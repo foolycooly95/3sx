@@ -2335,7 +2335,7 @@ void Sound_Test(struct _TASK* task_ptr) {
             Convert_Buff[3][1][0] = 1;
         }
 
-        if (sys_w.bgm_type == 0) {
+        if (sys_w.bgm_type == BGM_ARRANGED) {
             Convert_Buff[3][1][3] = 0;
         } else {
             Convert_Buff[3][1][3] = 1;
