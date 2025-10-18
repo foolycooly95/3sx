@@ -7,7 +7,6 @@
 #include "bin2obj/exchange.h"
 #include "bin2obj/gauge.h"
 #include "common.h"
-#include "sf33rd/Source/Game/SysDir.h"
 #include "sf33rd/Source/Game/effect/eff02.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/charset.h"
@@ -25,6 +24,7 @@
 #include "sf33rd/Source/Game/engine/pow_pow.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/io/pulpul.h"
+#include "sf33rd/Source/Game/system/sysdir.h"
 
 #include <SDL3/SDL.h>
 
@@ -238,8 +238,8 @@ void set_caught_status(s16 ix) {
         }
     }
 
-    as->wu.hit_adrs = (u32*)ds;
-    ds->wu.dmg_adrs = (u32*)as;
+    as->wu.hit_adrs = ds;
+    ds->wu.dmg_adrs = as;
     as->wu.hit_work_id = ds->wu.work_id;
     ds->wu.dmg_work_id = as->wu.work_id;
     ds->dm_point = 1;
@@ -408,8 +408,8 @@ void set_struck_status(s16 ix) {
 
     as = q_hit_push[ix2];
     ds = q_hit_push[ix];
-    as->hit_adrs = (u32*)ds;
-    ds->dmg_adrs = (u32*)as;
+    as->hit_adrs = ds;
+    ds->dmg_adrs = as;
     as->hit_work_id = ds->work_id;
     ds->dmg_work_id = as->work_id;
 
@@ -1363,15 +1363,15 @@ void add_combo_work(PLW* as, PLW* ds) {
         return;
     }
 
-    ds->kizetsu_kow = ds->cb->new_dm = as->wu.kind_of_waza;
-    kow = &ds->cb->kind_of[0][0][0];
+    ds->kizetsu_kow = ds->combo_type.new_dm = as->wu.kind_of_waza;
+    kow = &ds->combo_type.kind_of[0][0][0];
     cal = &calc_hit[ds->wu.id][0];
     kow[as->wu.kind_of_waza]++;
     cal[(as->wu.kind_of_waza & 120) / 8]++;
-    ds->cb->total++;
-    kow = &ds->rp->kind_of[0][0][0];
+    ds->combo_type.total++;
+    kow = &ds->remake_power.kind_of[0][0][0];
     kow[as->wu.kind_of_waza]++;
-    ds->rp->total++;
+    ds->remake_power.total++;
 }
 
 void nise_combo_work(PLW* as, PLW* ds, s16 num) {
@@ -1380,15 +1380,15 @@ void nise_combo_work(PLW* as, PLW* ds, s16 num) {
     s16 i;
 
     for (i = 0; i < num; i++) {
-        ds->kizetsu_kow = ds->cb->new_dm = as->wu.kind_of_waza;
-        kow = &ds->cb->kind_of[0][0][0];
+        ds->kizetsu_kow = ds->combo_type.new_dm = as->wu.kind_of_waza;
+        kow = &ds->combo_type.kind_of[0][0][0];
         cal = &calc_hit[ds->wu.id][0];
         kow[as->wu.kind_of_waza]++;
         cal[(as->wu.kind_of_waza & 120) / 8]++;
-        ds->cb->total++;
-        kow = &ds->rp->kind_of[0][0][0];
+        ds->combo_type.total++;
+        kow = &ds->remake_power.kind_of[0][0][0];
         kow[as->wu.kind_of_waza]++;
-        ds->rp->total++;
+        ds->remake_power.total++;
     }
 }
 
@@ -1404,7 +1404,7 @@ void cal_combo_waribiki(PLW* as, PLW* ds) {
         return;
     }
 
-    if (ds->rp->total == 0) {
+    if (ds->remake_power.total == 0) {
         return;
     }
 
@@ -1413,8 +1413,8 @@ void cal_combo_waribiki(PLW* as, PLW* ds) {
 
     for (i = 0; i < 9; i++) {
         for (j = 0; j < 4; j++) {
-            k = ds->rp->kind_of[i][j][0];
-            k += ds->rp->kind_of[i][j][1];
+            k = ds->remake_power.kind_of[i][j][0];
+            k += ds->remake_power.kind_of[i][j][1];
 
             if (k) {
                 tbl.ixl += k * koatt->step[i][j] * 256;
@@ -1451,11 +1451,11 @@ void cal_combo_waribiki2(PLW* ds) {
         return;
     }
 
-    if (ds->cb->total == 0) {
+    if (ds->combo_type.total == 0) {
         return;
     }
 
-    num = 32 - (ds->cb->total * 2);
+    num = 32 - (ds->combo_type.total * 2);
 
     if (num <= 0) {
         num = 1;

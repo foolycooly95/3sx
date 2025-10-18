@@ -7,8 +7,6 @@
 #include "bin2obj/gauge.h"
 #include "common.h"
 #include "sf33rd/Source/Game/Com_Data.h"
-#include "sf33rd/Source/Game/SysDir.h"
-#include "sf33rd/Source/Game/WORK_SYS.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/engine/caldir.h"
 #include "sf33rd/Source/Game/engine/charid.h"
@@ -18,6 +16,8 @@
 #include "sf33rd/Source/Game/engine/pls01.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/sound/se_data.h"
+#include "sf33rd/Source/Game/system/sysdir.h"
+#include "sf33rd/Source/Game/system/work_sys.h"
 #include "structs.h"
 
 void read_adrs_store_mvxy(WORK* wk, s16* adrs);
@@ -910,11 +910,11 @@ void add_sp_arts_gauge_hit_dm(PLW* wk) {
 s16 cal_sa_gauge_waribiki(PLW* wk, s16 asag) {
     s16 num;
 
-    if (wk->cb->total < 2) {
+    if (wk->combo_type.total < 2) {
         return asag;
     }
 
-    num = 32 - (wk->cb->total - 1) * 2;
+    num = 32 - (wk->combo_type.total - 1) * 2;
 
     if (num <= 0) {
         num = 1;

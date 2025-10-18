@@ -5,9 +5,6 @@
 
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "common.h"
-#include "sf33rd/Source/Game/SYS_sub.h"
-#include "sf33rd/Source/Game/SysDir.h"
-#include "sf33rd/Source/Game/WORK_SYS.h"
 #include "sf33rd/Source/Game/animation/win_pl.h"
 #include "sf33rd/Source/Game/count.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
@@ -43,6 +40,9 @@
 #include "sf33rd/Source/Game/rendering/texgroup.h"
 #include "sf33rd/Source/Game/stage/bg_data.h"
 #include "sf33rd/Source/Game/stage/bg_sub.h"
+#include "sf33rd/Source/Game/system/sys_sub.h"
+#include "sf33rd/Source/Game/system/sysdir.h"
+#include "sf33rd/Source/Game/system/work_sys.h"
 
 #if defined(DEBUG)
 #include "sf33rd/Source/Game/debug/debug_config.h"
@@ -77,9 +77,7 @@ void clear_super_arts_point(PLW* wk);
 void set_scrrrl();
 
 // bss
-ComboType combo_type[2]; // FIXME: move to PLW instead?
 ZanzouTableEntry zanzou_table[2][48];
-ComboType remake_power[2]; // FIXME: move to PLW instead?
 
 // sbss
 s16 pcon_rno[4];
@@ -1259,13 +1257,11 @@ void set_base_data(PLW* wk, s16 ix) {
     wk->wu.charset_id = plid_data[My_char[ix]];
     wk->wkey_flag = wk->dead_flag = 0;
     set_char_base_data(&wk->wu);
-    wk->wu.target_adrs = (u32*)&gs.plw[(ix + 1) & 1];
+    wk->wu.target_adrs = &gs.plw[(ix + 1) & 1];
     wk->player_number = My_char[ix];
     wk->wu.hit_adrs = wk->wu.target_adrs;
     wk->wu.dmg_adrs = wk->wu.target_adrs;
     cmd_init(wk);
-    wk->cb = &combo_type[ix];
-    wk->rp = &remake_power[ix];
 
     if (ix) {
         wk->wu.my_col_code |= 0x10;

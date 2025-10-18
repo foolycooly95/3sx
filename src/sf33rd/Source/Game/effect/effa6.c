@@ -5,13 +5,13 @@
 
 #include "sf33rd/Source/Game/effect/effa6.h"
 #include "common.h"
-#include "sf33rd/Source/Game/WORK_SYS.h"
 #include "sf33rd/Source/Game/effect/effb6.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/rendering/aboutspr.h"
 #include "sf33rd/Source/Game/screen/next_cpu.h"
 #include "sf33rd/Source/Game/stage/bg.h"
+#include "sf33rd/Source/Game/system/work_sys.h"
 
 s16 effa6_pos_x_1p;
 s16 effa6_pos_y_1p;
@@ -233,7 +233,7 @@ s32 effect_A6_init(WORK_Other* mwk) {
     ewk->wu.dir_old = mwk->wu.dir_old;
     ewk->wu.routine_no[6] = 60;
     ewk->master_player = My_char[Player_id];
-    ewk->my_master = (u32*)mwk;
+    ewk->my_master = mwk;
 
     switch (ewk->wu.dir_old) {
     case 0x43:

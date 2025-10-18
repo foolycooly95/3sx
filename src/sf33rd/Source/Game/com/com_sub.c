@@ -7,7 +7,6 @@
 #include "common.h"
 #include "sf33rd/AcrSDK/common/pad.h"
 #include "sf33rd/Source/Game/Com_Data.h"
-#include "sf33rd/Source/Game/WORK_SYS.h"
 #include "sf33rd/Source/Game/com/active/ac0000.h"
 #include "sf33rd/Source/Game/com/active/ac0001.h"
 #include "sf33rd/Source/Game/com/active/ac0002.h"
@@ -33,6 +32,7 @@
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/screen/vs_shell.h"
 #include "sf33rd/Source/Game/stage/bg.h"
+#include "sf33rd/Source/Game/system/work_sys.h"
 #include "structs.h"
 
 // sbss
@@ -978,7 +978,8 @@ void SA_Term(PLW* wk, u16 SA0, u16 SA1, u16 SA2, u16 Term_No) {
                 return;
 
             case 8:
-                if ((gs.plw[wk->wu.id].sa->kind_of_arts == 2) && (gs.plw[wk->wu.id].wu.vital_new <= (Max_vitality / 2))) {
+                if ((gs.plw[wk->wu.id].sa->kind_of_arts == 2) &&
+                    (gs.plw[wk->wu.id].wu.vital_new <= (Max_vitality / 2))) {
                     break;
                 }
                 CP_Index[wk->wu.id][0]++;
@@ -5103,7 +5104,7 @@ s32 Check_Shell(PLW* wk) {
                 CP_Index[wk->wu.id][2] = 0;
                 CP_Index[wk->wu.id][3] = 0;
 
-                Shell_Address[wk->wu.id] = (u32*)tmw;
+                Shell_Address[wk->wu.id] = tmw;
 
                 Guard_or_Jump_VS_Shell(wk, tmw, xx);
 
@@ -5150,7 +5151,7 @@ s32 Check_Shell_Another_in_Flip(PLW* wk) {
 
         xx = Compute_Hit_Time(wk, tmw);
 
-        Shell_Address[wk->wu.id] = (u32*)tmw;
+        Shell_Address[wk->wu.id] = tmw;
 
         break;
     }

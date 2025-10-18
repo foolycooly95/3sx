@@ -6,7 +6,6 @@
 #include "sf33rd/Source/Game/effect/effl7.h"
 #include "bin2obj/char_table.h"
 #include "common.h"
-#include "sf33rd/Source/Game/WORK_SYS.h"
 #include "sf33rd/Source/Game/animation/win_pl.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/caldir.h"
@@ -18,6 +17,7 @@
 #include "sf33rd/Source/Game/stage/bg.h"
 #include "sf33rd/Source/Game/stage/bg_sub.h"
 #include "sf33rd/Source/Game/stage/ta_sub.h"
+#include "sf33rd/Source/Game/system/work_sys.h"
 
 // forward declaration
 const s16 effl7_data_tbl[16];
@@ -107,16 +107,7 @@ void effl7_move(WORK_Other* ewk) {
 
         if (ewk->wu.cg_type == 0xFF) {
             ewk->wu.routine_no[1] += 1;
-
-            // The original programmers managed to call a func that accepts 5 args with just 4.
-            // This means that register t0 has some garbage that was stored there previously
-            // by a different func.
-            //
-            // To match the original behavior run the game in PCSX2, set a breakpoing at
-            // 0x234efc and note the value of t0. If it's 0, call set_char_move_init2
-            // with 0 in the last arg. If it's non-zero, call with 1.
-            // Original line: set_char_move_init2(&ewk->wu, 0, 0, 3);
-            fatal_error("This part needs debugging. Check the comment above for details.");
+            set_char_move_init2(&ewk->wu, 0, 0, 3, 1);
 
             if (ewk->wu.rl_flag) {
                 ewk->wu.mvxy.a[0].sp = 0x20000;
@@ -182,7 +173,7 @@ s32 effect_L7_init(WORK* wk, s32 /* unused */) {
     ewk->wu.my_col_mode = wk->my_col_mode;
     ewk->wu.my_col_code = wk->my_col_code + 1;
     ewk->wu.my_family = wk->my_family;
-    ewk->my_master = (u32*)wk;
+    ewk->my_master = wk;
     ewk->wu.rl_flag = wk->rl_flag;
 
     if (wk->rl_flag) {

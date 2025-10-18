@@ -6,13 +6,13 @@
 #include "sf33rd/Source/Game/effect/eff50.h"
 #include "bin2obj/char_table.h"
 #include "common.h"
-#include "sf33rd/Source/Game/WORK_SYS.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/charset.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/rendering/aboutspr.h"
 #include "sf33rd/Source/Game/rendering/texcash.h"
 #include "sf33rd/Source/Game/screen/sel_data.h"
+#include "sf33rd/Source/Game/system/work_sys.h"
 
 void effect_50_move(WORK_Other* ewk) {
     WORK_Other* pwk;
@@ -121,7 +121,7 @@ s32 effect_50_init(s16 PL_id, s16 Direction, s16 dm_vital) {
     ewk->wu.my_trans_mode = get_my_trans_mode(ewk->wu.my_mts);
 
     if (dm_vital == 0) {
-        Synchro_Address[ewk->master_id][ewk->wu.direction - 1] = (u32*)ewk;
+        Synchro_Address[ewk->master_id][ewk->wu.direction - 1] = ewk;
     }
 
     ewk->wu.xyz[0].disp.pos = Plate_Pos_Data_79[Play_Type][ewk->master_id][0][0];
