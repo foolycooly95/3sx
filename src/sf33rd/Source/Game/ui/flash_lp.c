@@ -1,3 +1,8 @@
+/**
+ * @file flash_lp.c
+ * Flash Lamp
+ */
+
 #include "sf33rd/Source/Game/ui/flash_lp.h"
 #include "common.h"
 #include "sf33rd/Source/Game/engine/workuser.h"

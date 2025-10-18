@@ -1,3 +1,8 @@
+/**
+ * @file sc_sub.c
+ * HUD elements and screen transitions
+ */
+
 #include "sf33rd/Source/Game/ui/sc_sub.h"
 #include "common.h"
 #include "sf33rd/AcrSDK/ps2/flps2render.h"

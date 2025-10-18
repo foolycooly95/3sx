@@ -1,3 +1,8 @@
+/**
+ * @file sc_data.c
+ * Data for layout and properties of HUD and menu screen elements
+ */
+
 #include "sf33rd/Source/Game/ui/sc_data.h"
 #include "common.h"
 #include "structs.h"

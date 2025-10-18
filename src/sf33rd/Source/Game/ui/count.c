@@ -1,3 +1,8 @@
+/**
+ * @file count.c
+ * Game Clock
+ */
+
 #include "sf33rd/Source/Game/ui/count.h"
 #include "common.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
