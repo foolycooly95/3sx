@@ -5,6 +5,7 @@
 
 #include "sf33rd/Source/Game/rendering/mtrans.h"
 #include "common.h"
+#include "port/sdl/sdl_game_renderer.h"
 #include "sf33rd/AcrSDK/ps2/flps2render.h"
 #include "sf33rd/AcrSDK/ps2/foundaps2.h"
 #include "sf33rd/Source/Common/PPGFile.h"
@@ -17,7 +18,6 @@
 #include "sf33rd/Source/Game/rendering/dc_ghost.h"
 #include "sf33rd/Source/Game/rendering/texcash.h"
 #include "sf33rd/Source/Game/rendering/texgroup.h"
-#include "sf33rd/Source/PS2/ps2Quad.h"
 #include "structs.h"
 
 #include <SDL3/SDL.h>
@@ -1601,7 +1601,7 @@ void seqsAfterProcess() {
                     flSetRenderState(FLRENDER_TEXSTAGE0, val);
                 }
 
-                ps2SeqsRenderQuad_Ax(&seqs_w.chip[i]);
+                SDLGameRenderer_DrawSprite2(&seqs_w.chip[i]);
             }
         }
     }

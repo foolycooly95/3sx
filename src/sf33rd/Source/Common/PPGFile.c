@@ -1,5 +1,6 @@
 #include "sf33rd/Source/Common/PPGFile.h"
 #include "common.h"
+#include "port/sdl/sdl_game_renderer.h"
 #include "sf33rd/AcrSDK/common/plcommon.h"
 #include "sf33rd/AcrSDK/ps2/flps2render.h"
 #include "sf33rd/AcrSDK/ps2/flps2vram.h"
@@ -7,7 +8,6 @@
 #include "sf33rd/Source/Common/MemMan.h"
 #include "sf33rd/Source/Compress/Lz77/Lz77Dec.h"
 #include "sf33rd/Source/Compress/zlibApp.h"
-#include "sf33rd/Source/PS2/ps2Quad.h"
 #include "structs.h"
 
 #include <SDL3/SDL.h>
@@ -146,7 +146,7 @@ void ppgWriteQuadOnly(Vertex* pos, u32 col, u32 texCode) {
         prm.t[i] = ((_Vertex*)pos)[i].t;
     }
 
-    ps2SeqsRenderQuad_A(&prm, col);
+    SDLGameRenderer_DrawTexturedQuad(&prm, col);
 }
 
 void ppgWriteQuadOnly2(Vertex* pos, u32 col, u32 texCode) {
@@ -159,7 +159,7 @@ void ppgWriteQuadOnly2(Vertex* pos, u32 col, u32 texCode) {
     prm.v[3] = ((_Vertex*)pos)[3].v;
     prm.t[3] = ((_Vertex*)pos)[3].t;
 
-    ps2SeqsRenderQuad_A2(&prm, col);
+    SDLGameRenderer_DrawSprite(&prm, col);
 }
 
 s32 ppgWriteQuadWithST_B(Vertex* pos, u32 col, PPGDataList* tb, s32 tix, s32 cix) {

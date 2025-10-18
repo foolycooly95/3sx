@@ -25,6 +25,10 @@ typedef struct SDLGameRenderer_Vertex {
     SDLGameRenderer_TexCoord tex_coord;
 } SDLGameRenderer_Vertex;
 
+typedef struct SDLGameRenderer_Quad {
+    SDLGameRenderer_Vec3 v[4];
+} SDLGameRenderer_Quad;
+
 typedef struct SDLGameRenderer_Sprite {
     SDLGameRenderer_Vec3 v[4];
     SDLGameRenderer_TexCoord t[4];
@@ -53,8 +57,8 @@ void SDLGameRenderer_CreatePalette(unsigned int ph);
 void SDLGameRenderer_DestroyPalette(unsigned int palette_handle);
 void SDLGameRenderer_UnlockPalette(unsigned int ph);
 void SDLGameRenderer_SetTexture(unsigned int th);
-void SDLGameRenderer_DrawTexturedQuad(const SDLGameRenderer_Vertex* vertices);
-void SDLGameRenderer_DrawSolidQuad(const SDLGameRenderer_Vertex* vertices);
+void SDLGameRenderer_DrawTexturedQuad(const SDLGameRenderer_Sprite* sprite, unsigned int color);
+void SDLGameRenderer_DrawSolidQuad(const SDLGameRenderer_Quad* vertices, unsigned int color);
 void SDLGameRenderer_DrawSprite(const SDLGameRenderer_Sprite* sprite, unsigned int color);
 void SDLGameRenderer_DrawSprite2(const SDLGameRenderer_Sprite2* sprite2);
 
