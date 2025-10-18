@@ -9,9 +9,9 @@
 #include "sf33rd/Source/Game/engine/plmain.h"
 #include "sf33rd/Source/Game/engine/slowf.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 typedef struct {
     const u16* spgtbl_ptr;

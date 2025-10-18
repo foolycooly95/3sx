@@ -8,9 +8,9 @@
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/slowf.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 VIT vit[2];
 

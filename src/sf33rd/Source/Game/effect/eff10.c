@@ -7,8 +7,8 @@
 #include "common.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 const u8 Contents_Check_Data[8] = { 0, 0, 1, 1, 0, 0, 0, 0 };
 

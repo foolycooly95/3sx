@@ -2,8 +2,6 @@
 #include "common.h"
 #include "sf33rd/AcrSDK/common/pad.h"
 #include "sf33rd/Source/Common/PPGWork.h"
-#include "sf33rd/Source/Game/Flash_LP.h"
-#include "sf33rd/Source/Game/count.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/demo/demo00.h"
 #include "sf33rd/Source/Game/demo/demo01.h"
@@ -37,7 +35,6 @@
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
 #include "sf33rd/Source/Game/rendering/mtrans.h"
 #include "sf33rd/Source/Game/rendering/texcash.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/screen/continue.h"
 #include "sf33rd/Source/Game/screen/entry.h"
 #include "sf33rd/Source/Game/screen/gameover.h"
@@ -57,6 +54,9 @@
 #include "sf33rd/Source/Game/system/sys_sub2.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/count.h"
+#include "sf33rd/Source/Game/ui/flash_lp.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 #include "structs.h"
 
 void Wait_Auto_Load(struct _TASK* /* unused */);

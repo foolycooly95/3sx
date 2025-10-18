@@ -7,7 +7,7 @@
 #include "common.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_sub.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 const u8 Rewrite_Color_Data_08[2][13][2] = { { { 30, 2 },
                                                { 15, 2 },

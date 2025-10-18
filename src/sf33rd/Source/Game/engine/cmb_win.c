@@ -9,10 +9,10 @@
 #include "sf33rd/Source/Game/engine/grade.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_data.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/system/sys_sub.h"
+#include "sf33rd/Source/Game/ui/sc_data.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 #include <SDL3/SDL.h>
 

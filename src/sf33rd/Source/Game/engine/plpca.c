@@ -17,9 +17,9 @@
 #include "sf33rd/Source/Game/engine/slowf.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/io/pulpul.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/stage/bg.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 void check_nagenuke(PLW* wk, PLW* tk);
 static s32 cat07_running_check(WORK* wk);

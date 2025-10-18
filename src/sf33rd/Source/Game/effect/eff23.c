@@ -10,9 +10,9 @@
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/rendering/aboutspr.h"
 #include "sf33rd/Source/Game/rendering/texcash.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/screen/sel_data.h"
 #include "sf33rd/Source/Game/stage/bg.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 void EFF23_WAIT(WORK_Other_CONN* ewk);
 void EFF23_SLIDE_IN(WORK_Other_CONN* ewk);

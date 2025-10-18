@@ -7,8 +7,8 @@
 #include "common.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/stage/bg.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 const u8* ci_pointer;
 u8 ci_col;

@@ -6,7 +6,6 @@
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "common.h"
 #include "sf33rd/Source/Game/animation/win_pl.h"
-#include "sf33rd/Source/Game/count.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/effect/eff00.h"
 #include "sf33rd/Source/Game/effect/eff01.h"
@@ -43,6 +42,7 @@
 #include "sf33rd/Source/Game/system/sys_sub.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/count.h"
 
 #if defined(DEBUG)
 #include "sf33rd/Source/Game/debug/debug_config.h"

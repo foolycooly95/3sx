@@ -6,7 +6,6 @@
 #include "sf33rd/Source/Game/engine/manage.h"
 #include "common.h"
 #include "sf33rd/Source/Game/animation/appear.h"
-#include "sf33rd/Source/Game/count.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/effect/eff08.h"
 #include "sf33rd/Source/Game/effect/eff14.h"
@@ -30,7 +29,6 @@
 #include "sf33rd/Source/Game/main.h"
 #include "sf33rd/Source/Game/menu/menu.h"
 #include "sf33rd/Source/Game/rendering/aboutspr.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -42,6 +40,8 @@
 #include "sf33rd/Source/Game/system/sys_sub2.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/count.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 void Game_Manage_1st();
 void Clear_1Stage_Work();

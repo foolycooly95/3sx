@@ -7,8 +7,8 @@
 #include "common.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_data.h"
-#include "sf33rd/Source/Game/sc_sub.h"
+#include "sf33rd/Source/Game/ui/sc_data.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 const u8 Rewrite_Mark_Data[13][2] = { { -1, 2 }, { 0, 2 },  { -1, 2 }, { 0, 2 },  { -1, 2 }, { 0, 2 },  { -1, 2 },
                                       { 0, 2 },  { -1, 2 }, { 0, 2 },  { -1, 2 }, { 0, 3 },  { -1, 99 } };

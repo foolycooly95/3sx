@@ -24,7 +24,6 @@
 #include "sf33rd/Source/Game/menu/ex_data.h"
 #include "sf33rd/Source/Game/menu/menu.h"
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/screen/entry.h"
 #include "sf33rd/Source/Game/screen/ranking.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
@@ -33,6 +32,7 @@
 #include "sf33rd/Source/Game/system/sys_sub2.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 #include <memory.h>
 
 u8 Candidate_Buff[16];

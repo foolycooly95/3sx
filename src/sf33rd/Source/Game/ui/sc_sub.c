@@ -1,4 +1,4 @@
-#include "sf33rd/Source/Game/sc_sub.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 #include "common.h"
 #include "sf33rd/AcrSDK/ps2/flps2render.h"
 #include "sf33rd/AcrSDK/ps2/foundaps2.h"
@@ -9,11 +9,11 @@
 #include "sf33rd/Source/Game/io/gd3rd.h"
 #include "sf33rd/Source/Game/rendering/dc_ghost.h"
 #include "sf33rd/Source/Game/rendering/mtrans.h"
-#include "sf33rd/Source/Game/sc_data.h"
 #include "sf33rd/Source/Game/stage/bg_data.h"
 #include "sf33rd/Source/Game/system/ramcnt.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_data.h"
 #include "sf33rd/Source/PS2/ps2Quad.h"
 #include "structs.h"
 

@@ -12,10 +12,10 @@
 #include "sf33rd/Source/Game/io/pulpul.h"
 #include "sf33rd/Source/Game/main.h"
 #include "sf33rd/Source/Game/menu/menu.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/system/reset.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 // sbss
 u8 PAUSE_X;
