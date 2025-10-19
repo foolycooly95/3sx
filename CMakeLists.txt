@@ -29,6 +29,7 @@ file(GLOB_RECURSE PORT_SRC src/port/*.c)
 file(GLOB_RECURSE ZLIB_SRC zlib/*.c)
 
 add_executable(3sx MACOSX_BUNDLE
+    src/main.c
     ${GAME_SRC} ${BIN2OBJ_SRC} ${PORT_SRC} ${ZLIB_SRC}
 )
 
