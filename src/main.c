@@ -1,4 +1,4 @@
-#include "sf33rd/Source/Game/main.h"
+#include "main.h"
 #include "common.h"
 #include "port/sdl/sdl_app.h"
 #include "sf33rd/AcrSDK/common/mlPAD.h"

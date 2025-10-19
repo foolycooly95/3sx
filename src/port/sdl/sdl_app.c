@@ -1,11 +1,11 @@
 #include "port/sdl/sdl_app.h"
 #include "common.h"
-#include "port/sound/adx.h"
+#include "main.h"
 #include "port/sdl/sdl_game_renderer.h"
 #include "port/sdl/sdl_message_renderer.h"
 #include "port/sdl/sdl_pad.h"
+#include "port/sound/adx.h"
 #include "sf33rd/AcrSDK/ps2/foundaps2.h"
-#include "sf33rd/Source/Game/main.h"
 
 #include <SDL3/SDL.h>
 
