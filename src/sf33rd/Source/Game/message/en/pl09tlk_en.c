@@ -1,3 +1,8 @@
+/**
+ * @file pl09tlk_en.c
+ * Oro Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl09tlk_en.h"
 #include "common.h"
 

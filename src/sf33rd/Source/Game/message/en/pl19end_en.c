@@ -1,3 +1,8 @@
+/**
+ * @file pl19end_en.c
+ * Remy Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl19end_en.h"
 #include "common.h"
 

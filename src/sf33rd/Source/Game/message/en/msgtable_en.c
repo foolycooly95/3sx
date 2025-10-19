@@ -1,5 +1,13 @@
+/**
+ * @file msgtable_en.c
+ * Main Message Table Jumptables (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/msgtable_en.h"
 #include "common.h"
+#include "sf33rd/Source/Game/message/en/msgextra_en.h"
+#include "sf33rd/Source/Game/message/en/msgmenu_en.h"
+#include "sf33rd/Source/Game/message/en/msgsysdir_en.h"
 #include "sf33rd/Source/Game/message/en/pl00end_en.h"
 #include "sf33rd/Source/Game/message/en/pl00tlk_en.h"
 #include "sf33rd/Source/Game/message/en/pl00win_en.h"
@@ -58,9 +66,6 @@
 #include "sf33rd/Source/Game/message/en/pl19end_en.h"
 #include "sf33rd/Source/Game/message/en/pl19tlk_en.h"
 #include "sf33rd/Source/Game/message/en/pl19win_en.h"
-#include "sf33rd/Source/Game/message/en/msgextra_en.h"
-#include "sf33rd/Source/Game/message/en/msgmenu_en.h"
-#include "sf33rd/Source/Game/message/en/msgsysdir_en.h"
 
 MessageTable* pl_mes_tbl[20] = { &pl00win_usa_tbl, &pl01win_usa_tbl, &pl02win_usa_tbl, &pl03win_usa_tbl,
                                  &pl04win_usa_tbl, &pl05win_usa_tbl, &pl06win_usa_tbl, &pl07win_usa_tbl,

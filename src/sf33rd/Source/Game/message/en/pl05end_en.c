@@ -1,3 +1,8 @@
+/**
+ * @file pl05end_en.c
+ * Necro Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl05end_en.h"
 #include "common.h"
 

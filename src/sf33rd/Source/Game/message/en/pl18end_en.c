@@ -1,3 +1,8 @@
+/**
+ * @file pl18end_en.c
+ * Twelve Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl18end_en.h"
 #include "common.h"
 

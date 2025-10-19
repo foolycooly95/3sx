@@ -1,3 +1,8 @@
+/**
+ * @file pl12tlk_en.c
+ * Sean Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl12tlk_en.h"
 #include "common.h"
 

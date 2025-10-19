@@ -1,3 +1,8 @@
+/**
+ * @file pl15end_en.c
+ * Chun-Li Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl15end_en.h"
 #include "common.h"
 

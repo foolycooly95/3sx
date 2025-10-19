@@ -1,3 +1,8 @@
+/**
+ * @file pl05tlk_en.c
+ * Necro Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl05tlk_en.h"
 #include "common.h"
 

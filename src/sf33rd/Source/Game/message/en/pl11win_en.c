@@ -1,3 +1,8 @@
+/**
+ * @file pl11win_en.c
+ * Ken Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl11win_en.h"
 #include "common.h"
 

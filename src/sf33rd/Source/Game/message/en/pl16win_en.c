@@ -1,3 +1,8 @@
+/**
+ * @file pl16win_en.c
+ * Makoto Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl16win_en.h"
 #include "common.h"
 

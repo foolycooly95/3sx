@@ -1,3 +1,8 @@
+/**
+ * @file pl11end_en.c
+ * Ken Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl11end_en.h"
 #include "common.h"
 

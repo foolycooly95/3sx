@@ -1,3 +1,8 @@
+/**
+ * @file pl08win_en.c
+ * Elena Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl08win_en.h"
 #include "common.h"
 

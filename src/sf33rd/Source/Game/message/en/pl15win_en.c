@@ -1,3 +1,8 @@
+/**
+ * @file pl15win_en.c
+ * Chun-Li Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl15win_en.h"
 #include "common.h"
 

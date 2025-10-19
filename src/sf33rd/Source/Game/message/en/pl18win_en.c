@@ -1,3 +1,8 @@
+/**
+ * @file pl18win_en.c
+ * Twelve Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl18win_en.h"
 #include "common.h"
 

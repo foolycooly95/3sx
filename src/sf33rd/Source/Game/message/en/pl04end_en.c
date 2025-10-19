@@ -1,3 +1,8 @@
+/**
+ * @file pl04end_en.c
+ * Dudley Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl04end_en.h"
 #include "common.h"
 

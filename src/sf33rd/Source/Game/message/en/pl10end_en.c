@@ -1,3 +1,8 @@
+/**
+ * @file pl10end_en.c
+ * Yang Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl10end_en.h"
 #include "common.h"
 

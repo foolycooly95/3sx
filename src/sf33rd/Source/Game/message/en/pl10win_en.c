@@ -1,3 +1,8 @@
+/**
+ * @file pl10win_en.c
+ * Yang Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl10win_en.h"
 #include "common.h"
 

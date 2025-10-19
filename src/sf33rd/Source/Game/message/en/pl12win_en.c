@@ -1,3 +1,8 @@
+/**
+ * @file pl12win_en.c
+ * Sean Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl12win_en.h"
 #include "common.h"
 

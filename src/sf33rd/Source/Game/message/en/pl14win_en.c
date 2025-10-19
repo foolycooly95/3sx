@@ -1,3 +1,8 @@
+/**
+ * @file pl14win_en.c
+ * Akuma/Gouki Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl14win_en.h"
 #include "common.h"
 

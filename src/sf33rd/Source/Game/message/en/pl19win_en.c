@@ -1,3 +1,8 @@
+/**
+ * @file pl19win_en.c
+ * Remy Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl19win_en.h"
 #include "common.h"
 

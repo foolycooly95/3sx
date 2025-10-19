@@ -1,3 +1,8 @@
+/**
+ * @file pl19tlk_en.c
+ * Remy Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl19tlk_en.h"
 #include "common.h"
 

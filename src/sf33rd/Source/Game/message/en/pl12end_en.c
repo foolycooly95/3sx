@@ -1,3 +1,8 @@
+/**
+ * @file pl12end_en.c
+ * Sean Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl12end_en.h"
 #include "common.h"
 

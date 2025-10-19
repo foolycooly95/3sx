@@ -1,3 +1,8 @@
+/**
+ * @file pl07end_en.c
+ * Ibuki Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl07end_en.h"
 #include "common.h"
 

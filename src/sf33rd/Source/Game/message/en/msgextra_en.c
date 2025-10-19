@@ -1,3 +1,8 @@
+/**
+ * @file msgextra_en.c
+ * Extra Option Menu Option Descriptors (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/msgextra_en.h"
 #include "common.h"
 

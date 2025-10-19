@@ -1,3 +1,8 @@
+/**
+ * @file pl07win_en.c
+ * Ibuki Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl07win_en.h"
 #include "common.h"
 

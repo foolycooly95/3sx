@@ -1,3 +1,8 @@
+/**
+ * @file pl06tlk_en.c
+ * Hugo Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl06tlk_en.h"
 #include "common.h"
 

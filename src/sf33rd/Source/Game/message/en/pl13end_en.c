@@ -1,3 +1,8 @@
+/**
+ * @file pl13end_en.c
+ * Urien Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl13end_en.h"
 #include "common.h"
 

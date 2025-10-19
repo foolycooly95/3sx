@@ -1,3 +1,8 @@
+/**
+ * @file pl08end_en.c
+ * Elena Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl08end_en.h"
 #include "common.h"
 

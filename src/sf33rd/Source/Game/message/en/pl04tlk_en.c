@@ -1,3 +1,8 @@
+/**
+ * @file pl04tlk_en.c
+ * Dudley Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl04tlk_en.h"
 #include "common.h"
 

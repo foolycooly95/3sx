@@ -1,3 +1,8 @@
+/**
+ * @file pl01tlk_en.c
+ * Alex Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl01tlk_en.h"
 #include "common.h"
 

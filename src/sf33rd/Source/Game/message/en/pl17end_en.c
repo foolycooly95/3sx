@@ -1,3 +1,8 @@
+/**
+ * @file pl17end_en.c
+ * Q Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl17end_en.h"
 #include "common.h"
 

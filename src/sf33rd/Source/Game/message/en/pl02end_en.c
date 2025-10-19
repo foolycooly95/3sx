@@ -1,3 +1,8 @@
+/**
+ * @file pl02end_en.c
+ * Ryu Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl02end_en.h"
 #include "common.h"
 

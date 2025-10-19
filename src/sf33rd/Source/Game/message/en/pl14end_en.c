@@ -1,3 +1,8 @@
+/**
+ * @file pl14end_en.c
+ * Akuma/Gouki Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl14end_en.h"
 #include "common.h"
 

@@ -1,3 +1,8 @@
+/**
+ * @file pl10tlk_en.c
+ * Yang Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl10tlk_en.h"
 #include "common.h"
 

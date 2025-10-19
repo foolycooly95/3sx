@@ -1,3 +1,8 @@
+/**
+ * @file pl09end_en.c
+ * Oro Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl09end_en.h"
 #include "common.h"
 

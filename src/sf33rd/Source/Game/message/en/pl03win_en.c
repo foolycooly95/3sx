@@ -1,3 +1,8 @@
+/**
+ * @file pl03win_en.c
+ * Yun Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl03win_en.h"
 #include "common.h"
 

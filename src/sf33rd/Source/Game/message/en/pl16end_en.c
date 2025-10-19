@@ -1,3 +1,8 @@
+/**
+ * @file pl16end_en.c
+ * Makoto Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl16end_en.h"
 #include "common.h"
 

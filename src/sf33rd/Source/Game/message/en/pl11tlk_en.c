@@ -1,3 +1,8 @@
+/**
+ * @file pl11tlk_en.c
+ * Ken Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl11tlk_en.h"
 #include "common.h"
 

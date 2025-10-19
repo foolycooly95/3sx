@@ -1,3 +1,8 @@
+/**
+ * @file pl03end_en.c
+ * Yun Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl03end_en.h"
 #include "common.h"
 

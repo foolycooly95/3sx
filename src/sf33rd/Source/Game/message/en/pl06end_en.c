@@ -1,3 +1,8 @@
+/**
+ * @file pl06end_en.c
+ * Hugo Ending Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl06end_en.h"
 #include "common.h"
 

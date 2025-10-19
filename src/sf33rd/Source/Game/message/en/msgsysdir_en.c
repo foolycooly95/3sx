@@ -1,3 +1,8 @@
+/**
+ * @file msgsysdir_en.c
+ * System Direction/Dipswitch Option Descriptors (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/msgsysdir_en.h"
 #include "common.h"
 

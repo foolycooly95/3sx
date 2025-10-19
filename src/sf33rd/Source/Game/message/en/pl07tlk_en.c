@@ -1,3 +1,8 @@
+/**
+ * @file pl07tlk_en.c
+ * Ibuki Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl07tlk_en.h"
 #include "common.h"
 

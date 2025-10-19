@@ -1,3 +1,8 @@
+/**
+ * @file pl17win_en.c
+ * Q Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl17win_en.h"
 #include "common.h"
 

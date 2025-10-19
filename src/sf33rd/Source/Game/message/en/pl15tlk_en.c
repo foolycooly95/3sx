@@ -1,3 +1,8 @@
+/**
+ * @file pl15tlk_en.c
+ * Chun-Li Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl15tlk_en.h"
 #include "common.h"
 

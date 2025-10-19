@@ -1,3 +1,8 @@
+/**
+ * @file pl00tlk_en.c
+ * Gill Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl00tlk_en.h"
 #include "common.h"
 

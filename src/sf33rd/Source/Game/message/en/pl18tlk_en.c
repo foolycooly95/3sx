@@ -1,3 +1,8 @@
+/**
+ * @file pl18tlk_en.c
+ * Twelve Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl18tlk_en.h"
 #include "common.h"
 

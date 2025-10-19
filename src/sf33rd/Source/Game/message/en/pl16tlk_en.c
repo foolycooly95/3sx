@@ -1,3 +1,8 @@
+/**
+ * @file pl16tlk_en.c
+ * Makoto Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl16tlk_en.h"
 #include "common.h"
 

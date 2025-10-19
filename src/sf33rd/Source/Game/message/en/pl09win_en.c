@@ -1,3 +1,8 @@
+/**
+ * @file pl09win_en.c
+ * Oro Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl09win_en.h"
 #include "common.h"
 

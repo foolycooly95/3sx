@@ -1,3 +1,8 @@
+/**
+ * @file pl05win_en.c
+ * Necro Win Quotes
+ */
+
 #include "sf33rd/Source/Game/message/en/pl05win_en.h"
 #include "common.h"
 

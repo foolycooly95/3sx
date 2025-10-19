@@ -1,3 +1,8 @@
+/**
+ * @file msgmenu_en.c
+ * Exit Menu Message (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/msgmenu_en.h"
 #include "common.h"
 

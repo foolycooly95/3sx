@@ -1,3 +1,8 @@
+/**
+ * @file pl08tlk_en.c
+ * Elena Cutscene Text (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl08tlk_en.h"
 #include "common.h"
 

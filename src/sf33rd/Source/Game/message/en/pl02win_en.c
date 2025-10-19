@@ -1,3 +1,8 @@
+/**
+ * @file pl02win_en.c
+ * Ryu Win Quotes (English)
+ */
+
 #include "sf33rd/Source/Game/message/en/pl02win_en.h"
 #include "common.h"
 
