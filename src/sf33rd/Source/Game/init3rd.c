@@ -24,9 +24,7 @@
 #include "sf33rd/Source/PS2/ps2Quad.h"
 #include "structs.h"
 
-#if !defined(TARGET_PS2)
 #include <string.h>
-#endif
 
 f32 Keep_Zoom_X;
 s8 Test_Cursor;
@@ -104,13 +102,9 @@ void Init_Task_1st(struct _TASK* task_ptr) {
         system_dir[ix] = Dir_Default_Data;
         permission_player[ix] = Permission_PL_Data;
 
-#if defined(TARGET_PS2)
-        save_w[ix].extra_option.contents = save_w[0].extra_option.contents;
-#else
         memcpy(&save_w[ix].extra_option.contents,
                &save_w[0].extra_option.contents,
                sizeof(save_w[ix].extra_option.contents));
-#endif
 
         Direction_Working[ix] = 0;
         Vital_Handicap[ix][0] = 7;
