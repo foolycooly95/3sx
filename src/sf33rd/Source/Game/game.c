@@ -1,4 +1,4 @@
-#include "sf33rd/Source/Game/Game.h"
+#include "sf33rd/Source/Game/game.h"
 #include "common.h"
 #include "sf33rd/AcrSDK/common/pad.h"
 #include "sf33rd/Source/Common/PPGWork.h"
