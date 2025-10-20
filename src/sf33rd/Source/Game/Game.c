@@ -2,8 +2,6 @@
 #include "common.h"
 #include "sf33rd/AcrSDK/common/pad.h"
 #include "sf33rd/Source/Common/PPGWork.h"
-#include "sf33rd/Source/Game/Flash_LP.h"
-#include "sf33rd/Source/Game/count.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/demo/demo00.h"
 #include "sf33rd/Source/Game/demo/demo01.h"
@@ -37,7 +35,6 @@
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
 #include "sf33rd/Source/Game/rendering/mtrans.h"
 #include "sf33rd/Source/Game/rendering/texcash.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/screen/continue.h"
 #include "sf33rd/Source/Game/screen/entry.h"
 #include "sf33rd/Source/Game/screen/gameover.h"
@@ -57,6 +54,9 @@
 #include "sf33rd/Source/Game/system/sys_sub2.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/count.h"
+#include "sf33rd/Source/Game/ui/flash_lp.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 #include "structs.h"
 
 void Wait_Auto_Load(struct _TASK* /* unused */);
@@ -348,7 +348,7 @@ void Game01() {
         if (Switch_Screen(0) != 0) {
             Game01_Sub();
             Cover_Timer = 5;
-            appear_type = 1;
+            gs.appear_type = APPEAR_TYPE_ANIMATED;
             set_hitmark_color();
 
             if (Debug_w[0x1D]) {
@@ -487,7 +487,7 @@ void Game2_0() {
     Time_in_Time = 60;
     init_slow_flag();
     clear_hit_queue();
-    pcon_rno[0] = pcon_rno[1] = pcon_rno[2] = pcon_rno[3] = 0;
+    gs.pcon_rno[0] = gs.pcon_rno[1] = gs.pcon_rno[2] = gs.pcon_rno[3] = 0;
     ca_check_flag = 1;
     bg_work_clear();
     win_lose_work_clear();
@@ -572,13 +572,13 @@ void Game2_2() {
     init_slow_flag();
     effect_work_quick_init();
     clear_hit_queue();
-    pcon_rno[0] = pcon_rno[1] = pcon_rno[2] = pcon_rno[3] = 0;
+    gs.pcon_rno[0] = gs.pcon_rno[1] = gs.pcon_rno[2] = gs.pcon_rno[3] = 0;
     ca_check_flag = 1;
     bg_work_clear();
     win_lose_work_clear();
     player_face_init();
     Game01_Sub();
-    appear_type = 1;
+    gs.appear_type = APPEAR_TYPE_ANIMATED;
     TATE00();
 
     for (i = 0; i < 3; i++) {
@@ -625,11 +625,11 @@ void Game2_5() {
         Score[1][2] = 0;
         Suicide[0] = 1;
         Game_pause = 0;
-        pcon_rno[0] = 0;
-        pcon_rno[1] = 0;
-        pcon_rno[2] = 0;
-        pcon_rno[3] = 0;
-        appear_type = 0;
+        gs.pcon_rno[0] = 0;
+        gs.pcon_rno[1] = 0;
+        gs.pcon_rno[2] = 0;
+        gs.pcon_rno[3] = 0;
+        gs.appear_type = APPEAR_TYPE_NON_ANIMATED;
         erase_extra_plef_work();
         compel_bg_init_position();
         win_lose_work_clear();
@@ -1281,7 +1281,7 @@ void Game09() {
         Time_in_Time = 60;
         init_slow_flag();
         clear_hit_queue();
-        pcon_rno[0] = pcon_rno[1] = pcon_rno[2] = pcon_rno[3] = 0;
+        gs.pcon_rno[0] = gs.pcon_rno[1] = gs.pcon_rno[2] = gs.pcon_rno[3] = 0;
         bbbs_com_initialize();
         ca_check_flag = 1;
         Bonus_Game_Work = 20;

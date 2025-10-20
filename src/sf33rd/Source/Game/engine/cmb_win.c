@@ -9,10 +9,10 @@
 #include "sf33rd/Source/Game/engine/grade.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_data.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/system/sys_sub.h"
+#include "sf33rd/Source/Game/ui/sc_data.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 #include <SDL3/SDL.h>
 
@@ -140,7 +140,7 @@ void combo_control(s8 PL) {
                 return;
             }
 
-            if (pcon_dp_flag == 1 && last_hit_time == 0) {
+            if (gs.pcon_dp_flag && last_hit_time == 0) {
                 super_arts_last_check(PL);
             }
 
@@ -242,7 +242,7 @@ s32 reversal_check(s8 PL) {
         return 0;
     }
 
-    if (gs.plw[PL].wu.routine_no[1] == 4 && gs.plw[PL].wu.old_rno[1] == 1 && pcon_dp_flag == 0 &&
+    if (gs.plw[PL].wu.routine_no[1] == 4 && gs.plw[PL].wu.old_rno[1] == 1 && !gs.pcon_dp_flag &&
         gs.plw[PL].wu.routine_no[2] >= 0x10) {
         rever_attack[PL] = 1;
 

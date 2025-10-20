@@ -1,13 +1,18 @@
-#include "sf33rd/Source/Game/count.h"
+/**
+ * @file count.c
+ * Game Clock
+ */
+
+#include "sf33rd/Source/Game/ui/count.h"
 #include "common.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/engine/pls01.h"
 #include "sf33rd/Source/Game/engine/slowf.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_data.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_data.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 Round_Timer round_timer;
 s8 flash_timer;
@@ -51,10 +56,6 @@ void count_cont_init(u8 type) {
 }
 
 void count_cont_main() {
-#if defined(TARGET_PS2)
-    void counter_write(s32 atr);
-#endif
-
     if (Bonus_Game_Flag) {
         return;
     }
@@ -98,10 +99,6 @@ void count_cont_main() {
 }
 
 void counter_control() {
-#if defined(TARGET_PS2)
-    void counter_write(s32 atr);
-#endif
-
     if (Counter_hi == 0) {
         if (No_Trans == 0) {
             counter_write(counter_color);

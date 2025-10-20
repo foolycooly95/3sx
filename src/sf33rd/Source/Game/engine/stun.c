@@ -8,9 +8,9 @@
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/slowf.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 SDAT sdat[2];
 
@@ -23,7 +23,7 @@ void stngauge_cont_init() {
         sdat[i].osflag = 0;
         sdat[i].g_or_s = 0;
         sdat[i].stimer = 2;
-        sdat[i].slen = (piyori_type[i].genkai / 8);
+        sdat[i].slen = (gs.piyori_type[i].genkai / 8);
         sdat[i].proccess_dead = 0;
 
         if (omop_st_bar_disp[i]) {
@@ -74,7 +74,7 @@ void stngauge_control(u8 pl) {
             sdat[pl].sflag = 1;
 
             if (sdat[pl].osflag == 0) {
-                sdat[pl].cstn = piyori_type[pl].genkai;
+                sdat[pl].cstn = gs.piyori_type[pl].genkai;
             }
 
             if (!EXE_flag && !Game_pause) {

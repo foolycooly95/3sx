@@ -349,7 +349,7 @@ s32 Push_LDREQ_Queue(REQ* ldreq) {
             break;
         }
 
-        *(u8*)(&q_ldreq[i].result)[0] &= ~masknum;
+        *q_ldreq[i].result &= ~masknum;
         return 1;
     }
 

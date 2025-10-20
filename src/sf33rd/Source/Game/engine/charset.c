@@ -918,7 +918,7 @@ s32 comm_if_s(WORK* wk, UNK11* ctc) {
     shdat = get_comm_if_shot(wk);
 
     if (wk->work_id == 1 && ((PLW*)wk)->player_number == 16 && ((PLW*)wk)->spmv_ng_flag & 2 && my_shdat == 0x440 &&
-        pcon_dp_flag) {
+        gs.pcon_dp_flag) {
         shdat = 0;
     }
 

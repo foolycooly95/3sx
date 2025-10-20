@@ -6,8 +6,37 @@
 
 #include <stdbool.h>
 
+typedef enum AppearanceType {
+    APPEAR_TYPE_NON_ANIMATED,
+    APPEAR_TYPE_ANIMATED,
+    APPEAR_TYPE_UNKNOWN_2, // FIXME: document
+    APPEAR_TYPE_UNKNOWN_3, // FIXME: document
+} AppearanceType;
+
 typedef struct GameState {
     PLW plw[2];
+
+    /// Afterimage data
+    ZanzouTableEntry zanzou_table[2][48];
+
+    SA_WORK super_arts[2];
+
+    /// Stun data
+    PiyoriType piyori_type[2];
+
+    AppearanceType appear_type;
+
+    /// Player controller routine indices
+    s16 pcon_rno[4];
+
+    /// `true` if the game has been slowed down at round end
+    bool round_slow_flag;
+
+    bool pcon_dp_flag;
+    u8 win_sp_flag;
+
+    /// `true` if death SFX playback needs to be requested
+    bool dead_voice_flag;
 } GameState;
 
 extern GameState gs;

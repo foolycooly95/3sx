@@ -1,10 +1,15 @@
-#include "sf33rd/Source/Game/Flash_LP.h"
+/**
+ * @file flash_lp.c
+ * Flash Lamp
+ */
+
+#include "sf33rd/Source/Game/ui/flash_lp.h"
 #include "common.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
-#include "sf33rd/Source/Game/sc_data.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/sc_data.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 const u8 Lamp_Flash_Data[2][2] = { { 0x07, 0x6F }, { 0x1E, 0x03 } };
 

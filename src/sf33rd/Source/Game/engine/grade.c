@@ -908,7 +908,7 @@ void grade_add_clean_hits(WORK_Other* wk) {
     WORK* mwk;
     s16 ix;
 
-    if (pcon_rno[0] != 0) {
+    if (gs.pcon_rno[0] != 0) {
         ix = wk->wu.id;
 
         if (wk->wu.work_id != 1) {
@@ -927,7 +927,7 @@ void grade_add_att_renew(WORK_Other* wk) {
     WORK* mwk;
     s16 ix;
 
-    if (pcon_rno[0] != 0) {
+    if (gs.pcon_rno[0] != 0) {
         ix = wk->wu.id;
 
         if (wk->wu.work_id != 1) {
@@ -1098,7 +1098,7 @@ void grade_set_round_result(s16 ix) {
 }
 
 void grade_add_personal_action(s16 ix) {
-    if (!pcon_dp_flag) {
+    if (!gs.pcon_dp_flag) {
         judge_item[ix][Play_Type].personal_act++;
 
         if (judge_item[ix][Play_Type].personal_act > 3) {

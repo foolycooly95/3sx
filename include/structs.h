@@ -55,6 +55,11 @@ struct _disp {
     s32 cable;
 };
 
+typedef enum {
+    BGM_ARRANGED,
+    BGM_ORIGINAL
+} BgmType;
+
 struct _SYSTEM_W {
     struct _disp disp;
     s32 pause;
@@ -62,10 +67,7 @@ struct _SYSTEM_W {
     s32 reset;
     u8 sound_mode;
     u8 screen_mode;
-
-    /// Controls background music type (arranged vs original)
-    u8 bgm_type;
-
+    BgmType bgm_type;
     u8 dummy;
 };
 
@@ -187,7 +189,10 @@ typedef struct {
 
 typedef struct {
     s8 flag;
+
+    /// Maximum stun threshold
     s16 genkai;
+
     s16 time;
     union {
         s32 timer;
@@ -985,7 +990,7 @@ struct _SAVE_W {
     u8 GuardCheck;
     u8 Auto_Save;
     u8 AnalogStick;
-    u8 BgmType;
+    BgmType BgmType;
     u8 SoundMode;
     u8 BGM_Level;
     u8 SE_Level;

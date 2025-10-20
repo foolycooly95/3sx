@@ -10,7 +10,6 @@
 #include "sf33rd/Source/Game/Game.h"
 #include "sf33rd/Source/Game/Message3rd/C_USA/msgTable_usa.h"
 #include "sf33rd/Source/Game/animation/appear.h"
-#include "sf33rd/Source/Game/count.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/effect/eff04.h"
 #include "sf33rd/Source/Game/effect/eff10.h"
@@ -49,7 +48,6 @@
 #include "sf33rd/Source/Game/rendering/color3rd.h"
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
 #include "sf33rd/Source/Game/rendering/texgroup.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/screen/entry.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
@@ -64,6 +62,8 @@
 #include "sf33rd/Source/Game/system/sys_sub2.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/count.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 #include "sf33rd/Source/PS2/mc/savesub.h"
 #include "structs.h"
 
@@ -1580,7 +1580,7 @@ void Load_Replay_Sub(struct _TASK* task_ptr) {
         if (Switch_Screen(0) != 0) {
             Game01_Sub();
             Cover_Timer = 5;
-            appear_type = 1;
+            gs.appear_type = APPEAR_TYPE_ANIMATED;
             set_hitmark_color();
             Purge_texcash_of_list(3);
             Make_texcash_of_list(3);
@@ -2335,7 +2335,7 @@ void Sound_Test(struct _TASK* task_ptr) {
             Convert_Buff[3][1][0] = 1;
         }
 
-        if (sys_w.bgm_type == 0) {
+        if (sys_w.bgm_type == BGM_ARRANGED) {
             Convert_Buff[3][1][3] = 0;
         } else {
             Convert_Buff[3][1][3] = 1;

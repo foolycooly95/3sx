@@ -6,7 +6,7 @@
 #include "sf33rd/Source/Game/engine/pls02.h"
 #include "bin2obj/gauge.h"
 #include "common.h"
-#include "sf33rd/Source/Game/Com_Data.h"
+#include "sf33rd/Source/Game/com/com_data.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/engine/caldir.h"
 #include "sf33rd/Source/Game/engine/charid.h"
@@ -431,7 +431,7 @@ two:
 s32 check_be_car_object() {
     PLW* com;
 
-    if (pcon_rno[0] == 0) {
+    if (gs.pcon_rno[0] == 0) {
         return 1;
     }
 
@@ -1032,7 +1032,7 @@ void add_sp_arts_gauge_nagenuke(PLW* wk) {
 }
 
 void add_sp_arts_gauge_maxbit(PLW* wk) {
-    if (pcon_rno[0] != 1) {
+    if (gs.pcon_rno[0] != 1) {
         return;
     }
 
@@ -1067,7 +1067,7 @@ void add_super_arts_gauge(SA_WORK* wk, s16 ix, s16 asag, u8 mf) {
             return;
         }
 
-        if (!pcon_dp_flag && !Bonus_Game_Flag && (sa_gauge_omake[omop_sa_gauge_ix[ix]] != 0) && (asag > 0) &&
+        if (!gs.pcon_dp_flag && !Bonus_Game_Flag && (sa_gauge_omake[omop_sa_gauge_ix[ix]] != 0) && (asag > 0) &&
             (wk->store != wk->store_max)) {
             asag = asag * 0x78 / 100;
 
@@ -1144,7 +1144,7 @@ void setup_lvdir_after_autodir(PLW* wk) {
 }
 
 void dead_voice_request() {
-    if (dead_voice_flag) {
+    if (gs.dead_voice_flag) {
         if (gs.plw[0].dead_flag) {
             dead_voice_request2(&gs.plw[0]);
         }
@@ -1154,7 +1154,7 @@ void dead_voice_request() {
         }
     }
 
-    dead_voice_flag = 0;
+    gs.dead_voice_flag = false;
 }
 
 void dead_voice_request2(PLW* wk) {

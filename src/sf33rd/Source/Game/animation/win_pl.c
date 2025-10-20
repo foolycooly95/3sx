@@ -75,7 +75,7 @@ void win_player(PLW* wk) {
         return;
     }
 
-    if (pcon_rno[0] == 2 && pcon_rno[1] == 3) {
+    if (gs.pcon_rno[0] == 2 && gs.pcon_rno[1] == 3) {
         Judge_normal_winner(wk);
         return;
     }
@@ -181,7 +181,7 @@ void jijii_nebukuro(PLW* wk) {
 
         if (wk->wu.xyz[1].disp.pos > 256) {
             win_rno[1]++;
-            win_sp_flag = 2;
+            gs.win_sp_flag = 2;
             set_char_move_init(&wk->wu, 9, 40);
             wk->wu.xyz[1].disp.pos = 200;
         }

@@ -5,14 +5,6 @@
 #include "types.h"
 
 typedef struct {
-    s16 body_dm[4][4];
-} RAMBOD;
-
-typedef struct {
-    s16 hand_dm[4][4];
-} RAMHAN;
-
-typedef struct {
     u8 nmsa_g_ix;
     u8 exsa_g_ix;
     u8 exs2_g_ix;
@@ -28,16 +20,8 @@ typedef struct {
 
 extern const s8 plid_data[20];
 
-extern s16 pcon_rno[4];
-extern s16 appear_type;
-extern u8 round_slow_flag;
-extern u8 pcon_dp_flag;
-extern u8 win_sp_flag;
-extern char dead_voice_flag;
-extern SA_WORK super_arts[2];
-extern PiyoriType piyori_type[2];
-extern RAMBOD rambod[2];
-extern RAMHAN ramhan[2];
+extern UNK_1 rambod[2];
+extern UNK_2 ramhan[2];
 extern u32 omop_spmv_ng_table[2];
 extern u32 omop_spmv_ng_table2[2];
 extern u16 vital_inc_timer;
@@ -46,8 +30,6 @@ extern char cmd_sel[2];
 extern s8 vib_sel[2];
 extern s16 sag_inc_timer[2];
 extern char no_sa[2];
-
-extern ZanzouTableEntry zanzou_table[2][48];
 
 extern const s16** kizetsu_timer_table[];
 

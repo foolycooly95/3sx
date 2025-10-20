@@ -5,12 +5,34 @@
 
 #include "sf33rd/Source/Game/effect/effa5.h"
 #include "common.h"
-#include "sf33rd/Source/Game/BCD.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 
 s32 Check_Sleep_A5(WORK_Other* ewk);
+
+s16 bcdext;
+
+u8 sbcd(u8 a, u8 b) {
+    s16 c, d;
+
+    if ((d = (b & 0xF) - (a & 0xF) - (bcdext & 1)) < 0) {
+        d += 10;
+        d |= 16;
+    }
+
+    c = (b & 0xF0) - (a & 0xF0) - (d & 0xF0);
+    d &= 0xF;
+
+    if ((d |= c) < 0) {
+        d += 160;
+        bcdext = 1;
+    } else {
+        bcdext = 0;
+    }
+
+    return d;
+}
 
 void effect_A5_move(WORK_Other* ewk) {
     if (Present_Mode == 4 || Present_Mode == 5) {

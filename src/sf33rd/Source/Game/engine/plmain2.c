@@ -142,20 +142,20 @@ void player_mvbs_0000(PLW* wk) {
 }
 
 void player_mvbs_1000(PLW* wk) {
-    switch (appear_type) {
-    case 0:
+    switch (gs.appear_type) {
+    case APPEAR_TYPE_NON_ANIMATED:
         plmv_b_1010(wk);
         plmv_b_1020(wk, 96);
         Appear_end++;
         break;
 
-    case 3:
+    case APPEAR_TYPE_UNKNOWN_3:
         plmv_b_1010(wk);
         plmv_b_1020(wk, 128);
         break;
 
-    case 1:
-    case 2:
+    case APPEAR_TYPE_ANIMATED:
+    case APPEAR_TYPE_UNKNOWN_2:
         wk->wu.routine_no[0] = 2;
 
         if (Bonus_Game_Flag != 20 || wk->wu.operator) {

@@ -11,6 +11,7 @@
 #include "sf33rd/Source/Game/engine/plpat.h"
 #include "sf33rd/Source/Game/engine/plpatuni.h"
 #include "sf33rd/Source/Game/engine/pls02.h"
+#include "sf33rd/Source/Game/engine/workuser.h"
 
 const u8 pl08_hcs_tbl[8] = { 0, 0, 0, 1, 0, 1, 1, 1 };
 
@@ -45,7 +46,7 @@ void Att_PL08_HEALING(PLW* wk) {
             }
         }
 
-        if (pcon_dp_flag == 0) {
+        if (!gs.pcon_dp_flag) {
             switch (wk->wu.cg_type) {
             case 24:
                 wk->wu.vital_new += 3;

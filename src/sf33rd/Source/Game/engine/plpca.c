@@ -17,9 +17,9 @@
 #include "sf33rd/Source/Game/engine/slowf.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/io/pulpul.h"
-#include "sf33rd/Source/Game/sc_sub.h"
 #include "sf33rd/Source/Game/stage/bg.h"
 #include "sf33rd/Source/Game/system/sysdir.h"
+#include "sf33rd/Source/Game/ui/sc_sub.h"
 
 void check_nagenuke(PLW* wk, PLW* tk);
 static s32 cat07_running_check(WORK* wk);
@@ -422,11 +422,11 @@ void subtract_cu_vital(PLW* wk) {
             if (wk->wu.vital_new < 0) {
                 wk->wu.vital_new = -1;
                 wk->dead_flag = 1;
-                dead_voice_flag = 1;
+                gs.dead_voice_flag = true;
 
-                if (round_slow_flag == 0) {
+                if (!gs.round_slow_flag) {
                     set_conclusion_slow();
-                    round_slow_flag = 1;
+                    gs.round_slow_flag = true;
                 }
             } else if (wk->py->flag == 0) {
                 wk->py->now.quantity.h += wk->wu.dm_piyo;

@@ -20,10 +20,10 @@ void plcnt_b2_die();
 void (*const player_bonus2_process[3])() = { plcnt_b_init, plcnt_b2_move, plcnt_b2_die };
 
 s32 Player_control_bonus2() {
-    if (((pcon_rno[0] + pcon_rno[1]) == 0) || (!Game_pause && !EXE_flag)) {
+    if (((gs.pcon_rno[0] + gs.pcon_rno[1]) == 0) || (!Game_pause && !EXE_flag)) {
         players_timer++;
         players_timer &= 0x7FFF;
-        player_bonus2_process[pcon_rno[0]]();
+        player_bonus2_process[gs.pcon_rno[0]]();
 
         if (check_be_car_object()) {
             check_body_touch2();
@@ -50,7 +50,7 @@ s32 Player_control_bonus2() {
         store_player_after_image_data();
     }
 
-    if (pcon_rno[0] == 2 && pcon_rno[1] == 0 && pcon_rno[2] == 2) {
+    if (gs.pcon_rno[0] == 2 && gs.pcon_rno[1] == 0 && gs.pcon_rno[2] == 2) {
         return 1;
     }
 
@@ -70,31 +70,31 @@ void plcnt_b2_move() {
 
     if (Bonus_Stage_RNO[0] == 2) {
         Time_Stop = 1;
-        pcon_rno[0] = 2;
-        pcon_rno[1] = 0;
-        pcon_rno[2] = 0;
+        gs.pcon_rno[0] = 2;
+        gs.pcon_rno[1] = 0;
+        gs.pcon_rno[2] = 0;
     }
 
     if (Time_Over) {
-        pcon_rno[0] = 2;
-        pcon_rno[1] = 0;
-        pcon_rno[2] = 0;
+        gs.pcon_rno[0] = 2;
+        gs.pcon_rno[1] = 0;
+        gs.pcon_rno[2] = 0;
     }
 }
 
 void plcnt_b2_die() {
     gs.plw[0].wu.dm_vital = gs.plw[1].wu.dm_vital = 0;
 
-    switch (pcon_rno[2]) {
+    switch (gs.pcon_rno[2]) {
     case 0:
         gs.plw[0].wkey_flag = gs.plw[1].wkey_flag = 1;
         gs.plw[0].image_setup_flag = gs.plw[1].image_setup_flag = 0;
-        pcon_rno[2]++;
+        gs.pcon_rno[2]++;
         /* fallthrough */
 
     case 1:
         if (footwork_check_bns(0) && footwork_check_bns(1)) {
-            pcon_rno[2]++;
+            gs.pcon_rno[2]++;
         }
 
         break;
@@ -119,12 +119,12 @@ void plcnt_b2_die() {
         }
 
         gs.plw[0].wu.cg_type = gs.plw[1].wu.cg_type = 0;
-        pcon_rno[2]++;
+        gs.pcon_rno[2]++;
         break;
 
     case 3:
         if ((gs.plw[0].wu.routine_no[3] == 9) && (gs.plw[1].wu.routine_no[3] == 9)) {
-            pcon_rno[2]++;
+            gs.pcon_rno[2]++;
         }
 
         break;

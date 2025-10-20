@@ -123,8 +123,8 @@ void effect_K5_move(WORK_Other* ewk) {
 
         K5_init_data_copy2((K5Data*)&rambod[mwk->id], mvj, 4);
         K5_init_data_copy2((K5Data*)&ramhan[mwk->id], mvj + 4, 4);
-        mwk->h_bod = (UNK_1*)&rambod[mwk->id];
-        mwk->h_han = (UNK_2*)&ramhan[mwk->id];
+        mwk->h_bod = &rambod[mwk->id];
+        mwk->h_han = &ramhan[mwk->id];
         break;
 
     case 2:

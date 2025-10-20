@@ -145,7 +145,7 @@ void Init_sound_system() {
     current_bgm = 0;
     bgm_seamless_always = 0;
     sys_w.sound_mode = 0;
-    sys_w.bgm_type = 0;
+    sys_w.bgm_type = BGM_ARRANGED;
     ADX_Init();
     system_init_level |= 2;
     cseInitSndDrv();
@@ -177,7 +177,7 @@ void checkAdxFileLoaded() {
         return;
     }
 
-    if (sys_w.bgm_type == 0) {
+    if (sys_w.bgm_type == BGM_ARRANGED) {
         fnum = 89;
     } else {
         fnum = 90;

@@ -174,8 +174,8 @@ void player_mv_0000(PLW* wk) {
 }
 
 void player_mv_1000(PLW* wk) {
-    switch (appear_type) {
-    case 0:
+    switch (gs.appear_type) {
+    case APPEAR_TYPE_NON_ANIMATED:
         plmv_1010(wk);
 
         if (Combo_Demo_Flag == 0) {
@@ -188,13 +188,13 @@ void player_mv_1000(PLW* wk) {
         Appear_end++;
         break;
 
-    case 3:
+    case APPEAR_TYPE_UNKNOWN_3:
         plmv_1010(wk);
         plmv_1020(wk, 0x80);
         break;
 
-    case 1:
-    case 2:
+    case APPEAR_TYPE_ANIMATED:
+    case APPEAR_TYPE_UNKNOWN_2:
         wk->wu.routine_no[0] = 2;
         wk->wu.routine_no[1] = 0;
         wk->wu.routine_no[2] = 0;
@@ -469,7 +469,7 @@ void mpg_union(PLW* wk) {
     case 2:
         switch (wk->sa->saeff_mp) {
         case -1:
-            if (pcon_dp_flag == 0) {
+            if (!gs.pcon_dp_flag) {
                 wk->sa->store = 0;
                 wk->sa->gauge.i = 0;
             }
@@ -543,7 +543,7 @@ void eag_union(PLW* wk) {
         break;
 
     case 2:
-        if (pcon_dp_flag == 0) {
+        if (!gs.pcon_dp_flag) {
             if (wk->sa->gauge_type == 1 && wk->sa->store == wk->sa->store_max) {
                 wk->sa->gauge.i = 0;
             }
@@ -608,7 +608,7 @@ void sag_union(PLW* wk) {
         case 0:
             switch (wk->sa->saeff_ok) {
             case -1:
-                if (pcon_dp_flag == 0) {
+                if (!gs.pcon_dp_flag) {
                     if (wk->sa->ex4th_exec) {
                         wk->sa->store = 0;
                     } else {
@@ -639,7 +639,7 @@ void sag_union(PLW* wk) {
             case 0:
                 switch (wk->sa->saeff_ok) {
                 case -1:
-                    if (pcon_dp_flag == 0) {
+                    if (!gs.pcon_dp_flag) {
                         if (wk->sa->ex4th_exec) {
                             wk->sa->store = 0;
                         } else {
@@ -838,7 +838,7 @@ const u8 plpdm_mvkind[32] = { 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 const u8 plpxx_kind[5] = { 0, 1, 0, 1, 0 };
 
 void check_omop_vital(PLW* wk) {
-    if (pcon_dp_flag) {
+    if (gs.pcon_dp_flag) {
         return;
     }
 

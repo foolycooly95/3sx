@@ -6,7 +6,6 @@
 #include "sf33rd/Source/Game/com/com_pl.h"
 #include "common.h"
 #include "sf33rd/AcrSDK/ps2/flps2debug.h"
-#include "sf33rd/Source/Game/Com_Data.h"
 #include "sf33rd/Source/Game/com/active/active00.h"
 #include "sf33rd/Source/Game/com/active/active01.h"
 #include "sf33rd/Source/Game/com/active/active02.h"
@@ -28,6 +27,7 @@
 #include "sf33rd/Source/Game/com/active/active18.h"
 #include "sf33rd/Source/Game/com/active/active19.h"
 #include "sf33rd/Source/Game/com/ck_pass.h"
+#include "sf33rd/Source/Game/com/com_data.h"
 #include "sf33rd/Source/Game/com/com_sub.h"
 #include "sf33rd/Source/Game/com/follow/follow02.h"
 #include "sf33rd/Source/Game/com/passive/pass00.h"
@@ -168,7 +168,7 @@ u16 cpu_algorithm(PLW* wk) {
 static u16 CPU_Sub(PLW* wk) {
     WORK* em = (WORK*)wk->wu.target_adrs;
 
-    if (Allow_a_battle_f == 0 || pcon_dp_flag == 1) {
+    if (Allow_a_battle_f == 0 || gs.pcon_dp_flag) {
         return 0;
     }
 

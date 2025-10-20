@@ -109,7 +109,7 @@ void K7_move_type_0(WORK_Other* ewk, PLW* mwk) {
             break;
         }
 
-        if (pcon_rno[0] != 1) {
+        if (gs.pcon_rno[0] != 1) {
             ewk->wu.routine_no[1] = 9;
             break;
         }
@@ -152,7 +152,7 @@ s16 K7_mt0_rebirth_check(PLW* mwk) {
 
     switch (mwk->wu.routine_no[1]) {
     case 0:
-        if (pcon_dp_flag) {
+        if (gs.pcon_dp_flag) {
             if (mwk->wu.routine_no[2] == 1 && mwk->wu.routine_no[3] != 0) {
                 num = 1;
             }
