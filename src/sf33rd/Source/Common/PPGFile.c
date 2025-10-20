@@ -136,7 +136,7 @@ s32 ppgWriteQuadWithST_A2(Vertex* pos, u32 col) {
 }
 
 void ppgWriteQuadOnly(Vertex* pos, u32 col, u32 texCode) {
-    SDLGameRenderer_Sprite prm;
+    Sprite prm;
     s32 i;
 
     flSetRenderState(FLRENDER_TEXSTAGE0, texCode);
@@ -153,7 +153,7 @@ void ppgWriteQuadOnly(Vertex* pos, u32 col, u32 texCode) {
 }
 
 void ppgWriteQuadOnly2(Vertex* pos, u32 col, u32 texCode) {
-    SDLGameRenderer_Sprite prm;
+    Sprite prm;
 
     flSetRenderState(FLRENDER_TEXSTAGE0, texCode);
 

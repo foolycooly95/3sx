@@ -2163,7 +2163,7 @@ const u8 scrnAddTex1UV[9][4] = { { 96, 0, 32, 32 },  { 63, 0, 32, 32 },  { 0, 96
 
 void dispButtonImage(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
     PAL_CURSOR_COL oricol;
-    SDLGameRenderer_Sprite prm;
+    Sprite prm;
 
     if (No_Trans) {
         return;
@@ -2189,7 +2189,7 @@ void dispButtonImage(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
 
 void dispButtonImage2(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
     PAL_CURSOR_COL oricol;
-    SDLGameRenderer_Sprite prm;
+    Sprite prm;
 
     if (No_Trans) {
         return;
@@ -2214,7 +2214,7 @@ void dispButtonImage2(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
 void dispSaveLoadTitle(void* ewk) {
     WORK* wk;
     PAL_CURSOR_COL oricol;
-    SDLGameRenderer_Sprite prm;
+    Sprite prm;
     FLVec3 pos[2];
     f32 step_t;
     s32 i;

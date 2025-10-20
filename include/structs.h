@@ -1438,27 +1438,9 @@ typedef struct {
 } Vertex;
 
 typedef struct {
-    Vec3 v[4];
-} Quad;
-
-typedef struct {
     f32 s;
     f32 t;
 } TexCoord;
-
-typedef struct {
-    Vec3 v[4];
-    TexCoord t[4];
-    u32 texCode;
-} Sprite;
-
-typedef struct {
-    Vec3 v[2];
-    TexCoord t[2];
-    u32 vtxColor;
-    u32 texCode;
-    u32 id;
-} Sprite2;
 
 typedef struct {
     u16 num_of_1st;

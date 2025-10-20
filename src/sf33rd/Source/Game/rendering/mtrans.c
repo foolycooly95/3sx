@@ -25,7 +25,7 @@
 #define PRIO_BASE_SIZE 128
 
 typedef struct {
-    SDLGameRenderer_Sprite2* chip;
+    Sprite2* chip;
     u16 sprTotal;
     u16 sprMax;
     s8 up[24];
@@ -1554,7 +1554,7 @@ void seqsInitialize(void* adrs) {
         }
     }
 
-    seqs_w.chip = (SDLGameRenderer_Sprite2*)adrs;
+    seqs_w.chip = (Sprite2*)adrs;
     seqs_w.sprMax = 0;
 }
 
@@ -1615,7 +1615,7 @@ void seqsAfterProcess() {
 }
 
 s32 seqsStoreChip(f32 x, f32 y, s32 w, s32 h, s32 gix, s32 code, s32 attr, s32 alpha, s32 id) {
-    SDLGameRenderer_Sprite2* chip;
+    Sprite2* chip;
     s32 u;
     s32 v;
 
