@@ -1456,13 +1456,6 @@ typedef struct {
 } Sprite2;
 
 typedef struct {
-    Sprite2* chip;
-    u16 sprTotal;
-    u16 sprMax;
-    s8 up[24];
-} SpriteChipSet;
-
-typedef struct {
     u16 num_of_1st;
     s16 apfn;
     s16 conv;

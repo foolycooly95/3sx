@@ -136,28 +136,37 @@ s32 ppgWriteQuadWithST_A2(Vertex* pos, u32 col) {
 }
 
 void ppgWriteQuadOnly(Vertex* pos, u32 col, u32 texCode) {
-    Sprite prm;
+    SDLGameRenderer_Sprite prm;
     s32 i;
 
     flSetRenderState(FLRENDER_TEXSTAGE0, texCode);
 
     for (i = 0; i < 4; i++) {
-        prm.v[i] = ((_Vertex*)pos)[i].v;
-        prm.t[i] = ((_Vertex*)pos)[i].t;
+        prm.v[i].x = pos[i].x;
+        prm.v[i].y = pos[i].y;
+        prm.v[i].z = pos[i].z;
+        prm.t[i].s = pos[i].s;
+        prm.t[i].t = pos[i].t;
     }
 
     SDLGameRenderer_DrawTexturedQuad(&prm, col);
 }
 
 void ppgWriteQuadOnly2(Vertex* pos, u32 col, u32 texCode) {
-    Sprite prm;
+    SDLGameRenderer_Sprite prm;
 
     flSetRenderState(FLRENDER_TEXSTAGE0, texCode);
 
-    prm.v[0] = ((_Vertex*)pos)[0].v;
-    prm.t[0] = ((_Vertex*)pos)[0].t;
-    prm.v[3] = ((_Vertex*)pos)[3].v;
-    prm.t[3] = ((_Vertex*)pos)[3].t;
+    prm.v[0].x = pos[0].x;
+    prm.v[0].y = pos[0].y;
+    prm.v[0].z = pos[0].z;
+    prm.t[0].s = pos[0].s;
+    prm.t[0].t = pos[0].t;
+    prm.v[3].x = pos[3].x;
+    prm.v[3].y = pos[3].y;
+    prm.v[3].z = pos[3].z;
+    prm.t[3].s = pos[3].s;
+    prm.t[3].t = pos[3].t;
 
     SDLGameRenderer_DrawSprite(&prm, col);
 }

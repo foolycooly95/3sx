@@ -24,6 +24,13 @@
 
 #define PRIO_BASE_SIZE 128
 
+typedef struct {
+    SDLGameRenderer_Sprite2* chip;
+    u16 sprTotal;
+    u16 sprMax;
+    s8 up[24];
+} SpriteChipSet;
+
 // sbss
 s32 curr_bright;
 SpriteChipSet seqs_w;
@@ -1547,7 +1554,7 @@ void seqsInitialize(void* adrs) {
         }
     }
 
-    seqs_w.chip = (Sprite2*)adrs;
+    seqs_w.chip = (SDLGameRenderer_Sprite2*)adrs;
     seqs_w.sprMax = 0;
 }
 
@@ -1594,7 +1601,7 @@ void seqsAfterProcess() {
 
         for (i = 0; i < seqs_w.sprTotal; i++) {
             if (seqs_w.up[seqs_w.chip[i].id]) {
-                val = seqs_w.chip[i].texCode;
+                val = seqs_w.chip[i].tex_code;
 
                 if (keep != val) {
                     keep = val;
@@ -1608,7 +1615,7 @@ void seqsAfterProcess() {
 }
 
 s32 seqsStoreChip(f32 x, f32 y, s32 w, s32 h, s32 gix, s32 code, s32 attr, s32 alpha, s32 id) {
-    Sprite2* chip;
+    SDLGameRenderer_Sprite2* chip;
     s32 u;
     s32 v;
 
@@ -1631,11 +1638,11 @@ s32 seqsStoreChip(f32 x, f32 y, s32 w, s32 h, s32 gix, s32 code, s32 attr, s32 a
     if (!(attr & 0x2000)) {
         u = (code & 0xF) * 16;
         v = code & 0xF0;
-        chip->texCode = ppgGetUsingTextureHandle(NULL, gix + (code >> 8));
+        chip->tex_code = ppgGetUsingTextureHandle(NULL, gix + (code >> 8));
     } else {
         u = (code & 7) * 32;
         v = (code & 0x38) * 4;
-        chip->texCode = ppgGetUsingTextureHandle(NULL, gix + (code >> 6));
+        chip->tex_code = ppgGetUsingTextureHandle(NULL, gix + (code >> 6));
     }
 
     appRenewTempPriority_1_Chip();
@@ -1656,8 +1663,8 @@ s32 seqsStoreChip(f32 x, f32 y, s32 w, s32 h, s32 gix, s32 code, s32 attr, s32 a
         chip->t[1].t = (v + h + dy) / 256.0f;
     }
 
-    chip->texCode |= ppgGetUsingPaletteHandle(NULL, attr & 0x1FF) << 16;
-    chip->vtxColor = curr_bright | ((0xFF - alpha) << 24);
+    chip->tex_code |= ppgGetUsingPaletteHandle(NULL, attr & 0x1FF) << 16;
+    chip->vertex_color = curr_bright | ((0xFF - alpha) << 24);
     chip->id = id;
     seqs_w.sprTotal += 1;
 

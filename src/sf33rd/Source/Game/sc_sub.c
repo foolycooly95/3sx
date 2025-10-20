@@ -2164,7 +2164,7 @@ const u8 scrnAddTex1UV[9][4] = { { 96, 0, 32, 32 },  { 63, 0, 32, 32 },  { 0, 96
 
 void dispButtonImage(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
     PAL_CURSOR_COL oricol;
-    Sprite prm;
+    SDLGameRenderer_Sprite prm;
 
     if (No_Trans) {
         return;
@@ -2172,7 +2172,7 @@ void dispButtonImage(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
 
     oricol.color = -1;
     oricol.argb.a = (0xFF - cl);
-    prm.texCode = ppgGetUsingTextureHandle(&ppgScrTex, 5) | (ppgGetUsingPaletteHandle(&ppgScrPalShot, 0) << 0x10);
+    prm.tex_code = ppgGetUsingTextureHandle(&ppgScrTex, 5) | (ppgGetUsingPaletteHandle(&ppgScrPalShot, 0) << 0x10);
     prm.v[0].x = px;
     prm.v[0].y = py;
     prm.v[3].x = (px + sx);
@@ -2184,13 +2184,13 @@ void dispButtonImage(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
     prm.t[3].s = (scrnAddTex1UV[ix][0] + scrnAddTex1UV[ix][2]) / 256.0f;
     prm.t[0].t = scrnAddTex1UV[ix][1] / 128.0f;
     prm.t[3].t = (scrnAddTex1UV[ix][1] + scrnAddTex1UV[ix][3]) / 128.0f;
-    flSetRenderState(FLRENDER_TEXSTAGE0, prm.texCode);
+    flSetRenderState(FLRENDER_TEXSTAGE0, prm.tex_code);
     SDLGameRenderer_DrawSprite(&prm, oricol.color);
 }
 
 void dispButtonImage2(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
     PAL_CURSOR_COL oricol;
-    Sprite prm;
+    SDLGameRenderer_Sprite prm;
 
     if (No_Trans) {
         return;
@@ -2198,7 +2198,7 @@ void dispButtonImage2(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
 
     oricol.color = -1;
     oricol.argb.a = (0xFF - cl);
-    prm.texCode = ppgGetUsingTextureHandle(&ppgScrTex, 5) | (ppgGetUsingPaletteHandle(&ppgScrPalShot, 0) << 0x10);
+    prm.tex_code = ppgGetUsingTextureHandle(&ppgScrTex, 5) | (ppgGetUsingPaletteHandle(&ppgScrPalShot, 0) << 0x10);
     prm.v[0].x = px * Frame_Zoom_X;
     prm.v[0].y = py * Frame_Zoom_Y;
     prm.v[3].x = Frame_Zoom_X * (px + sx);
@@ -2208,14 +2208,14 @@ void dispButtonImage2(s32 px, s32 py, s32 pz, s32 sx, s32 sy, s32 cl, s32 ix) {
     prm.t[3].s = (scrnAddTex1UV[ix][0] + scrnAddTex1UV[ix][2]) / 256.0f;
     prm.t[0].t = scrnAddTex1UV[ix][1] / 128.0f;
     prm.t[3].t = (scrnAddTex1UV[ix][1] + scrnAddTex1UV[ix][3]) / 128.0f;
-    flSetRenderState(FLRENDER_TEXSTAGE0, prm.texCode);
+    flSetRenderState(FLRENDER_TEXSTAGE0, prm.tex_code);
     SDLGameRenderer_DrawSprite(&prm, oricol.color);
 }
 
 void dispSaveLoadTitle(void* ewk) {
     WORK* wk;
     PAL_CURSOR_COL oricol;
-    Sprite prm;
+    SDLGameRenderer_Sprite prm;
     FLVec3 pos[2];
     f32 step_t;
     s32 i;
@@ -2228,19 +2228,13 @@ void dispSaveLoadTitle(void* ewk) {
     mlt_obj_matrix(wk, 0);
     oricol.color = -1;
     oricol.argb.a = (0xFF - wk->my_clear_level);
-    prm.texCode = ppgGetUsingTextureHandle(&ppgScrTex, 6) | (ppgGetUsingPaletteHandle(&ppgScrPalOpt, 0) << 0x10);
-    flSetRenderState(FLRENDER_TEXSTAGE0, prm.texCode);
+    prm.tex_code = ppgGetUsingTextureHandle(&ppgScrTex, 6) | (ppgGetUsingPaletteHandle(&ppgScrPalOpt, 0) << 0x10);
+    flSetRenderState(FLRENDER_TEXSTAGE0, prm.tex_code);
     prm.t[0].s = 0.0f;
     prm.t[3].s = 1.0f;
     prm.t[0].t = TO_UV_128(0.0f);
     prm.t[3].t = TO_UV_128(36.0f);
-
-#if defined(TARGET_PS2)
-    step_t = 36.5f;
-#else
     step_t = 36.0f;
-#endif
-
     pos[0].x = -192.0f;
     pos[0].y = -12.0f;
     pos[1].x = -64.0f;

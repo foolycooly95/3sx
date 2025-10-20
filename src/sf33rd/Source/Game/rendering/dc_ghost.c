@@ -169,16 +169,21 @@ void njdp2d_init() {
 }
 
 void njdp2d_draw() {
-    Quad prm;
+    SDLGameRenderer_Quad prm;
     s32 i;
+    s32 j;
 
     for (i = njdp2d_w.ix1st; i != -1; i = njdp2d_w.prim[i].next) {
         switch (njdp2d_w.prim[i].type) {
         case 0:
-            prm.v[0] = njdp2d_w.prim[i].v[0];
-            prm.v[1] = njdp2d_w.prim[i].v[1];
-            prm.v[2] = njdp2d_w.prim[i].v[2];
-            prm.v[3] = njdp2d_w.prim[i].v[3];
+            for (j = 0; j < 4; j++) {
+                // TODO: Can be replaced with simply
+                // prm.v[j] = njdp2d_w.prim[i].v[j];
+                // when NJDP2D_PRIM contains SDLGameRenderer_Vec3
+                prm.v[j].x = njdp2d_w.prim[i].v[j].x;
+                prm.v[j].y = njdp2d_w.prim[i].v[j].y;
+                prm.v[j].z = njdp2d_w.prim[i].v[j].z;
+            }
 
             SDLGameRenderer_DrawSolidQuad(&prm, njdp2d_w.prim[i].col);
             break;
