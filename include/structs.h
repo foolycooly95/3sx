@@ -47,28 +47,15 @@ struct _TASK {
     u8 free[4];
 };
 
-struct _disp {
-    u16 size_x;
-    u16 size_y;
-    u16 now;
-    u16 new;
-    s32 cable;
-};
-
 typedef enum {
     BGM_ARRANGED,
     BGM_ORIGINAL
 } BgmType;
 
 struct _SYSTEM_W {
-    struct _disp disp;
-    s32 pause;
-    s32 gd_error;
-    s32 reset;
     u8 sound_mode;
     u8 screen_mode;
     BgmType bgm_type;
-    u8 dummy;
 };
 
 typedef struct {
@@ -1438,34 +1425,9 @@ typedef struct {
 } Vertex;
 
 typedef struct {
-    Vec3 v[4];
-} Quad;
-
-typedef struct {
     f32 s;
     f32 t;
 } TexCoord;
-
-typedef struct {
-    Vec3 v[4];
-    TexCoord t[4];
-    u32 texCode;
-} Sprite;
-
-typedef struct {
-    Vec3 v[2];
-    TexCoord t[2];
-    u32 vtxColor;
-    u32 texCode;
-    u32 id;
-} Sprite2;
-
-typedef struct {
-    Sprite2* chip;
-    u16 sprTotal;
-    u16 sprMax;
-    s8 up[24];
-} SpriteChipSet;
 
 typedef struct {
     u16 num_of_1st;
@@ -2035,11 +1997,6 @@ typedef struct {
     u8 player_color;
     u8 all_clear;
 } ScoreRankingEntry;
-
-typedef struct {
-    s8 contents[10][7];
-    u16 sum;
-} DirData;
 
 typedef struct {
     u8 max_hitcombo;
