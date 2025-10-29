@@ -56,7 +56,6 @@ void Eff93_SLIDE_L(WORK_Other* ewk) {
             bg_w.bgw[1].xy[0].disp.pos = ewk->wu.hit_quake;
             bg_w.bgw[1].wxy[1].disp.pos = ewk->wu.direction;
             bg_w.bgw[1].xy[1].disp.pos = ewk->wu.direction;
-            Appear_Cursor = 1;
             Face_Move = 0;
             push_effect_work(&ewk->wu);
         }
@@ -107,7 +106,6 @@ void Eff93_SLIDE_R(WORK_Other* ewk) {
         }
 
         if ((arrived_x != 0) && (arrived_y != 0)) {
-            Appear_Cursor = 1;
             Face_Move = 0;
             push_effect_work(&ewk->wu);
         }
@@ -134,7 +132,6 @@ void Eff93_SLIDE_L_OUT(WORK_Other* ewk) {
 
         if (ewk->wu.hit_quake <= bg_w.bgw[1].wxy[0].disp.pos) {
             bg_w.bgw[1].wxy[0].disp.pos = ewk->wu.hit_quake;
-            Appear_Cursor = 1;
             Face_Move = 0;
             push_effect_work(&ewk->wu);
         }
@@ -162,7 +159,6 @@ void Eff93_SLIDE_R_OUT(WORK_Other* ewk) {
 
         if (ewk->wu.hit_quake >= bg_w.bgw[1].wxy[0].disp.pos) {
             bg_w.bgw[1].wxy[0].disp.pos = ewk->wu.hit_quake;
-            Appear_Cursor = 1;
             Face_Move = 0;
             push_effect_work(&ewk->wu);
         }
@@ -198,7 +194,6 @@ s32 effect_93_init(s8 Move_Type, s16 Time) {
     ewk->wu.id = 0x5D;
     ewk->wu.dir_timer = Time;
     ewk->wu.routine_no[0] = Move_Type;
-    Appear_Cursor = 0;
     return 0;
 }
 

@@ -262,7 +262,6 @@ void Sel_PL_Cont_1st() {
     Setup_Face_Sub();
     Time_Stop = 1;
     effect_A5_init();
-    Appear_Cursor = 0;
     Face_MV_Request = 0;
     Face_Status = 0;
     Face_Move = 0;
@@ -478,8 +477,6 @@ void Face_1st() {
     } else {
         Face_No[0] = 1;
     }
-
-    Appear_Cursor = 1;
 }
 
 void Face_2nd() {

@@ -134,7 +134,6 @@ extern s8 Demo_PL_Index;
 extern s8 Demo_Stage_Index;
 extern s8 Face_MV_Request;
 extern s8 Face_Move;
-extern s8 Appear_Cursor;
 extern s8 Time_Stop;
 extern s8 Player_id;
 extern s8 Last_Player_id;
