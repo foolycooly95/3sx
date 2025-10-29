@@ -40,6 +40,8 @@ typedef struct GameState {
 
     /// Go faster during a non-gameplay animation
     bool Scene_Cut;
+
+    bool Time_Over;
 } GameState;
 
 extern GameState gs;
@@ -120,7 +122,6 @@ extern s8 Face_Move;
 extern s8 Appear_Cursor;
 extern s8 Select_Timer;
 extern s8 Time_Stop;
-extern s8 Time_Over;
 extern s8 Player_id;
 extern s8 Last_Player_id;
 extern s8 Player_Number;

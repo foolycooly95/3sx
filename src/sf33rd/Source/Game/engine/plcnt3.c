@@ -75,7 +75,7 @@ void plcnt_b2_move() {
         gs.pcon_rno[2] = 0;
     }
 
-    if (Time_Over) {
+    if (gs.Time_Over) {
         gs.pcon_rno[0] = 2;
         gs.pcon_rno[1] = 0;
         gs.pcon_rno[2] = 0;

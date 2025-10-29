@@ -83,7 +83,7 @@ void effect_A5_move(WORK_Other* ewk) {
             ewk->wu.routine_no[0] = 1;
             Unit_Of_Timer = 60;
         } else if (--ewk->wu.dir_timer == 0) {
-            Time_Over = 1;
+            gs.Time_Over = true;
             ewk->wu.routine_no[0]++;
         }
 
@@ -94,7 +94,7 @@ void effect_A5_move(WORK_Other* ewk) {
             break;
         }
 
-        Time_Over = 1;
+        gs.Time_Over = true;
 
         if (Select_Timer) {
             ewk->wu.routine_no[0] = 1;

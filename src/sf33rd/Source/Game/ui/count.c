@@ -232,7 +232,7 @@ void bcounter_control() {
         if (Counter_hi == 0) {
             math_counter_hi = math_counter_low = 0;
             Allow_a_battle_f = 0;
-            Time_Over = 1;
+            gs.Time_Over = true;
         }
     }
 }
