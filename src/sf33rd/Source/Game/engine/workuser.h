@@ -54,6 +54,9 @@ typedef struct GameState {
     u8 counter_color;
     bool mugen_flag;
     s8 hoji_counter;
+
+    s8 Counter_hi;
+    s8 Counter_low;
 } GameState;
 
 extern GameState gs;
@@ -82,8 +85,6 @@ extern u32 Keep_Score[2];
 extern u32 Disp_Score_Buff[2];
 extern s8 Winner_id;
 extern s8 Loser_id;
-extern s8 Counter_hi;
-extern s8 Counter_low;
 extern s8 Break_Into;
 extern u8 My_char[2];
 extern u8 Allow_a_battle_f;

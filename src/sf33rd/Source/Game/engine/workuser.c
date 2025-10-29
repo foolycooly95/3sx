@@ -34,8 +34,6 @@ u32 Keep_Score[2];
 u32 Disp_Score_Buff[2];
 s8 Winner_id;
 s8 Loser_id;
-s8 Counter_hi;
-s8 Counter_low;
 s8 Break_Into;
 u8 My_char[2];
 u8 Allow_a_battle_f;

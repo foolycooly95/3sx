@@ -2444,7 +2444,7 @@ u32 Setup_Final_Score(s16 Type) {
     }
 
     Bonus_Score = xx;
-    xx += Counter_hi * 1000;
+    xx += gs.Counter_hi * 1000;
     Bonus_Score_Plus = xx;
     xx += Score[Player_id][0];
 
