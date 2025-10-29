@@ -14,7 +14,6 @@
 #include "sf33rd/Source/Game/ui/sc_data.h"
 #include "sf33rd/Source/Game/ui/sc_sub.h"
 
-s8 flash_timer;
 s8 flash_r_num;
 s8 flash_col;
 s8 math_counter_hi;
@@ -105,7 +104,7 @@ void counter_control() {
 
     if (flash_r_num) {
         if (Counter_hi == 10 && Counter_low == hoji_counter) {
-            flash_timer = 0;
+            gs.flash_timer = 0;
             counter_flash(1);
         } else if (Counter_hi < 11) {
             counter_flash(1);
@@ -114,7 +113,7 @@ void counter_control() {
         }
     } else if (Counter_hi == 30 && Counter_low == hoji_counter) {
         flash_r_num = 1;
-        flash_timer = 0;
+        gs.flash_timer = 0;
         counter_flash(0);
     }
 
@@ -176,10 +175,10 @@ void bcounter_write() {
 }
 
 void counter_flash(s8 Flash_Num) {
-    flash_timer--;
+    gs.flash_timer--;
 
-    if (flash_timer < 0) {
-        flash_timer = flash_timer_tbl[Flash_Num];
+    if (gs.flash_timer < 0) {
+        gs.flash_timer = flash_timer_tbl[Flash_Num];
         counter_color = flash_color_tbl[flash_col];
         flash_col++;
 

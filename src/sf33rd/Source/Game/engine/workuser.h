@@ -46,6 +46,7 @@ typedef struct GameState {
     // Round timer
 
     s8 round_timer;
+    s8 flash_timer;
 } GameState;
 
 extern GameState gs;
