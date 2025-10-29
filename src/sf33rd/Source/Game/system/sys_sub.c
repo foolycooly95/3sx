@@ -190,11 +190,11 @@ void Clear_Personal_Data(s16 PL_id) {
     Request_Break[PL_id] = 0;
 
     if (PL_id == 0) {
-        Cursor_X[0] = permission_player[Present_Mode].cursor_infor[0].first_x;
-        Cursor_Y[0] = permission_player[Present_Mode].cursor_infor[0].first_y;
+        gs.Cursor_X[0] = permission_player[Present_Mode].cursor_infor[0].first_x;
+        gs.Cursor_Y[0] = permission_player[Present_Mode].cursor_infor[0].first_y;
     } else {
-        Cursor_X[1] = permission_player[Present_Mode].cursor_infor[1].first_x;
-        Cursor_Y[1] = permission_player[Present_Mode].cursor_infor[1].first_y;
+        gs.Cursor_X[1] = permission_player[Present_Mode].cursor_infor[1].first_x;
+        gs.Cursor_Y[1] = permission_player[Present_Mode].cursor_infor[1].first_y;
     }
 
     for (xx = 0; xx < 10; xx++) {

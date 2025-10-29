@@ -66,7 +66,7 @@ void EFFK6_SLIDE_IN(WORK_Other* ewk) {
         ewk->wu.disp_flag = 1;
 
         if (ewk->wu.dir_old == 27 || ewk->wu.dir_old == 28) {
-            xx = ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+            xx = ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
             Setup_1st_PosK6(ewk, xx, Play_Type);
         } else {
             xx = ewk->wu.dir_step;
@@ -238,8 +238,8 @@ void EFFK6_MOVE(WORK_Other* ewk) {
         /* fallthrough */
 
     case 1:
-        if (ewk->wu.dir_step != ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]]) {
-            ewk->wu.dir_step = ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+        if (ewk->wu.dir_step != ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]]) {
+            ewk->wu.dir_step = ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
             ewk->wu.xyz[0].disp.pos =
                 bg_w.bgw[ewk->wu.my_family - 1].wxy[0].disp.pos + Get_PosK6(ewk, ewk->wu.dir_step, 0, Play_Type);
             ewk->wu.xyz[1].disp.pos =
@@ -387,7 +387,7 @@ s16 Setup_K6_Index(WORK_Other* ewk) {
     case 26:
     case 27:
     case 28:
-        return ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+        return ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
 
     case 29:
     case 30:

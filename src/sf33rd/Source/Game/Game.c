@@ -771,8 +771,8 @@ void Game03() {
             Request_E_No = 0;
             cpReadyTask(TASK_MENU, Menu_Task);
             task[TASK_MENU].r_no[1] = 16;
-            Cursor_Y_Pos[0][0] = 0;
-            Cursor_Y_Pos[1][0] = 0;
+            gs.Cursor_Y_Pos[0][0] = 0;
+            gs.Cursor_Y_Pos[1][0] = 0;
             G_Timer = 4;
         }
 

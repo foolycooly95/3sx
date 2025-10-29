@@ -209,8 +209,8 @@ void EFF39_MOVE(WORK_Other* ewk) {
         /* fallthrough */
 
     case 1:
-        if (ewk->wu.dir_step != ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]]) {
-            ewk->wu.dir_step = ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+        if (ewk->wu.dir_step != ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]]) {
+            ewk->wu.dir_step = ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
             ewk->wu.dir_step += chkNameAkuma(ewk->wu.dir_step, 9);
             ewk->wu.xyz[0].disp.pos =
                 bg_w.bgw[ewk->wu.my_family - 1].wxy[0].disp.pos + Get_Pos39(ewk, ewk->wu.dir_step, 0);
@@ -253,7 +253,7 @@ s32 effect_39_init(s16 PL_id, s16 dir_old, s16 Your_Char, s16 Target_BG, s16 Opt
     ewk->wu.my_trans_mode = get_my_trans_mode(ewk->wu.my_mts);
 
     if (Your_Char == 0x7F) {
-        ewk->wu.dir_step = ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+        ewk->wu.dir_step = ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
     } else {
         ewk->wu.dir_step = Your_Char;
     }

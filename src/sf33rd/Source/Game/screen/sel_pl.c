@@ -400,11 +400,11 @@ void Setup_Cursor_Y() {
     s16 d;
 
     for (i = 2, a = j = 0; i >= 0; i--, b = j++) {
-        Cursor_Y_Pos[0][i] = Cursor_Y_Data[j];
+        gs.Cursor_Y_Pos[0][i] = Cursor_Y_Data[j];
     }
 
     for (i = 2, c = j = 3; i >= 0; i--, d = j++) {
-        Cursor_Y_Pos[1][i] = Cursor_Y_Data[j];
+        gs.Cursor_Y_Pos[1][i] = Cursor_Y_Data[j];
     }
 }
 
@@ -1150,7 +1150,7 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
     }
 
     Sel_PL_Complete[PL_id] = 1;
-    My_char[PL_id] = ID_of_Face[Cursor_Y[PL_id]][Cursor_X[PL_id]];
+    My_char[PL_id] = ID_of_Face[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]];
 
     if (Last_My_char2[PL_id] != My_char[PL_id]) {
         Arts_Y[ID] = Super_Arts[ID] = Last_Super_Arts[ID] = 0;
@@ -1176,131 +1176,131 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
 }
 
 void Sel_PL_Sub_CR(s16 PL_id) {
-    if (Cursor_X[PL_id] == 7) {
+    if (gs.Cursor_X[PL_id] == 7) {
         return;
     }
 
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_Y[PL_id]++;
+        gs.Cursor_Y[PL_id]++;
 
-        switch (Cursor_X[PL_id]) {
+        switch (gs.Cursor_X[PL_id]) {
         case 6:
-            if (Cursor_Y[PL_id] > 1) {
-                Cursor_Y[PL_id] = 1;
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_Y[PL_id] > 1) {
+                gs.Cursor_Y[PL_id] = 1;
+                gs.Cursor_X[PL_id] = 0;
             }
 
             break;
 
         default:
-            if (Cursor_Y[PL_id] > 2) {
-                Cursor_Y[PL_id] = 0;
-                Cursor_X[PL_id]++;
+            if (gs.Cursor_Y[PL_id] > 2) {
+                gs.Cursor_Y[PL_id] = 0;
+                gs.Cursor_X[PL_id]++;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Sel_PL_Sub_CL(s16 PL_id) {
-    if (Cursor_X[PL_id] == 7) {
+    if (gs.Cursor_X[PL_id] == 7) {
         return;
     }
 
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_Y[PL_id]--;
+        gs.Cursor_Y[PL_id]--;
 
-        switch (Cursor_X[PL_id]) {
+        switch (gs.Cursor_X[PL_id]) {
         case 0:
-            if (Cursor_Y[PL_id] <= 0) {
-                Cursor_Y[PL_id] = 1;
-                Cursor_X[PL_id] = 6;
+            if (gs.Cursor_Y[PL_id] <= 0) {
+                gs.Cursor_Y[PL_id] = 1;
+                gs.Cursor_X[PL_id] = 6;
             }
             break;
 
         case 1:
-            if (Cursor_Y[PL_id] < 0) {
-                Cursor_Y[PL_id] = 2;
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_Y[PL_id] < 0) {
+                gs.Cursor_Y[PL_id] = 2;
+                gs.Cursor_X[PL_id] = 0;
             }
             break;
 
         default:
-            if (Cursor_Y[PL_id] < 0) {
-                Cursor_Y[PL_id] = 2;
-                Cursor_X[PL_id]--;
+            if (gs.Cursor_Y[PL_id] < 0) {
+                gs.Cursor_Y[PL_id] = 2;
+                gs.Cursor_X[PL_id]--;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Sel_PL_Sub_CU(s16 PL_id) {
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_X[PL_id]++;
+        gs.Cursor_X[PL_id]++;
 
-        switch (Cursor_Y[PL_id]) {
+        switch (gs.Cursor_Y[PL_id]) {
         case 0:
-            if (Cursor_X[PL_id] > 6) {
-                Cursor_X[PL_id] = 1;
+            if (gs.Cursor_X[PL_id] > 6) {
+                gs.Cursor_X[PL_id] = 1;
             }
 
             break;
 
         case 1:
-            if (Cursor_X[PL_id] > 7) {
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_X[PL_id] > 7) {
+                gs.Cursor_X[PL_id] = 0;
             }
 
             break;
 
         default:
-            if (Cursor_X[PL_id] > 5) {
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_X[PL_id] > 5) {
+                gs.Cursor_X[PL_id] = 0;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Sel_PL_Sub_CD(s16 PL_id) {
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_X[PL_id]--;
+        gs.Cursor_X[PL_id]--;
 
-        switch (Cursor_Y[PL_id]) {
+        switch (gs.Cursor_Y[PL_id]) {
         case 0:
-            if (Cursor_X[PL_id] <= 0) {
-                Cursor_X[PL_id] = 6;
+            if (gs.Cursor_X[PL_id] <= 0) {
+                gs.Cursor_X[PL_id] = 6;
             }
 
             break;
 
         case 1:
-            if (Cursor_X[PL_id] < 0) {
-                Cursor_X[PL_id] = 7;
+            if (gs.Cursor_X[PL_id] < 0) {
+                gs.Cursor_X[PL_id] = 7;
             }
 
             break;
 
         default:
-            if (Cursor_X[PL_id] < 0) {
-                Cursor_X[PL_id] = 5;
+            if (gs.Cursor_X[PL_id] < 0) {
+                gs.Cursor_X[PL_id] = 5;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Auto_Repeat_Sub(s16 PL_id) {

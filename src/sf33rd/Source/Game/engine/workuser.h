@@ -59,6 +59,10 @@ typedef struct GameState {
     s8 Counter_low;
     s16 Unit_Of_Timer;
     s8 Select_Timer;
+
+    s8 Cursor_X[2];
+    s8 Cursor_Y[2];
+    s8 Cursor_Y_Pos[2][4];
 } GameState;
 
 extern GameState gs;
@@ -313,9 +317,6 @@ extern u8 Exit_No;
 extern u8 SP_No[2][4];
 extern u8 Face_No[2];
 extern s8 Select_Start[2];
-extern s8 Cursor_X[2];
-extern s8 Cursor_Y[2];
-extern s8 Cursor_Y_Pos[2][4];
 extern s8 Stop_Cursor[2];
 extern u8 Training_Index;
 extern u8 Connect_Status;
