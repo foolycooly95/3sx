@@ -18,12 +18,16 @@
 #include <SDL3/SDL.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+
+#define INPUT_HISTORY_MAX 120
+
+// Uncomment to enable packet drops
+// #define LOSSY_ADAPTER
 
 // FIXME: We shouldn't need yet another struct for state
 typedef struct SavedState {
     GameState gs;
-    u16 p1sw_1;
-    u16 p2sw_1;
 } SavedState;
 
 typedef enum SessionState {
@@ -39,6 +43,29 @@ static unsigned short remote_port = 0;
 static int player_number = 0;
 static int player_handle = 0;
 static SessionState session_state = SESSION_IDLE;
+static u16 input_history[2][INPUT_HISTORY_MAX] = { 0 };
+static float frames_behind = 0;
+static int frame_skip_timer = 0;
+
+#if defined(LOSSY_ADAPTER)
+static GekkoNetAdapter* base_adapter = NULL;
+static GekkoNetAdapter lossy_adapter = { 0 };
+
+static float random_float() {
+    return (float)rand() / RAND_MAX;
+}
+
+static void LossyAdapter_SendData(GekkoNetAddress* addr, const char* data, int length) {
+    const float number = random_float();
+
+    // Adjust this number to change drop probability
+    if (number <= 0.25) {
+        return;
+    }
+
+    base_adapter->send_data(addr, data, length);
+}
+#endif
 
 static void setup_vs_mode() {
     // This is pretty much a copy of logic from menu.c
@@ -63,6 +90,15 @@ static void setup_vs_mode() {
     task[TASK_GAME].condition = 3;
 }
 
+#if defined(LOSSY_ADAPTER)
+static void configure_lossy_adapter() {
+    base_adapter = gekko_default_adapter(local_port);
+    lossy_adapter.send_data = LossyAdapter_SendData;
+    lossy_adapter.receive_data = base_adapter->receive_data;
+    lossy_adapter.free_data = base_adapter->free_data;
+}
+#endif
+
 static void configure_gekko() {
     GekkoConfig config;
     SDL_zero(config);
@@ -76,7 +112,14 @@ static void configure_gekko() {
 
     gekko_create(&session);
     gekko_start(session, &config);
+
+    #if defined(LOSSY_ADAPTER)
+    configure_lossy_adapter();
+    gekko_net_adapter_set(session, &lossy_adapter);
+    #else
     gekko_net_adapter_set(session, gekko_default_adapter(local_port));
+    #endif
+
     printf("starting a session for player %d at port %hu\n", player_number, local_port);
 
     char remote_address_str[100];
@@ -101,23 +144,31 @@ static u16 get_inputs() {
     return inputs;
 }
 
+static void note_input(u16 input, int player, int frame) {
+    input_history[player][frame % INPUT_HISTORY_MAX] = input;
+}
+
+static u16 recall_input(int player, int frame) {
+    return input_history[player][frame % INPUT_HISTORY_MAX];
+}
+
 static void save_state(GekkoGameEvent* event) {
     *event->data.save.state_len = sizeof(SavedState);
     SavedState* dest = (SavedState*)event->data.save.state;
     SDL_memcpy(&dest->gs, &gs, sizeof(GameState));
-    dest->p1sw_1 = p1sw_1;
-    dest->p2sw_1 = p2sw_1;
 }
 
 static void load_state(GekkoGameEvent* event) {
     const SavedState* src = (SavedState*)event->data.load.state;
     SDL_memcpy(&gs, &src->gs, sizeof(GameState));
-    p1sw_1 = src->p1sw_1;
-    p2sw_1 = src->p2sw_1;
 }
 
 static bool game_ready_to_run_character_select() {
     return G_No[1] == 1;
+}
+
+static bool need_to_catch_up() {
+    return frames_behind >= 1;
 }
 
 static void step_game(bool render) {
@@ -141,14 +192,27 @@ static void step_game(bool render) {
 
 static void advance_game(GekkoGameEvent* event, bool last_advance) {
     const u16* inputs = (u16*)event->data.adv.inputs;
+    const int frame = event->data.adv.frame;
     p1sw_0 = inputs[0];
     p2sw_0 = inputs[1];
+
+    p1sw_1 = recall_input(0, frame - 1);
+    p2sw_1 = recall_input(1, frame - 1);
+
+    note_input(inputs[0], 0, frame);
+    note_input(inputs[1], 1, frame);
 
     step_game(last_advance);
 }
 
 static void process_session() {
+    frames_behind = -gekko_frames_ahead(session);
+
     gekko_network_poll(session);
+
+    // GekkoNetworkStats stats;
+    // gekko_network_stats(session, (player_handle == 0) ? 1 : 0, &stats);
+    // printf("🛜 ping: %hu, avg ping: %.2f, jitter: %.2f\n", stats.last_ping, stats.avg_ping, stats.jitter);
 
     u16 local_inputs = get_inputs();
     gekko_add_local_input(session, player_handle, &local_inputs);
@@ -225,6 +289,26 @@ static void process_events() {
     }
 }
 
+static void step_logic() {
+    process_session();
+    process_events();
+}
+
+static void run_netplay() {
+    step_logic();
+
+    if (need_to_catch_up() && (frame_skip_timer == 0)) {
+        step_logic();
+        frame_skip_timer = 60; // Allow skipping a frame roughly every second
+    }
+
+    frame_skip_timer -= 1;
+
+    if (frame_skip_timer < 0) {
+        frame_skip_timer = 0;
+    }
+}
+
 void Netplay_SetPlayer(int player) {
     if (player == 1) {
         local_port = 50000;
@@ -255,13 +339,8 @@ void Netplay_Run() {
         break;
 
     case SESSION_CONNECTING:
-        process_session();
-        process_events();
-        break;
-
     case SESSION_RUNNING:
-        process_session();
-        process_events();
+        run_netplay();
         break;
 
     case SESSION_IDLE:
