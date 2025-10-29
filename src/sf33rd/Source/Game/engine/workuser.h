@@ -42,6 +42,10 @@ typedef struct GameState {
     bool Scene_Cut;
 
     bool Time_Over;
+
+    // Round timer
+
+    s8 round_timer;
 } GameState;
 
 extern GameState gs;

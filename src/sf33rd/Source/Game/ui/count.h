@@ -4,8 +4,6 @@
 #include "structs.h"
 #include "types.h"
 
-extern s8 round_timer;
-
 void count_cont_init(u8 type);
 void count_cont_main();
 void counter_control();

@@ -14,7 +14,6 @@
 #include "sf33rd/Source/Game/ui/sc_data.h"
 #include "sf33rd/Source/Game/ui/sc_sub.h"
 
-s8 round_timer;
 s8 flash_timer;
 s8 flash_r_num;
 s8 flash_col;
@@ -25,11 +24,11 @@ s8 mugen_flag;
 s8 hoji_counter;
 
 void count_cont_init(u8 type) {
-    Counter_hi = save_w[Present_Mode].Time_Limit;
+    Counter_hi = save_w[Present_Mode].Time_Limit; // FIXME: use a consistent value in netplay
 
     if (Counter_hi == -1) {
         mugen_flag = 1;
-        round_timer = 1;
+        gs.round_timer = 1;
 
         if (type == 0) {
             counter_write(4);
@@ -38,7 +37,7 @@ void count_cont_init(u8 type) {
         mugen_flag = 0;
         hoji_counter = 60;
         Counter_low = hoji_counter;
-        round_timer = Counter_hi;
+        gs.round_timer = Counter_hi;
         math_counter_hi = Counter_hi;
         math_counter_hi /= 10;
         math_counter_low = Counter_hi - (math_counter_hi * 10);
@@ -136,7 +135,7 @@ void counter_control() {
         counter_color = 4;
     }
 
-    round_timer = Counter_hi;
+    gs.round_timer = Counter_hi;
     math_counter_hi = Counter_hi;
     math_counter_hi /= 10;
     math_counter_low = Counter_hi - (math_counter_hi * 10);
@@ -194,7 +193,7 @@ void bcount_cont_init() {
     Counter_hi = 50;
     hoji_counter = 60;
     Counter_low = hoji_counter;
-    round_timer = Counter_hi;
+    gs.round_timer = Counter_hi;
     math_counter_hi = 5;
     math_counter_low = 0;
     bcounter_write();
@@ -224,7 +223,7 @@ void bcounter_control() {
     hoji_counter = 60;
     Counter_low = hoji_counter;
     Counter_hi -= 1;
-    round_timer = Counter_hi;
+    gs.round_timer = Counter_hi;
     math_counter_hi = Counter_hi;
     math_counter_hi /= 10;
     math_counter_low = Counter_hi - (math_counter_hi * 10);
