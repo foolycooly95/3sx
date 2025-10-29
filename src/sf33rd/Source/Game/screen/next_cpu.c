@@ -115,7 +115,7 @@ void Next_CPU_1st() {
     bg_mvxy.d[0].sp = 0;
     Sel_EM_Complete[Player_id] = 0;
     Temporary_EM[Player_id] = Last_Selected_EM[Player_id];
-    Select_Timer = 0x20;
+    gs.Select_Timer = 0x20;
     Setup_EM_List();
 
     if (VS_Index[Player_id] == 0) {
@@ -609,7 +609,7 @@ void Select_CPU_1st() {
     SC_No[0]++;
     Sel_EM_Complete[Player_id] = 0;
     Temporary_EM[Player_id] = Last_Selected_EM[Player_id];
-    Select_Timer = 0x20;
+    gs.Select_Timer = 0x20;
     Setup_EM_List();
     Target_BG_X[3] = bg_w.bgw[3].wxy[0].disp.pos + 458;
     Offset_BG_X[3] = 0;

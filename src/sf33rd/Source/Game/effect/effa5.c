@@ -67,7 +67,7 @@ void effect_A5_move(WORK_Other* ewk) {
         gs.Unit_Of_Timer = 60;
         bcdext = 0;
 
-        if ((Select_Timer = sbcd(1, Select_Timer)) == 0) {
+        if ((gs.Select_Timer = sbcd(1, gs.Select_Timer)) == 0) {
             ewk->wu.routine_no[0]++;
             ewk->wu.dir_timer = 30;
         }
@@ -79,7 +79,7 @@ void effect_A5_move(WORK_Other* ewk) {
             break;
         }
 
-        if (Select_Timer) {
+        if (gs.Select_Timer) {
             ewk->wu.routine_no[0] = 1;
             gs.Unit_Of_Timer = 60;
         } else if (--ewk->wu.dir_timer == 0) {
@@ -96,7 +96,7 @@ void effect_A5_move(WORK_Other* ewk) {
 
         gs.Time_Over = true;
 
-        if (Select_Timer) {
+        if (gs.Select_Timer) {
             ewk->wu.routine_no[0] = 1;
             gs.Unit_Of_Timer = 60;
         }

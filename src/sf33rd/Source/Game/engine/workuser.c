@@ -82,7 +82,6 @@ s8 Demo_Stage_Index;
 s8 Face_MV_Request;
 s8 Face_Move;
 s8 Appear_Cursor;
-s8 Select_Timer;
 s8 Time_Stop;
 s8 Player_id;
 s8 Last_Player_id;

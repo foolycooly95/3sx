@@ -88,7 +88,7 @@ void effect_D8_move(WORK_Other* ewk) {
             Sel_PL_Complete[ewk->master_id] = -0x8000;
 
             if (Select_Start[ewk->master_id] == 0) {
-                Select_Timer = 0x20;
+                gs.Select_Timer = 0x20;
             }
 
             gs.Unit_Of_Timer = 60;

@@ -251,9 +251,9 @@ void Sel_PL_Cont_1st() {
     Setup_Cursor_Y();
 
     if (Present_Mode == 4 || Present_Mode == 5) {
-        Select_Timer = 0x20;
+        gs.Select_Timer = 0x20;
     } else {
-        Select_Timer = 0x30;
+        gs.Select_Timer = 0x30;
     }
 
     gs.Unit_Of_Timer = 60;

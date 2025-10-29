@@ -1352,7 +1352,7 @@ void Break_Into_02(s16 /* unused */) {
         grade_check_work_1st_init(New_Challenger, 0);
     }
 
-    Select_Timer = 0x30;
+    gs.Select_Timer = 0x30;
     gs.Unit_Of_Timer = 60;
 }
 
