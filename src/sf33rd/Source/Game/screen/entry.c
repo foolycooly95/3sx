@@ -1353,7 +1353,7 @@ void Break_Into_02(s16 /* unused */) {
     }
 
     Select_Timer = 0x30;
-    Unit_Of_Timer = 60;
+    gs.Unit_Of_Timer = 60;
 }
 
 void Break_Into_04(s16 /* unused */) {

@@ -57,6 +57,7 @@ typedef struct GameState {
 
     s8 Counter_hi;
     s8 Counter_low;
+    s16 Unit_Of_Timer;
 } GameState;
 
 extern GameState gs;
@@ -427,7 +428,6 @@ extern s16 Arts_Y[2];
 extern s16 Move_Super_Arts[2];
 extern s16 Battle_Country;
 extern s16 Face_Status;
-extern s16 Unit_Of_Timer;
 
 // ID of the player currently operated on during player selection routines
 extern s16 ID;

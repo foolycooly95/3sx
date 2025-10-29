@@ -140,7 +140,7 @@ void Next_CPU_1st() {
     }
 
     Time_Stop = 1;
-    Unit_Of_Timer = 60;
+    gs.Unit_Of_Timer = 60;
     effect_A5_init();
     Rnd = random_16() & 3;
     effect_58_init(6, 10, EM_Select_Voice_Data[Rnd]);

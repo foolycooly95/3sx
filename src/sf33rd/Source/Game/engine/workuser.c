@@ -358,7 +358,6 @@ s16 Arts_Y[2];
 s16 Move_Super_Arts[2];
 s16 Battle_Country;
 s16 Face_Status;
-s16 Unit_Of_Timer;
 s16 ID;
 s16 mes_already;
 s16 Timer_00[2];

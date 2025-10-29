@@ -256,7 +256,7 @@ void Sel_PL_Cont_1st() {
         Select_Timer = 0x30;
     }
 
-    Unit_Of_Timer = 60;
+    gs.Unit_Of_Timer = 60;
     Setup_Face_ID();
     Setup_1st_Play_Type();
     Setup_Face_Sub();

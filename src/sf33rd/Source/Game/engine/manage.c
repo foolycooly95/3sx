@@ -1978,7 +1978,7 @@ void Game_Manage_12_0() {
         Time_Stop = 1;
         gs.Time_Over = false;
         Exit_No = 0;
-        Unit_Of_Timer = 0;
+        gs.Unit_Of_Timer = 0;
         setup_bonus_car_parts();
         bcount_cont_init();
     }
