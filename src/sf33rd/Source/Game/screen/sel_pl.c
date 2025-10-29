@@ -149,7 +149,7 @@ s16 Select_Player() {
         return 0;
     }
 
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     Sel_PL_Control();
     Switch_Work();
     ID = 0;
@@ -1585,7 +1585,7 @@ void Exit_2nd() {
         return;
     }
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         Exit_Timer = 1;
     } else {
         Exit_Timer = 60;
@@ -1694,7 +1694,7 @@ void Exit_6th() {
         return;
     }
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         Exit_Timer = 1;
     }
 

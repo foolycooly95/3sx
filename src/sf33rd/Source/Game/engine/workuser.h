@@ -37,6 +37,9 @@ typedef struct GameState {
 
     /// `true` if death SFX playback needs to be requested
     bool dead_voice_flag;
+
+    /// Go faster during a non-gameplay animation
+    bool Scene_Cut;
 } GameState;
 
 extern GameState gs;
@@ -260,10 +263,6 @@ extern s8 Temporary_EM[2];
 extern s8 OK_Moving_SA_Plate[2];
 extern u8 Battle_Q[2];
 extern u8 EM_History[2][10];
-
-// Go faster during a non-gameplay animation
-extern bool Scene_Cut;
-
 extern u8 GO_No[4];
 extern u8 Aborigine;
 extern u8 Continue_Count_Down[2];

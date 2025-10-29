@@ -230,7 +230,7 @@ s32 Shift_38(WORK_Other* ewk) {
     s16 ix;
     s16 loop;
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         loop = 3;
     } else {
         loop = 1;

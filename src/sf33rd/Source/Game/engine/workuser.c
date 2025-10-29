@@ -230,7 +230,6 @@ s8 Temporary_EM[2];
 s8 OK_Moving_SA_Plate[2];
 u8 Battle_Q[2];
 u8 EM_History[2][10];
-bool Scene_Cut;
 u8 GO_No[4];
 u8 Aborigine;
 u8 Continue_Count_Down[2];
