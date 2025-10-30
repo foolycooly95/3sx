@@ -143,10 +143,18 @@ static u16 get_inputs() {
 }
 
 static void note_input(u16 input, int player, int frame) {
+    if (frame < 0) {
+        return;
+    }
+
     input_history[player][frame % INPUT_HISTORY_MAX] = input;
 }
 
 static u16 recall_input(int player, int frame) {
+    if (frame < 0) {
+        return 0;
+    }
+
     return input_history[player][frame % INPUT_HISTORY_MAX];
 }
 
