@@ -24,7 +24,6 @@
 #include "sf33rd/Source/Game/effect/eff79.h"
 #include "sf33rd/Source/Game/effect/eff93.h"
 #include "sf33rd/Source/Game/effect/eff99.h"
-#include "sf33rd/Source/Game/effect/effa5.h"
 #include "sf33rd/Source/Game/effect/effd8.h"
 #include "sf33rd/Source/Game/effect/effk6.h"
 #include "sf33rd/Source/Game/engine/grade.h"
@@ -39,6 +38,7 @@
 #include "sf33rd/Source/Game/rendering/mtrans.h"
 #include "sf33rd/Source/Game/screen/next_cpu.h"
 #include "sf33rd/Source/Game/screen/sel_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -149,14 +149,14 @@ s16 Select_Player() {
         return 0;
     }
 
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     Sel_PL_Control();
     Switch_Work();
     ID = 0;
     Sel_PL();
     ID = 1;
     Sel_PL();
-    Time_Over = 0;
+    gs.Time_Over = false;
 
     if (Check_Exit_Check() == 0 && Debug_w[24] == -1) {
         SEL_PL_X = 0;
@@ -251,24 +251,23 @@ void Sel_PL_Cont_1st() {
     Setup_Cursor_Y();
 
     if (Present_Mode == 4 || Present_Mode == 5) {
-        Select_Timer = 0x20;
+        gs.Select_Timer = 0x20;
     } else {
-        Select_Timer = 0x30;
+        gs.Select_Timer = 0x30;
     }
 
-    Unit_Of_Timer = 60;
+    gs.Unit_Of_Timer = 60;
     Setup_Face_ID();
     Setup_1st_Play_Type();
     Setup_Face_Sub();
-    Time_Stop = 1;
-    effect_A5_init();
-    Appear_Cursor = 0;
+    gs.Time_Stop = 1;
+    SelectTimer_Init();
     Face_MV_Request = 0;
     Face_Status = 0;
     Face_Move = 0;
     Break_Into_CPU = 0;
     Explosion = 0;
-    Time_Over = 0;
+    gs.Time_Over = false;
     Move_Super_Arts[0] = 0;
     Move_Super_Arts[1] = 0;
     Flash_Complete[0] = 0;
@@ -401,11 +400,11 @@ void Setup_Cursor_Y() {
     s16 d;
 
     for (i = 2, a = j = 0; i >= 0; i--, b = j++) {
-        Cursor_Y_Pos[0][i] = Cursor_Y_Data[j];
+        gs.Cursor_Y_Pos[0][i] = Cursor_Y_Data[j];
     }
 
     for (i = 2, c = j = 3; i >= 0; i--, d = j++) {
-        Cursor_Y_Pos[1][i] = Cursor_Y_Data[j];
+        gs.Cursor_Y_Pos[1][i] = Cursor_Y_Data[j];
     }
 }
 
@@ -478,8 +477,6 @@ void Face_1st() {
     } else {
         Face_No[0] = 1;
     }
-
-    Appear_Cursor = 1;
 }
 
 void Face_2nd() {
@@ -821,7 +818,7 @@ void PL_Sel_2nd() {
 
         if (ret != 0 || My_char[ID2] == 0) {
             SP_No[ID2][3]++;
-            Cursor_Timer[ID2] = 40;
+            gs.Cursor_Timer[ID2] = 40;
             Go_Away_Red_Lines();
 
             if (Mode_Type == MODE_NORMAL_TRAINING || Mode_Type == MODE_PARRY_TRAINING) {
@@ -841,7 +838,7 @@ void PL_Sel_2nd() {
         break;
 
     case 1:
-        if ((Cursor_Timer[ID2] -= 1) != 0) {
+        if ((gs.Cursor_Timer[ID2] -= 1) != 0) {
             break;
         }
 
@@ -935,7 +932,7 @@ void Sel_PL_2nd() {
     SP_No[ID][0]++;
     Stop_Cursor[ID] = 0;
     Deley_Shot_No[ID] = 0;
-    Cursor_Timer[ID] = 1;
+    gs.Cursor_Timer[ID] = 1;
 
     if (Demo_Flag == 0) {
         Demo_Timer[ID] = 0;
@@ -1118,7 +1115,7 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
         return;
     }
 
-    if (Time_Over) {
+    if (gs.Time_Over) {
         sw = SWK_WEST;
     }
 
@@ -1126,20 +1123,20 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
         Auto_Repeat_Sub(PL_id);
     }
 
-    if ((Cursor_Timer[PL_id] -= 1) == 0) {
-        Cursor_Timer[PL_id] = 1;
+    if ((gs.Cursor_Timer[PL_id] -= 1) == 0) {
+        gs.Cursor_Timer[PL_id] = 1;
 
         if (sw & SWK_RIGHT) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CR(PL_id);
         } else if (sw & SWK_LEFT) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CL(PL_id);
         } else if (sw & SWK_UP) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CU(PL_id);
         } else if (sw & SWK_DOWN) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CD(PL_id);
         }
     }
@@ -1153,7 +1150,7 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
     }
 
     Sel_PL_Complete[PL_id] = 1;
-    My_char[PL_id] = ID_of_Face[Cursor_Y[PL_id]][Cursor_X[PL_id]];
+    My_char[PL_id] = ID_of_Face[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]];
 
     if (Last_My_char2[PL_id] != My_char[PL_id]) {
         Arts_Y[ID] = Super_Arts[ID] = Last_Super_Arts[ID] = 0;
@@ -1179,131 +1176,131 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
 }
 
 void Sel_PL_Sub_CR(s16 PL_id) {
-    if (Cursor_X[PL_id] == 7) {
+    if (gs.Cursor_X[PL_id] == 7) {
         return;
     }
 
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_Y[PL_id]++;
+        gs.Cursor_Y[PL_id]++;
 
-        switch (Cursor_X[PL_id]) {
+        switch (gs.Cursor_X[PL_id]) {
         case 6:
-            if (Cursor_Y[PL_id] > 1) {
-                Cursor_Y[PL_id] = 1;
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_Y[PL_id] > 1) {
+                gs.Cursor_Y[PL_id] = 1;
+                gs.Cursor_X[PL_id] = 0;
             }
 
             break;
 
         default:
-            if (Cursor_Y[PL_id] > 2) {
-                Cursor_Y[PL_id] = 0;
-                Cursor_X[PL_id]++;
+            if (gs.Cursor_Y[PL_id] > 2) {
+                gs.Cursor_Y[PL_id] = 0;
+                gs.Cursor_X[PL_id]++;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Sel_PL_Sub_CL(s16 PL_id) {
-    if (Cursor_X[PL_id] == 7) {
+    if (gs.Cursor_X[PL_id] == 7) {
         return;
     }
 
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_Y[PL_id]--;
+        gs.Cursor_Y[PL_id]--;
 
-        switch (Cursor_X[PL_id]) {
+        switch (gs.Cursor_X[PL_id]) {
         case 0:
-            if (Cursor_Y[PL_id] <= 0) {
-                Cursor_Y[PL_id] = 1;
-                Cursor_X[PL_id] = 6;
+            if (gs.Cursor_Y[PL_id] <= 0) {
+                gs.Cursor_Y[PL_id] = 1;
+                gs.Cursor_X[PL_id] = 6;
             }
             break;
 
         case 1:
-            if (Cursor_Y[PL_id] < 0) {
-                Cursor_Y[PL_id] = 2;
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_Y[PL_id] < 0) {
+                gs.Cursor_Y[PL_id] = 2;
+                gs.Cursor_X[PL_id] = 0;
             }
             break;
 
         default:
-            if (Cursor_Y[PL_id] < 0) {
-                Cursor_Y[PL_id] = 2;
-                Cursor_X[PL_id]--;
+            if (gs.Cursor_Y[PL_id] < 0) {
+                gs.Cursor_Y[PL_id] = 2;
+                gs.Cursor_X[PL_id]--;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Sel_PL_Sub_CU(s16 PL_id) {
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_X[PL_id]++;
+        gs.Cursor_X[PL_id]++;
 
-        switch (Cursor_Y[PL_id]) {
+        switch (gs.Cursor_Y[PL_id]) {
         case 0:
-            if (Cursor_X[PL_id] > 6) {
-                Cursor_X[PL_id] = 1;
+            if (gs.Cursor_X[PL_id] > 6) {
+                gs.Cursor_X[PL_id] = 1;
             }
 
             break;
 
         case 1:
-            if (Cursor_X[PL_id] > 7) {
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_X[PL_id] > 7) {
+                gs.Cursor_X[PL_id] = 0;
             }
 
             break;
 
         default:
-            if (Cursor_X[PL_id] > 5) {
-                Cursor_X[PL_id] = 0;
+            if (gs.Cursor_X[PL_id] > 5) {
+                gs.Cursor_X[PL_id] = 0;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Sel_PL_Sub_CD(s16 PL_id) {
     Cursor_Move[PL_id] = 1;
 
     do {
-        Cursor_X[PL_id]--;
+        gs.Cursor_X[PL_id]--;
 
-        switch (Cursor_Y[PL_id]) {
+        switch (gs.Cursor_Y[PL_id]) {
         case 0:
-            if (Cursor_X[PL_id] <= 0) {
-                Cursor_X[PL_id] = 6;
+            if (gs.Cursor_X[PL_id] <= 0) {
+                gs.Cursor_X[PL_id] = 6;
             }
 
             break;
 
         case 1:
-            if (Cursor_X[PL_id] < 0) {
-                Cursor_X[PL_id] = 7;
+            if (gs.Cursor_X[PL_id] < 0) {
+                gs.Cursor_X[PL_id] = 7;
             }
 
             break;
 
         default:
-            if (Cursor_X[PL_id] < 0) {
-                Cursor_X[PL_id] = 5;
+            if (gs.Cursor_X[PL_id] < 0) {
+                gs.Cursor_X[PL_id] = 5;
             }
 
             break;
         }
-    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[Cursor_Y[PL_id]][Cursor_X[PL_id]]]);
+    } while (!permission_player[Present_Mode].ok[Face_Cursor_Data[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]]]);
 }
 
 void Auto_Repeat_Sub(s16 PL_id) {
@@ -1477,7 +1474,7 @@ void Sel_Arts_Sub(s16 PL_id, u16 sw, u16 /* unused */) {
         return;
     }
 
-    if (Time_Over) {
+    if (gs.Time_Over) {
         sw = SWK_WEST;
     }
 
@@ -1585,7 +1582,7 @@ void Exit_2nd() {
         return;
     }
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         Exit_Timer = 1;
     } else {
         Exit_Timer = 60;
@@ -1593,7 +1590,7 @@ void Exit_2nd() {
 
     Exit_No++;
     Last_My_char[Player_id] = My_char[Player_id];
-    Time_Stop = 2;
+    gs.Time_Stop = 2;
 
     for (xx = 0; xx < 4; xx++) {
         SC_No[xx] = 0;
@@ -1694,7 +1691,7 @@ void Exit_6th() {
         return;
     }
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         Exit_Timer = 1;
     }
 

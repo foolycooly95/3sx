@@ -259,7 +259,7 @@ void Menu_Init(struct _TASK* task_ptr) {
     for (ix = 0; ix < 4; ix++) {
         Menu_Suicide[ix] = 0;
         Unsubstantial_BG[ix] = 0;
-        Cursor_Y_Pos[0][ix] = 0;
+        gs.Cursor_Y_Pos[0][ix] = 0;
     }
 
     All_Clear_Suicide();
@@ -317,10 +317,10 @@ void Mode_Select(struct _TASK* task_ptr) {
 
         Clear_Personal_Data(0);
         Clear_Personal_Data(1);
-        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
-        Cursor_Y_Pos[0][1] = 0;
-        Cursor_Y_Pos[0][2] = 0;
-        Cursor_Y_Pos[0][3] = 0;
+        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
+        gs.Cursor_Y_Pos[0][1] = 0;
+        gs.Cursor_Y_Pos[0][2] = 0;
+        gs.Cursor_Y_Pos[0][3] = 0;
 
         for (ix = 0; ix < 4; ix++) {
             Vital_Handicap[ix][0] = 7;
@@ -454,7 +454,7 @@ void Menu_in_Sub(struct _TASK* task_ptr) {
     task_ptr->r_no[2] += 1;
     task_ptr->timer = 5;
     Menu_Common_Init();
-    Menu_Cursor_Y[0] = Cursor_Y_Pos[0][1];
+    Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][1];
     Menu_Suicide[0] = 1;
     Menu_Suicide[1] = 0;
     Order[0x64] = 4;
@@ -2043,8 +2043,8 @@ void Return_Option_Mode_Sub(struct _TASK* task_ptr) {
     task_ptr->r_no[2] = 0;
     task_ptr->r_no[3] = 0;
     task_ptr->free[0] = 0;
-    Cursor_Y_Pos[0][2] = Menu_Cursor_Y[0];
-    Cursor_Y_Pos[1][2] = Menu_Cursor_Y[1];
+    gs.Cursor_Y_Pos[0][2] = Menu_Cursor_Y[0];
+    gs.Cursor_Y_Pos[1][2] = Menu_Cursor_Y[1];
 }
 
 void Screen_Adjust(struct _TASK* task_ptr) {
@@ -2911,8 +2911,8 @@ s32 Exit_Sub(struct _TASK* task_ptr, s16 cursor_ix, s16 next_routine) {
             task_ptr->r_no[2] = 0;
             task_ptr->r_no[3] = 0;
             task_ptr->free[0] = 0;
-            Cursor_Y_Pos[0][cursor_ix] = Menu_Cursor_Y[0];
-            Cursor_Y_Pos[1][cursor_ix] = Menu_Cursor_Y[1];
+            gs.Cursor_Y_Pos[0][cursor_ix] = Menu_Cursor_Y[0];
+            gs.Cursor_Y_Pos[1][cursor_ix] = Menu_Cursor_Y[1];
             pulpul_stop();
             return 1;
         }
@@ -3007,7 +3007,7 @@ void Menu_Select(struct _TASK* task_ptr) {
     case 1:
         task_ptr->r_no[2]++;
         Menu_Common_Init();
-        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
+        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
         Menu_Suicide[0] = 0;
         Menu_Suicide[1] = 0;
         Menu_Suicide[2] = 0;
@@ -3139,7 +3139,7 @@ s32 Yes_No_Cursor_Move_Sub(struct _TASK* task_ptr) {
             task_ptr->r_no[2] = 1;
             Menu_Suicide[0] = 0;
             Menu_Suicide[1] = 1;
-            Cursor_Y_Pos[0][0] = 2;
+            gs.Cursor_Y_Pos[0][0] = 2;
             return 1;
         }
 
@@ -3239,7 +3239,7 @@ void Return_Pause_Sub(struct _TASK* task_ptr) {
     task[TASK_PAUSE].free[0] = 1;
     task_ptr->r_no[1] = 1;
     task_ptr->r_no[2] = 1;
-    Cursor_Y_Pos[0][0] = 1;
+    gs.Cursor_Y_Pos[0][0] = 1;
     Order[138] = 3;
     Order_Timer[138] = 1;
     effect_66_init(138, 9, 2, 7, -1, -1, -0x3FFC);
@@ -3495,8 +3495,8 @@ void VS_Result(struct _TASK* task_ptr) {
         task_ptr->r_no[2]++;
         task_ptr->timer = 5;
         Menu_Common_Init();
-        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
-        Menu_Cursor_Y[1] = Cursor_Y_Pos[1][0];
+        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
+        Menu_Cursor_Y[1] = gs.Cursor_Y_Pos[1][0];
         Menu_Suicide[0] = 0;
         Menu_Suicide[1] = 1;
         Menu_Cursor_X[0] = 0;
@@ -4131,7 +4131,7 @@ void Setup_Tr_Pause(struct _TASK* task_ptr) {
     task_ptr->r_no[2] = 0;
     task_ptr->r_no[3] = 0;
     task_ptr->free[0] = 60;
-    Cursor_Y_Pos[0][0] = 0;
+    gs.Cursor_Y_Pos[0][0] = 0;
     Disp_Attack_Data = 0;
     Game_pause = 0x81;
     Pause_Down = 1;
@@ -4185,7 +4185,7 @@ s32 Pause_in_Normal_Tr(struct _TASK* task_ptr) {
     case 1:
         task_ptr->r_no[2]++;
         Menu_Common_Init();
-        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
+        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
 
         for (ix = 0; ix < 4; ix++) {
             Menu_Suicide[ix] = 0;
@@ -4225,7 +4225,7 @@ s32 Pause_in_Normal_Tr(struct _TASK* task_ptr) {
                 break;
 
             case 1:
-                Cursor_Y_Pos[0][0] = 0;
+                gs.Cursor_Y_Pos[0][0] = 0;
                 return 2;
 
             case 2:
@@ -4282,7 +4282,7 @@ s32 Pause_1st_Sub(struct _TASK* task_ptr) {
 
     if (sw & SWK_SOUTH) {
         task_ptr->r_no[2] += 1;
-        Cursor_Y_Pos[0][0] = 0;
+        gs.Cursor_Y_Pos[0][0] = 0;
         SE_selected();
     }
 
@@ -4684,7 +4684,7 @@ void Yes_No_Cursor_Exit_Training(struct _TASK* task_ptr, s16 cursor_id) {
             task_ptr->r_no[2] = 0;
             Menu_Suicide[0] = 0;
             Menu_Suicide[1] = 1;
-            Cursor_Y_Pos[0][0] = cursor_id;
+            gs.Cursor_Y_Pos[0][0] = cursor_id;
             break;
         }
 

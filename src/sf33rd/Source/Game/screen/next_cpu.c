@@ -16,7 +16,6 @@
 #include "sf33rd/Source/Game/effect/eff75.h"
 #include "sf33rd/Source/Game/effect/eff76.h"
 #include "sf33rd/Source/Game/effect/eff98.h"
-#include "sf33rd/Source/Game/effect/effa5.h"
 #include "sf33rd/Source/Game/effect/effa9.h"
 #include "sf33rd/Source/Game/effect/effe0.h"
 #include "sf33rd/Source/Game/effect/effect.h"
@@ -28,6 +27,7 @@
 #include "sf33rd/Source/Game/io/gd3rd.h"
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
 #include "sf33rd/Source/Game/screen/sel_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -93,9 +93,9 @@ s16 Next_CPU() {
     }
 
     SEL_CPU_X = 0;
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     Next_CPU_Tbl[SC_No[0]]();
-    Time_Over = 0;
+    gs.Time_Over = false;
 
     if (Check_Exit_Check() == 0 && Debug_w[0x18] == -1) {
         SEL_CPU_X = 0;
@@ -115,7 +115,7 @@ void Next_CPU_1st() {
     bg_mvxy.d[0].sp = 0;
     Sel_EM_Complete[Player_id] = 0;
     Temporary_EM[Player_id] = Last_Selected_EM[Player_id];
-    Select_Timer = 0x20;
+    gs.Select_Timer = 0x20;
     Setup_EM_List();
 
     if (VS_Index[Player_id] == 0) {
@@ -139,9 +139,9 @@ void Next_CPU_1st() {
         Order_Timer[56] = 1;
     }
 
-    Time_Stop = 1;
-    Unit_Of_Timer = 60;
-    effect_A5_init();
+    gs.Time_Stop = 1;
+    gs.Unit_Of_Timer = 60;
+    SelectTimer_Init();
     Rnd = random_16() & 3;
     effect_58_init(6, 10, EM_Select_Voice_Data[Rnd]);
     Next_Step = 0;
@@ -237,7 +237,7 @@ void Next_CPU_3rd() {
     case 3:
         switch (SC_No[2]) {
         case 0:
-            if (Scene_Cut) {
+            if (gs.Scene_Cut) {
                 S_Timer = 9;
             }
 
@@ -276,7 +276,7 @@ void Next_CPU_4th() {
         break;
 
     default:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -430,7 +430,7 @@ void Next_CPU_5th() {
         break;
 
     default:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -530,9 +530,9 @@ s32 After_Bonus() {
     }
 
     SEL_CPU_X = 0;
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     After_Bonus_Tbl[SC_No[0]]();
-    Time_Over = 0;
+    gs.Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -601,7 +601,7 @@ s16 Select_CPU_First() {
 
     SEL_CPU_X = 0;
     Select_CPU_First_Tbl[SC_No[0]]();
-    Time_Over = 0;
+    gs.Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -609,7 +609,7 @@ void Select_CPU_1st() {
     SC_No[0]++;
     Sel_EM_Complete[Player_id] = 0;
     Temporary_EM[Player_id] = Last_Selected_EM[Player_id];
-    Select_Timer = 0x20;
+    gs.Select_Timer = 0x20;
     Setup_EM_List();
     Target_BG_X[3] = bg_w.bgw[3].wxy[0].disp.pos + 458;
     Offset_BG_X[3] = 0;
@@ -675,7 +675,7 @@ void NC_Cut_Sub() {
     if (Next_Step) {
         SC_No[0]++;
         SC_No[1] = 0;
-        Time_Stop = 0;
+        gs.Time_Stop = 0;
     }
 }
 
@@ -747,7 +747,7 @@ void Select_CPU_3rd() {
         break;
 
     case 3:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -817,7 +817,7 @@ void Select_CPU_3rd() {
     case 7:
         switch (SC_No[2]) {
         case 0:
-            if (Scene_Cut) {
+            if (gs.Scene_Cut) {
                 S_Timer = 9;
             }
 
@@ -886,7 +886,7 @@ void Next_Bonus_2nd() {
     case 1:
         switch (SC_No[2]) {
         case 0:
-            if (Scene_Cut) {
+            if (gs.Scene_Cut) {
                 S_Timer = 9;
             }
 
@@ -925,7 +925,7 @@ void Next_Bonus_3rd() {
         break;
 
     default:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -956,14 +956,14 @@ s16 Next_Q() {
     }
 
     SEL_CPU_X = 0;
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     Next_Q_Tbl[SC_No[0]]();
 
     if (Check_Exit_Check() == 0 && Debug_w[0x18] == -1) {
         SEL_CPU_X = 0;
     }
 
-    Time_Over = 0;
+    gs.Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -1047,7 +1047,7 @@ void Next_Q_3rd() {
         return;
 
     default:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -1070,7 +1070,7 @@ void Sel_CPU_Sub(s16 PL_id, u16 sw, u16 /* unused */) {
         return;
     }
 
-    if (Time_Over) {
+    if (gs.Time_Over) {
         sw = SWK_WEST;
     }
 
@@ -1106,7 +1106,7 @@ void Sel_CPU_Sub(s16 PL_id, u16 sw, u16 /* unused */) {
         Sel_EM_Complete[PL_id] = 1;
         EM_id = EM_List[Player_id][Temporary_EM[Player_id] - 1];
         My_char[COM_id] = EM_id;
-        Time_Stop = 2;
+        gs.Time_Stop = 2;
 
         if (VS_Index[PL_id] < 8) {
             Sound_SE(ID + 98);

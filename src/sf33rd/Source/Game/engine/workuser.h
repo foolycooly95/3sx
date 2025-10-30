@@ -2,6 +2,7 @@
 #define WORKUSER_H
 
 #include "sf33rd/Source/Game/engine/cmd_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "types.h"
 
 #include <stdbool.h>
@@ -37,6 +38,34 @@ typedef struct GameState {
 
     /// `true` if death SFX playback needs to be requested
     bool dead_voice_flag;
+
+    /// Go faster during a non-gameplay animation
+    bool Scene_Cut;
+
+    bool Time_Over;
+
+    // Round timer
+
+    s8 round_timer;
+    s8 flash_timer;
+    s8 flash_r_num;
+    s8 flash_col;
+    s8 math_counter_hi;
+    s8 math_counter_low;
+    u8 counter_color;
+    bool mugen_flag;
+    s8 hoji_counter;
+
+    s8 Counter_hi;
+    s8 Counter_low;
+    s16 Unit_Of_Timer;
+    s8 Select_Timer;
+    s8 Cursor_X[2];
+    s8 Cursor_Y[2];
+    s8 Cursor_Y_Pos[2][4];
+    s8 Cursor_Timer[2];
+    SelectTimerState select_timer_state;
+    s8 Time_Stop;
 } GameState;
 
 extern GameState gs;
@@ -65,8 +94,6 @@ extern u32 Keep_Score[2];
 extern u32 Disp_Score_Buff[2];
 extern s8 Winner_id;
 extern s8 Loser_id;
-extern s8 Counter_hi;
-extern s8 Counter_low;
 extern s8 Break_Into;
 extern u8 My_char[2];
 extern u8 Allow_a_battle_f;
@@ -97,7 +124,6 @@ extern s8 Request_E_No;
 extern s8 Request_G_No;
 extern u8 Present_Rank[2];
 extern s8 Best_Grade[2];
-extern s8 Cursor_Timer[2];
 extern s8 Demo_Type;
 extern s8 Rank_Type;
 extern s8 Flash_Sign[2];
@@ -114,10 +140,6 @@ extern s8 Demo_PL_Index;
 extern s8 Demo_Stage_Index;
 extern s8 Face_MV_Request;
 extern s8 Face_Move;
-extern s8 Appear_Cursor;
-extern s8 Select_Timer;
-extern s8 Time_Stop;
-extern s8 Time_Over;
 extern s8 Player_id;
 extern s8 Last_Player_id;
 extern s8 Player_Number;
@@ -260,10 +282,6 @@ extern s8 Temporary_EM[2];
 extern s8 OK_Moving_SA_Plate[2];
 extern u8 Battle_Q[2];
 extern u8 EM_History[2][10];
-
-// Go faster during a non-gameplay animation
-extern bool Scene_Cut;
-
 extern u8 GO_No[4];
 extern u8 Aborigine;
 extern u8 Continue_Count_Down[2];
@@ -300,9 +318,6 @@ extern u8 Exit_No;
 extern u8 SP_No[2][4];
 extern u8 Face_No[2];
 extern s8 Select_Start[2];
-extern s8 Cursor_X[2];
-extern s8 Cursor_Y[2];
-extern s8 Cursor_Y_Pos[2][4];
 extern s8 Stop_Cursor[2];
 extern u8 Training_Index;
 extern u8 Connect_Status;
@@ -414,7 +429,6 @@ extern s16 Arts_Y[2];
 extern s16 Move_Super_Arts[2];
 extern s16 Battle_Country;
 extern s16 Face_Status;
-extern s16 Unit_Of_Timer;
 
 // ID of the player currently operated on during player selection routines
 extern s16 ID;

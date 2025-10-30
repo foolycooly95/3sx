@@ -49,7 +49,7 @@ struct _TASK {
 
 typedef enum {
     BGM_ARRANGED,
-    BGM_ORIGINAL
+    BGM_ORIGINAL,
 } BgmType;
 
 struct _SYSTEM_W {
@@ -2103,17 +2103,6 @@ typedef union {
     s32 psi;
     LoHi16 pss;
 } MS;
-
-typedef struct {
-    union {
-        s16 full;
-        struct {
-            s8 l;
-            s8 h;
-        } half;
-    } size;
-    s32 step;
-} Round_Timer;
 
 typedef struct {
     s16 x_pos_num;

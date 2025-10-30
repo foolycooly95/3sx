@@ -230,7 +230,7 @@ s32 Shift_38(WORK_Other* ewk) {
     s16 ix;
     s16 loop;
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         loop = 3;
     } else {
         loop = 1;
@@ -313,8 +313,8 @@ void EFF38_MOVE(WORK_Other* ewk) {
         break;
 
     case 1:
-        if (ewk->wu.dir_step != ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]]) {
-            ewk->wu.dir_step = ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+        if (ewk->wu.dir_step != ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]]) {
+            ewk->wu.dir_step = ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
             ewk->wu.xyz[0].disp.pos = bg_w.bgw[ewk->wu.my_family - 1].wxy[0].disp.pos +
                                       EFF38_Base_XY[ewk->master_id][Play_Type][0] +
                                       EFF38_Correct_Data[ewk->master_id][Play_Type][ewk->wu.dir_step][0];
@@ -365,7 +365,7 @@ s32 effect_38_init(s16 PL_id, s16 dir_old, s16 Your_Char, s16 Play_Status, s16 T
     ewk->wu.my_trans_mode = get_my_trans_mode(ewk->wu.my_mts);
 
     if (Your_Char == 0x7F) {
-        ewk->wu.dir_step = ID_of_Face[Cursor_Y[ewk->master_id]][Cursor_X[ewk->master_id]];
+        ewk->wu.dir_step = ID_of_Face[gs.Cursor_Y[ewk->master_id]][gs.Cursor_X[ewk->master_id]];
 
         if (ewk->wu.dir_step == 0 && PL_id == 0) {
             ewk->wu.dir_step = 23;

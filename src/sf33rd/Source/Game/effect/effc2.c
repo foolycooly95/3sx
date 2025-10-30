@@ -452,7 +452,7 @@ void effC2_main_process_second(WORK_Other* ewk, PLW* twk) {
                 }
 
                 if (--ewk->wu.hit_stop < 0) {
-                    Time_Stop = 1;
+                    gs.Time_Stop = 1;
                     setup_demojump(twk, 0);
                     ewk->wu.routine_no[2]++;
                     ewk->wu.mvxy.a[1].sp = 0x20000;
@@ -503,7 +503,7 @@ void effC2_main_process_second(WORK_Other* ewk, PLW* twk) {
                     ewk->wu.routine_no[2] = 0;
                     ewk->wu.original_vitality = ewk->wu.shell_ix[0] = 0x640;
                     ewk->wu.vital_old = 0;
-                    Time_Stop = 0;
+                    gs.Time_Stop = 0;
                 }
 
                 break;
@@ -514,7 +514,7 @@ void effC2_main_process_second(WORK_Other* ewk, PLW* twk) {
         case 1:
             switch (ewk->wu.routine_no[2]) {
             case 0:
-                if (Time_Over) {
+                if (gs.Time_Over) {
                     ewk->wu.dm_vital = 0;
                 }
 
@@ -543,7 +543,7 @@ void effC2_main_process_second(WORK_Other* ewk, PLW* twk) {
                     ewk->wu.routine_no[1] = 0;
                     ewk->wu.routine_no[2] = 0;
                     ewk->wu.cg_type = 0;
-                    Time_Stop = 1;
+                    gs.Time_Stop = 1;
                 }
 
                 break;
@@ -750,7 +750,7 @@ void c3_new_damage(WORK* wk) {
     s16 ix;
     s16 brlv;
 
-    if (Time_Over) {
+    if (gs.Time_Over) {
         wk->dm_vital = 0;
     }
 

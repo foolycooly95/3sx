@@ -14,45 +14,33 @@
 #include "sf33rd/Source/Game/ui/sc_data.h"
 #include "sf33rd/Source/Game/ui/sc_sub.h"
 
-Round_Timer round_timer;
-s8 flash_timer;
-s8 flash_r_num;
-s8 flash_col;
-s8 math_counter_hi;
-s8 math_counter_low;
-u8 counter_color;
-s8 mugen_flag;
-s8 hoji_counter;
-
 void count_cont_init(u8 type) {
-    Counter_hi = save_w[Present_Mode].Time_Limit;
+    gs.Counter_hi = save_w[Present_Mode].Time_Limit; // FIXME: use a consistent value in netplay
 
-    if (Counter_hi == -1) {
-        mugen_flag = 1;
-        round_timer.size.half.h = 1;
+    if (gs.Counter_hi == -1) {
+        gs.mugen_flag = true;
+        gs.round_timer = 1;
 
         if (type == 0) {
             counter_write(4);
         }
     } else {
-        mugen_flag = 0;
-        hoji_counter = 60;
-        Counter_low = hoji_counter;
-        round_timer.size.half.h = Counter_hi;
-        math_counter_hi = Counter_hi;
-        math_counter_hi /= 10;
-        math_counter_low = Counter_hi - (math_counter_hi * 10);
+        gs.mugen_flag = false;
+        gs.hoji_counter = 60;
+        gs.Counter_low = gs.hoji_counter;
+        gs.round_timer = gs.Counter_hi;
+        gs.math_counter_hi = gs.Counter_hi;
+        gs.math_counter_hi /= 10;
+        gs.math_counter_low = gs.Counter_hi - (gs.math_counter_hi * 10);
 
         if (type == 0) {
             counter_write(4);
         }
-
-        round_timer.size.half.l = 0;
     }
 
-    flash_r_num = 0;
-    flash_col = 0;
-    counter_color = 4;
+    gs.flash_r_num = 0;
+    gs.flash_col = 0;
+    gs.counter_color = 4;
 }
 
 void count_cont_main() {
@@ -66,26 +54,26 @@ void count_cont_main() {
     }
 
     if (Debug_w[24]) {
-        counter_write(counter_color);
+        counter_write(gs.counter_color);
         return;
     }
 
     if (Allow_a_battle_f == 0 || Demo_Time_Stop != 0) {
-        counter_write(counter_color);
+        counter_write(gs.counter_color);
         return;
     }
 
     if (Break_Into) {
-        counter_write(counter_color);
+        counter_write(gs.counter_color);
         return;
     }
 
     if (sa_stop_check() != 0) {
-        counter_write(counter_color);
+        counter_write(gs.counter_color);
         return;
     }
 
-    if (mugen_flag == 1) {
+    if (gs.mugen_flag) {
         counter_write(4);
         return;
     }
@@ -95,56 +83,56 @@ void count_cont_main() {
         return;
     }
 
-    counter_write(counter_color);
+    counter_write(gs.counter_color);
 }
 
 void counter_control() {
-    if (Counter_hi == 0) {
+    if (gs.Counter_hi == 0) {
         if (No_Trans == 0) {
-            counter_write(counter_color);
+            counter_write(gs.counter_color);
         }
         return;
     }
 
-    if (flash_r_num) {
-        if (Counter_hi == 10 && Counter_low == hoji_counter) {
-            flash_timer = 0;
+    if (gs.flash_r_num) {
+        if (gs.Counter_hi == 10 && gs.Counter_low == gs.hoji_counter) {
+            gs.flash_timer = 0;
             counter_flash(1);
-        } else if (Counter_hi < 11) {
+        } else if (gs.Counter_hi < 11) {
             counter_flash(1);
         } else {
             counter_flash(0);
         }
-    } else if (Counter_hi == 30 && Counter_low == hoji_counter) {
-        flash_r_num = 1;
-        flash_timer = 0;
+    } else if (gs.Counter_hi == 30 && gs.Counter_low == gs.hoji_counter) {
+        gs.flash_r_num = 1;
+        gs.flash_timer = 0;
         counter_flash(0);
     }
 
-    if (Counter_low != 0) {
-        Counter_low -= 1;
+    if (gs.Counter_low != 0) {
+        gs.Counter_low -= 1;
 
         if (No_Trans == 0) {
-            counter_write(counter_color);
+            counter_write(gs.counter_color);
         }
 
         return;
     }
 
-    Counter_low = hoji_counter;
-    Counter_hi -= 1;
+    gs.Counter_low = gs.hoji_counter;
+    gs.Counter_hi -= 1;
 
-    if (Counter_hi == 0) {
-        counter_color = 4;
+    if (gs.Counter_hi == 0) {
+        gs.counter_color = 4;
     }
 
-    round_timer.size.half.h = Counter_hi;
-    math_counter_hi = Counter_hi;
-    math_counter_hi /= 10;
-    math_counter_low = Counter_hi - (math_counter_hi * 10);
+    gs.round_timer = gs.Counter_hi;
+    gs.math_counter_hi = gs.Counter_hi;
+    gs.math_counter_hi /= 10;
+    gs.math_counter_low = gs.Counter_hi - (gs.math_counter_hi * 10);
 
     if (No_Trans == 0) {
-        counter_write(counter_color);
+        counter_write(gs.counter_color);
     }
 }
 
@@ -156,9 +144,9 @@ void counter_write(u8 atr) {
             for (i = 0; i < 4; i++) {
                 scfont_sqput(i + 22, 1, 9, 2, 31, 2, 1, 3, 2);
             }
-        } else if (mugen_flag == 0) {
-            scfont_sqput(22, 0, atr, 2, math_counter_hi << 1, 2, 2, 4, 2);
-            scfont_sqput(24, 0, atr, 2, math_counter_low << 1, 2, 2, 4, 2);
+        } else if (!gs.mugen_flag) {
+            scfont_sqput(22, 0, atr, 2, gs.math_counter_hi << 1, 2, 2, 4, 2);
+            scfont_sqput(24, 0, atr, 2, gs.math_counter_low << 1, 2, 2, 4, 2);
         } else {
             scfont_sqput(22, 0, 4, 2, 28, 28, 4, 4, 2);
         }
@@ -172,40 +160,39 @@ void counter_write(u8 atr) {
 void bcounter_write() {
     if (!No_Trans) {
         scfont_put(21, 4, 0x8F, 2, 20, 6, 2);
-        scfont_sqput(22, 2, 15, 2, math_counter_hi << 1, 6, 2, 3, 2);
-        scfont_sqput(24, 2, 15, 2, math_counter_low << 1, 6, 2, 3, 2);
+        scfont_sqput(22, 2, 15, 2, gs.math_counter_hi << 1, 6, 2, 3, 2);
+        scfont_sqput(24, 2, 15, 2, gs.math_counter_low << 1, 6, 2, 3, 2);
         scfont_put(26, 4, 15, 2, 20, 6, 2);
     }
 }
 
 void counter_flash(s8 Flash_Num) {
-    flash_timer--;
+    gs.flash_timer--;
 
-    if (flash_timer < 0) {
-        flash_timer = flash_timer_tbl[Flash_Num];
-        counter_color = flash_color_tbl[flash_col];
-        flash_col++;
+    if (gs.flash_timer < 0) {
+        gs.flash_timer = flash_timer_tbl[Flash_Num];
+        gs.counter_color = flash_color_tbl[gs.flash_col];
+        gs.flash_col++;
 
-        if (flash_col == 4) {
-            flash_col = 0;
+        if (gs.flash_col == 4) {
+            gs.flash_col = 0;
         }
     }
 }
 
 void bcount_cont_init() {
-    Counter_hi = 50;
-    hoji_counter = 60;
-    Counter_low = hoji_counter;
-    round_timer.size.half.h = Counter_hi;
-    math_counter_hi = 5;
-    math_counter_low = 0;
+    gs.Counter_hi = 50;
+    gs.hoji_counter = 60;
+    gs.Counter_low = gs.hoji_counter;
+    gs.round_timer = gs.Counter_hi;
+    gs.math_counter_hi = 5;
+    gs.math_counter_low = 0;
     bcounter_write();
-    round_timer.size.half.l = 0;
-    Time_Stop = 0;
+    gs.Time_Stop = 0;
 }
 
 void bcount_cont_main() {
-    if (Break_Into != 0 || sa_stop_check() || Time_Stop != 0 || Allow_a_battle_f == 0) {
+    if (Break_Into != 0 || sa_stop_check() || gs.Time_Stop != 0 || Allow_a_battle_f == 0) {
         return;
     }
 
@@ -215,47 +202,49 @@ void bcount_cont_main() {
 }
 
 void bcounter_control() {
-    if (Counter_hi != 0) {
-        if (Counter_low != 0) {
-            Counter_low -= 1;
-            return;
-        }
+    if (gs.Counter_hi == 0) {
+        return;
+    }
 
-        hoji_counter = 60;
-        Counter_low = hoji_counter;
-        Counter_hi -= 1;
-        round_timer.size.half.h = Counter_hi;
-        math_counter_hi = Counter_hi;
-        math_counter_hi /= 10;
-        math_counter_low = Counter_hi - (math_counter_hi * 10);
+    if (gs.Counter_low != 0) {
+        gs.Counter_low -= 1;
+        return;
+    }
 
-        if (Counter_hi == 0) {
-            math_counter_hi = math_counter_low = 0;
-            Allow_a_battle_f = 0;
-            Time_Over = 1;
-        }
+    gs.hoji_counter = 60;
+    gs.Counter_low = gs.hoji_counter;
+    gs.Counter_hi -= 1;
+    gs.round_timer = gs.Counter_hi;
+    gs.math_counter_hi = gs.Counter_hi;
+    gs.math_counter_hi /= 10;
+    gs.math_counter_low = gs.Counter_hi - (gs.math_counter_hi * 10);
+
+    if (gs.Counter_hi == 0) {
+        gs.math_counter_hi = gs.math_counter_low = 0;
+        Allow_a_battle_f = 0;
+        gs.Time_Over = true;
     }
 }
 
 s16 bcounter_down(u8 kind) {
-    if (Counter_hi == 0) {
-        math_counter_hi = math_counter_low = 0;
+    if (gs.Counter_hi == 0) {
+        gs.math_counter_hi = gs.math_counter_low = 0;
         return 0;
     }
 
-    Counter_hi -= 1;
+    gs.Counter_hi -= 1;
 
     if (kind) {
-        Counter_hi = 0;
+        gs.Counter_hi = 0;
     }
 
-    math_counter_hi = Counter_hi;
-    math_counter_hi /= 10;
-    math_counter_low = Counter_hi - (math_counter_hi * 10);
+    gs.math_counter_hi = gs.Counter_hi;
+    gs.math_counter_hi /= 10;
+    gs.math_counter_low = gs.Counter_hi - (gs.math_counter_hi * 10);
 
-    if (Counter_hi == 0) {
-        math_counter_hi = math_counter_low = 0;
+    if (gs.Counter_hi == 0) {
+        gs.math_counter_hi = gs.math_counter_low = 0;
     }
 
-    return Counter_hi;
+    return gs.Counter_hi;
 }

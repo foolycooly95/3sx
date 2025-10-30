@@ -103,7 +103,10 @@ static void configure_gekko() {
     config.state_size = sizeof(GameState);
     config.max_spectators = 0;
     config.input_prediction_window = 10;
-    // config.desync_detection = true;
+
+#if defined(DEBUG)
+    config.desync_detection = true;
+#endif
 
     gekko_create(&session);
     gekko_start(session, &config);
@@ -140,17 +143,42 @@ static u16 get_inputs() {
 }
 
 static void note_input(u16 input, int player, int frame) {
+    if (frame < 0) {
+        return;
+    }
+
     input_history[player][frame % INPUT_HISTORY_MAX] = input;
 }
 
 static u16 recall_input(int player, int frame) {
+    if (frame < 0) {
+        return 0;
+    }
+
     return input_history[player][frame % INPUT_HISTORY_MAX];
 }
+
+#if defined(DEBUG)
+static unsigned int djb2_hash(const uint8_t* data, size_t len) {
+    unsigned int hash = 5381;
+
+    for (size_t i = 0; i < len; i++) {
+        hash *= 33;
+        hash += data[i];
+    }
+
+    return hash;
+}
+#endif
 
 static void save_state(GekkoGameEvent* event) {
     *event->data.save.state_len = sizeof(GameState);
     GameState* dst = (GameState*)event->data.save.state;
     SDL_memcpy(dst, &gs, sizeof(GameState));
+
+#if defined(DEBUG)
+    *event->data.save.checksum = djb2_hash(&gs, sizeof(GameState));
+#endif
 }
 
 static void load_state(GekkoGameEvent* event) {
@@ -238,7 +266,13 @@ static void process_session() {
             session_state = SESSION_RUNNING;
             break;
 
-        default:
+        case DesyncDetected:
+            printf("⚠️ desync detected at frame %d\n", event->data.desynced.frame);
+            break;
+
+        case EmptySessionEvent:
+        case SpectatorPaused:
+        case SpectatorUnpaused:
             // Do nothing
             break;
         }

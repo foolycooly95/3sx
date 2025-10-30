@@ -42,6 +42,7 @@
 #include "sf33rd/Source/Game/screen/ranking.h"
 #include "sf33rd/Source/Game/screen/sel_pl.h"
 #include "sf33rd/Source/Game/screen/win.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -291,6 +292,7 @@ void Game01() {
     BG_Draw_System();
     Basic_Sub();
     Setup_Play_Type();
+    SelectTimer_Run();
 
     switch (G_No[2]) {
     case 0:
@@ -399,7 +401,7 @@ void Game01() {
 void Game02() {
     void (*Game02_Jmp_Tbl[8])() = { Game2_0, Game2_1, Game2_2, Game2_3, Game2_4, Game2_5, Game2_6, Game2_7 };
 
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     Game02_Jmp_Tbl[G_No[2]]();
     BG_move_Ex(3);
 }
@@ -771,8 +773,8 @@ void Game03() {
             Request_E_No = 0;
             cpReadyTask(TASK_MENU, Menu_Task);
             task[TASK_MENU].r_no[1] = 16;
-            Cursor_Y_Pos[0][0] = 0;
-            Cursor_Y_Pos[1][0] = 0;
+            gs.Cursor_Y_Pos[0][0] = 0;
+            gs.Cursor_Y_Pos[1][0] = 0;
             G_Timer = 4;
         }
 
@@ -1382,7 +1384,7 @@ s16 Bonus_Sub() {
     s16 x;
 
     mpp_w.inGame = true;
-    Scene_Cut = Cut_Cut_Cut();
+    gs.Scene_Cut = Cut_Cut_Cut();
     Bonus_Game_Complete = 0;
 
     if (Game_pause != 0x81) {

@@ -853,7 +853,7 @@ void Game_Manage_7_5() {
 }
 
 void Game_Manage_7_6() {
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -986,7 +986,7 @@ void Game_Manage_81_1() {
 }
 
 void Game_Manage_81_2() {
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -1017,7 +1017,7 @@ void Game_Manage_8_2() {
         C_Timer = 1;
     }
 
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -1039,7 +1039,7 @@ void Game_Manage_8_2() {
 }
 
 void Game_Manage_8_3() {
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -1072,7 +1072,7 @@ void Game_Manage_9th() {
         break;
 
     case 1:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             C_Timer = 1;
         }
 
@@ -1758,7 +1758,7 @@ void Pool_Score(s16 PL_id) {
         return;
     }
 
-    Time_Bonus[Winner_id] += round_timer.size.half.h * 300;
+    Time_Bonus[Winner_id] += gs.round_timer * 300;
 }
 
 s32 Check_Break_Into_CPU(s16 PL_id) {
@@ -1975,10 +1975,10 @@ void Game_Manage_12_0() {
 
     if (Bonus_Type == 20) {
         C_No[1] = 6;
-        Time_Stop = 1;
-        Time_Over = 0;
+        gs.Time_Stop = 1;
+        gs.Time_Over = false;
         Exit_No = 0;
-        Unit_Of_Timer = 0;
+        gs.Unit_Of_Timer = 0;
         setup_bonus_car_parts();
         bcount_cont_init();
     }
@@ -2203,7 +2203,7 @@ void Game_Manage_12_5() {
         break;
 
     case 1:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             C_Timer = 1;
         }
 
@@ -2264,7 +2264,7 @@ void Game_Manage_12_8() {
             break;
 
         case 2:
-            if (C_Timer < 11 && Scene_Cut) {
+            if (C_Timer < 11 && gs.Scene_Cut) {
                 C_Timer = 1;
             }
 
@@ -2444,7 +2444,7 @@ u32 Setup_Final_Score(s16 Type) {
     }
 
     Bonus_Score = xx;
-    xx += Counter_hi * 1000;
+    xx += gs.Counter_hi * 1000;
     Bonus_Score_Plus = xx;
     xx += Score[Player_id][0];
 
@@ -2456,7 +2456,7 @@ u32 Setup_Final_Score(s16 Type) {
 }
 
 s32 Bonus_Cut_Sub() {
-    if (Scene_Cut) {
+    if (gs.Scene_Cut) {
         Sound_SE(100);
         Bonus_Game_result = 0;
         Score[Player_id][0] = Final_Bonus_Score;
@@ -2502,7 +2502,7 @@ s16 Check_Time_Over() {
 
     switch (C_No[2]) {
     case 0:
-        if (Time_Over) {
+        if (gs.Time_Over) {
             C_No[2]++;
             C_Timer = 60;
             request_center_message(2);

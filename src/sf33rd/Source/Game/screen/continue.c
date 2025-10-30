@@ -72,7 +72,7 @@ void Continue_1st() {
         break;
 
     case 2:
-        if (Scene_Cut) {
+        if (gs.Scene_Cut) {
             Cont_Timer = 1;
         }
 

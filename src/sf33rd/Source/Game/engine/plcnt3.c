@@ -69,13 +69,13 @@ void plcnt_b2_move() {
     move_player_work_bonus();
 
     if (Bonus_Stage_RNO[0] == 2) {
-        Time_Stop = 1;
+        gs.Time_Stop = 1;
         gs.pcon_rno[0] = 2;
         gs.pcon_rno[1] = 0;
         gs.pcon_rno[2] = 0;
     }
 
-    if (Time_Over) {
+    if (gs.Time_Over) {
         gs.pcon_rno[0] = 2;
         gs.pcon_rno[1] = 0;
         gs.pcon_rno[2] = 0;
