@@ -63,6 +63,7 @@ typedef struct GameState {
     s8 Cursor_X[2];
     s8 Cursor_Y[2];
     s8 Cursor_Y_Pos[2][4];
+    s8 Cursor_Timer[2];
 } GameState;
 
 extern GameState gs;
@@ -121,7 +122,6 @@ extern s8 Request_E_No;
 extern s8 Request_G_No;
 extern u8 Present_Rank[2];
 extern s8 Best_Grade[2];
-extern s8 Cursor_Timer[2];
 extern s8 Demo_Type;
 extern s8 Rank_Type;
 extern s8 Flash_Sign[2];

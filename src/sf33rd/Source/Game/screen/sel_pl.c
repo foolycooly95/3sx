@@ -818,7 +818,7 @@ void PL_Sel_2nd() {
 
         if (ret != 0 || My_char[ID2] == 0) {
             SP_No[ID2][3]++;
-            Cursor_Timer[ID2] = 40;
+            gs.Cursor_Timer[ID2] = 40;
             Go_Away_Red_Lines();
 
             if (Mode_Type == MODE_NORMAL_TRAINING || Mode_Type == MODE_PARRY_TRAINING) {
@@ -838,7 +838,7 @@ void PL_Sel_2nd() {
         break;
 
     case 1:
-        if ((Cursor_Timer[ID2] -= 1) != 0) {
+        if ((gs.Cursor_Timer[ID2] -= 1) != 0) {
             break;
         }
 
@@ -932,7 +932,7 @@ void Sel_PL_2nd() {
     SP_No[ID][0]++;
     Stop_Cursor[ID] = 0;
     Deley_Shot_No[ID] = 0;
-    Cursor_Timer[ID] = 1;
+    gs.Cursor_Timer[ID] = 1;
 
     if (Demo_Flag == 0) {
         Demo_Timer[ID] = 0;
@@ -1123,20 +1123,20 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
         Auto_Repeat_Sub(PL_id);
     }
 
-    if ((Cursor_Timer[PL_id] -= 1) == 0) {
-        Cursor_Timer[PL_id] = 1;
+    if ((gs.Cursor_Timer[PL_id] -= 1) == 0) {
+        gs.Cursor_Timer[PL_id] = 1;
 
         if (sw & SWK_RIGHT) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CR(PL_id);
         } else if (sw & SWK_LEFT) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CL(PL_id);
         } else if (sw & SWK_UP) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CU(PL_id);
         } else if (sw & SWK_DOWN) {
-            Cursor_Timer[PL_id] = 5;
+            gs.Cursor_Timer[PL_id] = 5;
             Sel_PL_Sub_CD(PL_id);
         }
     }

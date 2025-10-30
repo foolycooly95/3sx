@@ -64,7 +64,6 @@ s8 Request_E_No;
 s8 Request_G_No;
 u8 Present_Rank[2];
 s8 Best_Grade[2];
-s8 Cursor_Timer[2];
 s8 Demo_Type;
 s8 Rank_Type;
 s8 Flash_Sign[2];
