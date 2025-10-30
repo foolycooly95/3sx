@@ -1975,7 +1975,7 @@ void Game_Manage_12_0() {
 
     if (Bonus_Type == 20) {
         C_No[1] = 6;
-        Time_Stop = 1;
+        gs.Time_Stop = 1;
         gs.Time_Over = false;
         Exit_No = 0;
         gs.Unit_Of_Timer = 0;

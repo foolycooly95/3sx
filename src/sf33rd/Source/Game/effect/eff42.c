@@ -176,7 +176,7 @@ void EFF42_MOVE(WORK_Other* ewk) {
     case 0:
         if (--ewk->wu.dir_timer == 0) {
             ewk->wu.routine_no[0]++;
-            Time_Stop = 0;
+            gs.Time_Stop = 0;
         }
 
         break;

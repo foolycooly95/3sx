@@ -139,7 +139,7 @@ void Next_CPU_1st() {
         Order_Timer[56] = 1;
     }
 
-    Time_Stop = 1;
+    gs.Time_Stop = 1;
     gs.Unit_Of_Timer = 60;
     SelectTimer_Init();
     Rnd = random_16() & 3;
@@ -675,7 +675,7 @@ void NC_Cut_Sub() {
     if (Next_Step) {
         SC_No[0]++;
         SC_No[1] = 0;
-        Time_Stop = 0;
+        gs.Time_Stop = 0;
     }
 }
 
@@ -1106,7 +1106,7 @@ void Sel_CPU_Sub(s16 PL_id, u16 sw, u16 /* unused */) {
         Sel_EM_Complete[PL_id] = 1;
         EM_id = EM_List[Player_id][Temporary_EM[Player_id] - 1];
         My_char[COM_id] = EM_id;
-        Time_Stop = 2;
+        gs.Time_Stop = 2;
 
         if (VS_Index[PL_id] < 8) {
             Sound_SE(ID + 98);

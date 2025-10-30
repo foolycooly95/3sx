@@ -260,7 +260,7 @@ void Sel_PL_Cont_1st() {
     Setup_Face_ID();
     Setup_1st_Play_Type();
     Setup_Face_Sub();
-    Time_Stop = 1;
+    gs.Time_Stop = 1;
     SelectTimer_Init();
     Face_MV_Request = 0;
     Face_Status = 0;
@@ -1590,7 +1590,7 @@ void Exit_2nd() {
 
     Exit_No++;
     Last_My_char[Player_id] = My_char[Player_id];
-    Time_Stop = 2;
+    gs.Time_Stop = 2;
 
     for (xx = 0; xx < 4; xx++) {
         SC_No[xx] = 0;

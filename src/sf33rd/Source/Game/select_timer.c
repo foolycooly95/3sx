@@ -32,7 +32,7 @@ static u8 sbcd(u8 a, u8 b) {
 }
 
 static void check_sleep() {
-    if (Time_Stop == 2) {
+    if (gs.Time_Stop == 2) {
         gs.select_timer_state.step = 0;
     }
 }
@@ -61,7 +61,7 @@ void SelectTimer_Run() {
 
     switch (gs.select_timer_state.step) {
     case 0:
-        if (Time_Stop == 0) {
+        if (gs.Time_Stop == 0) {
             gs.select_timer_state.step = 1;
         }
 

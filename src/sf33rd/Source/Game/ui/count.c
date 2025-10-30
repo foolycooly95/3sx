@@ -188,11 +188,11 @@ void bcount_cont_init() {
     gs.math_counter_hi = 5;
     gs.math_counter_low = 0;
     bcounter_write();
-    Time_Stop = 0;
+    gs.Time_Stop = 0;
 }
 
 void bcount_cont_main() {
-    if (Break_Into != 0 || sa_stop_check() || Time_Stop != 0 || Allow_a_battle_f == 0) {
+    if (Break_Into != 0 || sa_stop_check() || gs.Time_Stop != 0 || Allow_a_battle_f == 0) {
         return;
     }
 
