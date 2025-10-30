@@ -2,6 +2,7 @@
 #define WORKUSER_H
 
 #include "sf33rd/Source/Game/engine/cmd_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "types.h"
 
 #include <stdbool.h>
@@ -59,11 +60,11 @@ typedef struct GameState {
     s8 Counter_low;
     s16 Unit_Of_Timer;
     s8 Select_Timer;
-
     s8 Cursor_X[2];
     s8 Cursor_Y[2];
     s8 Cursor_Y_Pos[2][4];
     s8 Cursor_Timer[2];
+    SelectTimerState select_timer_state;
 } GameState;
 
 extern GameState gs;

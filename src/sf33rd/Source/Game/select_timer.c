@@ -9,8 +9,6 @@
 
 static s16 bcdext = 0;
 
-SelectTimerState select_timer_state = { 0 };
-
 static u8 sbcd(u8 a, u8 b) {
     s16 c;
     s16 d;
@@ -35,17 +33,17 @@ static u8 sbcd(u8 a, u8 b) {
 
 static void check_sleep() {
     if (Time_Stop == 2) {
-        select_timer_state.step = 0;
+        gs.select_timer_state.step = 0;
     }
 }
 
 void SelectTimer_Init() {
-    select_timer_state.is_running = true;
-    select_timer_state.step = 0;
+    gs.select_timer_state.is_running = true;
+    gs.select_timer_state.step = 0;
 }
 
 void SelectTimer_Finish() {
-    SDL_zero(select_timer_state);
+    SDL_zero(gs.select_timer_state);
 }
 
 void SelectTimer_Run() {
@@ -61,10 +59,10 @@ void SelectTimer_Run() {
         return;
     }
 
-    switch (select_timer_state.step) {
+    switch (gs.select_timer_state.step) {
     case 0:
         if (Time_Stop == 0) {
-            select_timer_state.step = 1;
+            gs.select_timer_state.step = 1;
         }
 
         break;
@@ -81,8 +79,8 @@ void SelectTimer_Run() {
         gs.Select_Timer = sbcd(1, gs.Select_Timer);
 
         if (gs.Select_Timer == 0) {
-            select_timer_state.step = 2;
-            select_timer_state.timer = 30;
+            gs.select_timer_state.step = 2;
+            gs.select_timer_state.timer = 30;
         }
 
         break;
@@ -91,14 +89,14 @@ void SelectTimer_Run() {
         check_sleep();
 
         if (gs.Select_Timer) {
-            select_timer_state.step = 1;
+            gs.select_timer_state.step = 1;
             gs.Unit_Of_Timer = 60;
         } else {
-            select_timer_state.timer -= 1;
+            gs.select_timer_state.timer -= 1;
 
-            if (select_timer_state.timer == 0) {
+            if (gs.select_timer_state.timer == 0) {
                 gs.Time_Over = true;
-                select_timer_state.step = 3;
+                gs.select_timer_state.step = 3;
             }
         }
 
@@ -109,14 +107,14 @@ void SelectTimer_Run() {
         gs.Time_Over = true;
 
         if (gs.Select_Timer) {
-            select_timer_state.step = 1;
+            gs.select_timer_state.step = 1;
             gs.Unit_Of_Timer = 60;
         }
 
         break;
 
     default:
-        select_timer_state.is_running = false;
+        gs.select_timer_state.is_running = false;
         break;
     }
 }
