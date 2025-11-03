@@ -34,11 +34,11 @@ void effect_D8_move(WORK_Other* ewk) {
     switch (ewk->wu.routine_no[0]) {
     case 0:
         if (((Mode_Type == MODE_NORMAL_TRAINING) || (Mode_Type == MODE_PARRY_TRAINING)) &&
-            (ewk->master_id == New_Challenger) && (S_No[3] < 2)) {
+            (ewk->master_id == gs.New_Challenger) && (gs.S_No[3] < 2)) {
             return;
         }
 
-        if (Complete_Face <= 0) {
+        if (gs.Complete_Face <= 0) {
             ewk->wu.routine_no[0] += 1;
             ewk->wu.dir_timer = 10;
         }
@@ -59,7 +59,7 @@ void effect_D8_move(WORK_Other* ewk) {
             ewk->wu.vital_new = gs.Cursor_X[ewk->master_id];
             ewk->wu.vital_old = gs.Cursor_Y[ewk->master_id];
 
-            if (Play_Type == 1) {
+            if (gs.Play_Type == 1) {
                 offset_x = Setup_Face_Offset_X(99);
             } else {
                 offset_x = Setup_Face_Offset_X(Play_Type_1st);
@@ -69,7 +69,7 @@ void effect_D8_move(WORK_Other* ewk) {
             set_char_move_init2(&ewk->wu, 0, ewk->wu.char_index, (ewk->wu.cg_ix / ewk->wu.cgd_type) + 1, 0);
         }
 
-        if (Sel_PL_Complete[ewk->master_id]) {
+        if (gs.Sel_PL_Complete[ewk->master_id]) {
             ewk->wu.routine_no[0] += 1;
             ewk->wu.dir_timer = 20;
             ewk->wu.char_index += 1;
@@ -85,9 +85,9 @@ void effect_D8_move(WORK_Other* ewk) {
             char_move(&ewk->wu);
         } else {
             ewk->wu.routine_no[0] += 1;
-            Sel_PL_Complete[ewk->master_id] = -0x8000;
+            gs.Sel_PL_Complete[ewk->master_id] = -0x8000;
 
-            if (Select_Start[ewk->master_id] == 0) {
+            if (gs.Select_Start[ewk->master_id] == 0) {
                 gs.Select_Timer = 0x20;
             }
 

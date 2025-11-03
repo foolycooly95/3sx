@@ -66,6 +66,16 @@ typedef struct GameState {
     s8 Cursor_Timer[2];
     SelectTimerState select_timer_state;
     s8 Time_Stop;
+    s8 Suicide[8];
+    s8 Complete_Face;
+    u8 Play_Type;
+    s16 Sel_PL_Complete[2];
+    s8 New_Challenger;
+
+    // Character select routine indices
+    u8 S_No[4];
+
+    s8 Select_Start[2];
 } GameState;
 
 extern GameState gs;
@@ -111,7 +121,6 @@ extern s8 request_message;
 extern s8 judge_flag;
 extern s8 WINNER;
 extern s8 LOSER;
-extern s8 New_Challenger;
 extern s8 Champion;
 extern s8 Fade_Half_Flag;
 extern s8 Reserve_Cut;
@@ -268,7 +277,6 @@ extern u8 Stage_Time_Finish[2];
 extern u8 Bonus_Type;
 extern s8 Completion_Bonus[2][2];
 extern s8 ichikannkei;
-extern s8 Complete_Face;
 extern u8 Plate_Disposal_No[2][3];
 extern u8 SO_No[2];
 extern u8 Disp_Command_Name[2][3];
@@ -291,7 +299,6 @@ extern s8 Last_Selected_EM[2];
 extern u8 Q_Country;
 extern u8 Continue_Cut[2];
 extern u8 Introduce_Boss[2][2];
-extern s8 Suicide[8];
 extern u8 Final_Play_Type[2];
 extern s8 Rank_In[2][4];
 extern s8 Request_Disp_Rank[2][4];
@@ -306,9 +313,6 @@ extern u8 E_Number[2][4];
 extern u8 E_No[4];
 extern u8 C_No[4];
 
-// Character select routine indices
-extern u8 S_No[4];
-
 // Game routine indices
 extern u8 G_No[4];
 
@@ -317,7 +321,6 @@ extern u8 M_No[4];
 extern u8 Exit_No;
 extern u8 SP_No[2][4];
 extern u8 Face_No[2];
-extern s8 Select_Start[2];
 extern s8 Stop_Cursor[2];
 extern u8 Training_Index;
 extern u8 Connect_Status;
@@ -326,7 +329,6 @@ extern u8 Game_pause;
 extern u8 Game_difficulty;
 extern u8 Pause;
 extern u8 Pause_ID;
-extern u8 Play_Type;
 extern u8 Exit_Menu;
 extern u8 Conclusion_Flag;
 extern u8 CP_No[2][4];
@@ -423,7 +425,6 @@ extern s16 ENTRY_X;
 extern s16 C_Timer;
 extern s16 S_Timer;
 extern s16 Flash_Complete[2];
-extern s16 Sel_PL_Complete[2];
 extern s16 Sel_Arts_Complete[2];
 extern s16 Arts_Y[2];
 extern s16 Move_Super_Arts[2];

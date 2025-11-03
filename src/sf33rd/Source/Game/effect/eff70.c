@@ -17,7 +17,7 @@
 void Setup_Eff70(WORK_Other* ewk);
 
 void effect_70_move(WORK_Other* ewk) {
-    if (Suicide[0] == 1) {
+    if (gs.Suicide[0] == 1) {
         ewk->wu.routine_no[0] = 99;
         ewk->wu.disp_flag = 0;
         return;
@@ -40,7 +40,7 @@ void effect_70_move(WORK_Other* ewk) {
         char_move(&ewk->wu);
 
         if (ewk->wu.cg_type) {
-            Complete_Face--;
+            gs.Complete_Face--;
             ewk->wu.routine_no[0]++;
             ewk->wu.char_index = 0;
             set_char_move_init2(&ewk->wu, 0, ewk->wu.char_index, ewk->wu.dir_step + 1, 0);
@@ -50,7 +50,7 @@ void effect_70_move(WORK_Other* ewk) {
         /* fallthrough */
 
     case 2:
-        if (Play_Type == 1 && Sel_PL_Complete[0] & 0x8000 && Sel_PL_Complete[1] & 0x8000) {
+        if (gs.Play_Type == 1 && gs.Sel_PL_Complete[0] & 0x8000 && gs.Sel_PL_Complete[1] & 0x8000) {
             ewk->wu.routine_no[0]++;
             ewk->wu.dir_timer = 30;
         }
@@ -111,7 +111,7 @@ s32 effect_70_init(s16 id) {
     ewk->wu.dir_step = id;
     ewk->wu.dir_timer = 10;
 
-    if (permission_player[Present_Mode].ok[id] == 0) {
+    if (permission_player[Present_Mode].ok[id] == 0) { // FIXME: Should this be moved to GameState?
         ewk->wu.my_bright_type = 1;
         ewk->wu.my_bright_level = 7;
         ewk->wu.my_clear_level = 80;

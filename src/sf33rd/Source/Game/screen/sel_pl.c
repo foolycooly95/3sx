@@ -170,7 +170,7 @@ void Switch_Work() {
         return;
     }
 
-    switch (S_No[3]) {
+    switch (gs.S_No[3]) {
     case 0:
         if (Champion) {
             p1sw_0 = 0;
@@ -181,7 +181,7 @@ void Switch_Work() {
         break;
 
     case 1:
-        S_No[3]++;
+        gs.S_No[3]++;
         Default_Training_Data(0);
         Record_Data_Tr = 0;
         Training_Disp_Work_Clear();
@@ -212,7 +212,7 @@ void Switch_Work() {
 void Sel_PL_Control() {
     void (*Sel_PL_Cont_Tbl[4])() = { Sel_PL_Cont_1st, Sel_PL_Cont_2nd, Sel_PL_Cont_3rd, Sel_PL_Cont_4th };
     Setup_Select_Status();
-    Sel_PL_Cont_Tbl[S_No[0]]();
+    Sel_PL_Cont_Tbl[gs.S_No[0]]();
     Face_Control();
     OBJ_Control();
     ID2 = 0;
@@ -226,7 +226,7 @@ void Sel_PL_Cont_1st() {
     s16 xx;
 
     Switch_Screen(1);
-    S_No[0]++;
+    gs.S_No[0]++;
     All_Clear_Suicide();
     SsBgmHalfVolume(0);
     Face_No[0] = 0;
@@ -305,7 +305,7 @@ void Check_Use_Gill() {
 void Sel_PL_Cont_2nd() {
     Switch_Screen(1);
     Switch_Screen_Init(1);
-    S_No[0]++;
+    gs.S_No[0]++;
     Request_E_No = 1;
     Clear_Flash_No();
 }
@@ -315,7 +315,7 @@ void Sel_PL_Cont_3rd() {
         return;
     }
 
-    S_No[0]++;
+    gs.S_No[0]++;
     Forbid_Break = 0;
 
     if (G_No[1] != 1) {
@@ -324,7 +324,9 @@ void Sel_PL_Cont_3rd() {
     }
 }
 
-void Sel_PL_Cont_4th() {}
+void Sel_PL_Cont_4th() {
+    // Do nothing
+}
 
 void Setup_Face_ID() {
     s16 x;
@@ -338,18 +340,17 @@ void Setup_Face_ID() {
 }
 
 void Setup_1st_Play_Type() {
-    if (Play_Type == 1) {
+    if (gs.Play_Type == 1) {
         Play_Type_1st = 99;
-        return;
+    } else {
+        Play_Type_1st = Aborigine;
     }
-
-    Play_Type_1st = Aborigine;
 }
 
 void Setup_Face_Sub() {
     s16 x;
 
-    Complete_Face = 19;
+    gs.Complete_Face = 19;
 
     for (x = 1; x < 20; x++) {
         effect_70_init(x);
@@ -442,7 +443,7 @@ void Setup_FACE_BG() {
 }
 
 s16 Setup_Face_X() {
-    if (Play_Type == 1) {
+    if (gs.Play_Type == 1) {
         return 604;
     }
 
@@ -454,7 +455,7 @@ s16 Setup_Face_X() {
 }
 
 s16 Setup_Face_Y() {
-    if (Play_Type == 1) {
+    if (gs.Play_Type == 1) {
         return 0;
     }
 
@@ -497,7 +498,7 @@ void Face_2nd() {
         return;
     }
 
-    if (Sel_PL_Complete[Aborigine]) {
+    if (gs.Sel_PL_Complete[Aborigine]) {
         Face_MV_Time = 5;
         Face_No[0]++;
 
@@ -671,10 +672,10 @@ void OBJ_2nd() {
     Order_Dir[42] = 3;
     Order[Aborigine + 11] = 4;
     Order_Timer[Aborigine + 11] = 1;
-    Select_Start[Aborigine] = 2;
-    effect_38_init(New_Challenger, New_Challenger + 11, 127, 1, 2);
-    Order[New_Challenger + 11] = 1;
-    Order_Timer[New_Challenger + 11] = 1;
+    gs.Select_Start[Aborigine] = 2;
+    effect_38_init(gs.New_Challenger, gs.New_Challenger + 11, 127, 1, 2);
+    Order[gs.New_Challenger + 11] = 1;
+    Order_Timer[gs.New_Challenger + 11] = 1;
     Go_Away_Red_Lines();
     Order[Aborigine + 31] = 5;
     Order_Timer[Aborigine + 31] = 1;
@@ -765,7 +766,7 @@ void PL_Sel_1st() {
     s16 ret;
     s16 ret2;
 
-    if (Sel_PL_Complete[ID2] == -0x8000) {
+    if (gs.Sel_PL_Complete[ID2] == -0x8000) {
         SP_No[ID2][1] = 2;
         Push_LDREQ_Queue_Player(ID2, My_char[ID2]);
         ret = check_use_all_SA();
@@ -808,7 +809,7 @@ void PL_Sel_2nd() {
 
     switch (SP_No[ID2][3]) {
     case 0:
-        if (!Sel_PL_Complete[ID2]) {
+        if (!gs.Sel_PL_Complete[ID2]) {
             break;
         }
 
@@ -822,7 +823,7 @@ void PL_Sel_2nd() {
             Go_Away_Red_Lines();
 
             if (Mode_Type == MODE_NORMAL_TRAINING || Mode_Type == MODE_PARRY_TRAINING) {
-                S_No[3] = 1;
+                gs.S_No[3] = 1;
                 break;
             }
 
@@ -896,7 +897,7 @@ void Sel_PL_1st() {
     Auto_Cursor[ID] = 0;
     Moving_Plate[ID] = 0;
     Moving_Plate_Counter[ID] = 0;
-    Select_Start[ID] = 2;
+    gs.Select_Start[ID] = 2;
     Select_Arts[ID] = -1;
 
     if (ID == 1) {
@@ -911,9 +912,9 @@ void Sel_PL_1st() {
         Free_Ptr[0] = Voice_Random_Data[1][Rnd];
     }
 
-    if (Sel_PL_Complete[ID]) {
+    if (gs.Sel_PL_Complete[ID]) {
         SP_No[ID][0] = 3;
-        Select_Start[ID] = 3;
+        gs.Select_Start[ID] = 3;
         Select_Arts[ID] = 3;
         Stop_Cursor[ID] = 1;
         paring_ctr_vs[0][ID] = 0;
@@ -925,7 +926,7 @@ void Sel_PL_1st() {
 }
 
 void Sel_PL_2nd() {
-    if (Select_Start[ID] > 0) {
+    if (gs.Select_Start[ID] > 0) {
         return;
     }
 
@@ -957,7 +958,7 @@ void Sel_PL_3rd() {
         Sel_PL_Sub(0, Deley_Shot_Sub(0));
     }
 
-    if (Sel_PL_Complete[ID] >= 0) {
+    if (gs.Sel_PL_Complete[ID] >= 0) {
         return;
     }
 
@@ -1074,7 +1075,7 @@ void Sel_PL_5th() {
     SP_No[ID][0]++;
 
     if (Mode_Type == MODE_NORMAL_TRAINING || Mode_Type == MODE_PARRY_TRAINING) {
-        S_No[3] = 1;
+        gs.S_No[3] = 1;
     }
 
     if (gs.plw[0].wu.operator == 0 || gs.plw[1].wu.operator == 0) {
@@ -1111,7 +1112,7 @@ u16 Disposal_Of_Diagonal(u16 sw) {
 void Sel_PL_Sub(s16 PL_id, u16 sw) {
     Cursor_Move[PL_id] = 0;
 
-    if (Sel_PL_Complete[PL_id]) {
+    if (gs.Sel_PL_Complete[PL_id]) {
         return;
     }
 
@@ -1149,7 +1150,7 @@ void Sel_PL_Sub(s16 PL_id, u16 sw) {
         return;
     }
 
-    Sel_PL_Complete[PL_id] = 1;
+    gs.Sel_PL_Complete[PL_id] = 1;
     My_char[PL_id] = ID_of_Face[gs.Cursor_Y[PL_id]][gs.Cursor_X[PL_id]];
 
     if (Last_My_char2[PL_id] != My_char[PL_id]) {
@@ -1564,7 +1565,7 @@ void Exit_1st() {
 void Exit_2nd() {
     s16 xx;
 
-    S_No[1] = 0;
+    gs.S_No[1] = 0;
 
     if (Select_Status[0] == 3) {
         Exit_No = 3;
@@ -1603,8 +1604,8 @@ void Exit_3rd() {
     }
 
     Exit_No++;
-    S_No[1] = 0;
-    Suicide[3] = 1;
+    gs.S_No[1] = 0;
+    gs.Suicide[3] = 1;
 
     if (VS_Index[Player_id] >= 9) {
         EM_Rank = 1;
@@ -1619,7 +1620,7 @@ void Exit_4th() {
     FadeIn(0, 4, 8);
     Exit_No++;
     Forbid_Break = 0;
-    Suicide[0] = 1;
+    gs.Suicide[0] = 1;
     Menu_Suicide[0] = 1;
     bgPalCodeOffset[0] = 144;
     BGM_Request(51);
@@ -1964,7 +1965,7 @@ void Correct_Control_Time(s16 PL_id) {
     u8 xx;
     u8 zz;
 
-    if (Play_Type == 1) {
+    if (gs.Play_Type == 1) {
         return;
     }
 
@@ -2022,9 +2023,9 @@ u8 Setup_Battle_Country() {
         return Random_Stage_Data[0][Rnd32];
     }
 
-    if (My_char[New_Challenger] == 17) {
+    if (My_char[gs.New_Challenger] == 17) {
         return My_char[Champion];
     }
 
-    return My_char[New_Challenger];
+    return My_char[gs.New_Challenger];
 }

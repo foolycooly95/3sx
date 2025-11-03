@@ -366,7 +366,7 @@ void Mode_Select(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -600,7 +600,7 @@ void Training_Mode(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -653,7 +653,7 @@ void Training_Mode(struct _TASK* task_ptr) {
         Champion = PL_id;
         Pause_ID = PL_id;
         Training_ID = PL_id;
-        New_Challenger = PL_id ^ 1;
+        gs.New_Challenger = PL_id ^ 1;
         cpExitTask(TASK_ENTRY);
 
         break;
@@ -721,7 +721,7 @@ void Option_Select(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -831,7 +831,7 @@ void System_Direction(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -1474,7 +1474,7 @@ void Load_Replay_Sub(struct _TASK* task_ptr) {
         task_ptr->r_no[3] += 1;
         FadeInit();
         FadeOut(0, 0xFF, 8);
-        Play_Type = 1;
+        gs.Play_Type = 1;
         Mode_Type = MODE_REPLAY;
         Present_Mode = 3;
         Bonus_Game_Flag = 0;
@@ -1718,7 +1718,7 @@ void Game_Option(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -1854,7 +1854,7 @@ void Button_Config(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -2104,7 +2104,7 @@ void Screen_Adjust(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -2380,7 +2380,7 @@ void Sound_Test(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -2591,7 +2591,7 @@ void Memory_Card(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -3483,9 +3483,9 @@ void VS_Result(struct _TASK* task_ptr) {
         task_ptr->r_no[1] = 16;
         task_ptr->r_no[2] = 1;
         task_ptr->r_no[3] = 0;
-        Sel_PL_Complete[0] = 0;
+        gs.Sel_PL_Complete[0] = 0;
         Sel_Arts_Complete[0] = 0;
-        Sel_PL_Complete[1] = 0;
+        gs.Sel_PL_Complete[1] = 0;
         Sel_Arts_Complete[1] = 0;
         Clear_Flash_Init(4);
         break;
@@ -3564,7 +3564,7 @@ void VS_Result(struct _TASK* task_ptr) {
     case 3:
         if (FadeIn(1, 25, 8)) {
             task_ptr->r_no[2]++;
-            Suicide[3] = 0;
+            gs.Suicide[3] = 0;
         }
 
         break;
@@ -4335,8 +4335,8 @@ void Reset_Training(struct _TASK* task_ptr) {
         BGM_Timer[0] = 1;
         G_Timer = 10;
         Cover_Timer = 5;
-        Suicide[0] = 1;
-        Suicide[6] = 1;
+        gs.Suicide[0] = 1;
+        gs.Suicide[6] = 1;
         judge_flag = 0;
         Lever_LR[0] = 0;
         Lever_LR[1] = 0;
@@ -4394,8 +4394,8 @@ void Reset_Replay(struct _TASK* task_ptr) {
         Cover_Timer = 5;
         effect_work_kill_mod_plcol();
         move_effect_work(6);
-        Suicide[0] = 1;
-        Suicide[6] = 1;
+        gs.Suicide[0] = 1;
+        gs.Suicide[6] = 1;
         judge_flag = 0;
         cpExitTask(TASK_PAUSE);
         break;
@@ -4507,31 +4507,31 @@ void Normal_Training(struct _TASK* task_ptr) {
                 Training_Disp_Work_Clear();
                 CP_No[0][0] = 0;
                 CP_No[1][0] = 0;
-                gs.plw[New_Challenger].wu.operator = 1;
-                Operator_Status[New_Challenger] = 1;
+                gs.plw[gs.New_Challenger].wu.operator = 1;
+                Operator_Status[gs.New_Challenger] = 1;
                 Setup_NTr_Data(Menu_Cursor_Y[0]);
                 count_cont_init(0);
 
                 switch (Training[0].contents[0][0][0]) {
                 case 0:
                     control_pl_rno = 0;
-                    control_player = New_Challenger;
+                    control_player = gs.New_Challenger;
                     break;
 
                 case 1:
                     control_pl_rno = 1;
-                    control_player = New_Challenger;
+                    control_player = gs.New_Challenger;
                     break;
 
                 case 2:
                     control_pl_rno = 2;
-                    control_player = New_Challenger;
+                    control_player = gs.New_Challenger;
                     break;
 
                 case 3:
                     control_pl_rno = 99;
-                    gs.plw[New_Challenger].wu.operator = 0;
-                    Operator_Status[New_Challenger] = 0;
+                    gs.plw[gs.New_Challenger].wu.operator = 0;
+                    Operator_Status[gs.New_Challenger] = 0;
                     break;
 
                 case 4:
@@ -5142,8 +5142,8 @@ void Blocking_Tr_Option(struct _TASK* task_ptr) {
         task_ptr->r_no[3] = 0;
         Training[0] = Training[2];
 
-        gs.plw[New_Challenger].wu.operator = 1;
-        Operator_Status[New_Challenger] = 1;
+        gs.plw[gs.New_Challenger].wu.operator = 1;
+        Operator_Status[gs.New_Challenger] = 1;
 
         switch (Training[0].contents[1][0][0]) {
         case 0:
@@ -5219,7 +5219,7 @@ void Character_Change(struct _TASK* task_ptr) {
                 G_No[3] = 0;
 
                 for (ix = 0; ix < 2; ix++) {
-                    Sel_PL_Complete[ix] = 0;
+                    gs.Sel_PL_Complete[ix] = 0;
                     Sel_Arts_Complete[ix] = 0;
                     gs.plw[ix].wu.operator = 1;
                     Operator_Status[ix] = 1;
