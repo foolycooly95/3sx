@@ -175,7 +175,7 @@ void Game_Manage_1st() {
 
     win_pause_go = 0;
     appear_work_clear();
-    gs.win_sp_flag = 0;
+    win_sp_flag = 0;
     BGM_No[1] = 0;
     BGM_No[0] = 0;
     Appear_Q = 0;
@@ -184,20 +184,20 @@ void Game_Manage_1st() {
     Round_Operator[0] = 0;
     Round_Operator[1] = 0;
 
-    if (gs.plw[0].wu.operator) {
+    if (plw[0].wu.operator) {
         Round_Operator[0] = 1;
-        Final_Play_Type[0] = gs.Play_Type;
+        Final_Play_Type[0] = Play_Type;
     }
 
-    if (gs.plw[1].wu.operator) {
+    if (plw[1].wu.operator) {
         Round_Operator[1] = 1;
-        Final_Play_Type[1] = gs.Play_Type;
+        Final_Play_Type[1] = Play_Type;
     }
 
     Battle_Q[0] = 0;
     Battle_Q[1] = 0;
 
-    if (gs.Play_Type == 0) {
+    if (Play_Type == 0) {
         Control_Time = SC_Personal_Time[Player_id];
         paring_ctr_ori[Player_id] = paring_ctr_vs[0][Player_id] = 0;
         Stage_Stock_Score[Player_id] = Score[Player_id][0];
@@ -225,8 +225,8 @@ void Game_Manage_1st() {
     if (Mode_Type == MODE_NORMAL_TRAINING || Mode_Type == MODE_PARRY_TRAINING) {
         cpReadyTask(TASK_MENU, Menu_Task);
         task[TASK_MENU].r_no[0] = 7;
-        gs.plw[gs.New_Challenger].wu.operator = 0;
-        Operator_Status[gs.New_Challenger] = 0;
+        plw[New_Challenger].wu.operator = 0;
+        Operator_Status[New_Challenger] = 0;
         Lever_LR[0] = 0;
         Lever_LR[1] = 0;
         return;
@@ -364,8 +364,8 @@ void Game_Manage_2_1() {
 void Game_Manage_2_2() {
     s16 ix;
 
-    gs.Suicide[0] = 0;
-    gs.Suicide[6] = 0;
+    Suicide[0] = 0;
+    Suicide[6] = 0;
 
     for (ix = 0; ix < 4; ix++) {
         Message_Suicide[ix] = 0;
@@ -414,13 +414,13 @@ void Game_Manage_2_3() {
     }
 
     appear_work_clear();
-    gs.win_sp_flag = 0;
+    win_sp_flag = 0;
 
-    if (gs.pcon_rno[0] != 0) {
+    if (pcon_rno[0] != 0) {
         return;
     }
 
-    if (gs.pcon_rno[1] != 1) {
+    if (pcon_rno[1] != 1) {
         return;
     }
 
@@ -447,11 +447,11 @@ void Game_Manage_2_4() {
             Score[0][2] = 0;
             Score[1][2] = 0;
             Game_pause = 0;
-            gs.pcon_rno[0] = 0;
-            gs.pcon_rno[1] = 0;
-            gs.pcon_rno[2] = 0;
-            gs.pcon_rno[3] = 0;
-            gs.appear_type = APPEAR_TYPE_NON_ANIMATED;
+            pcon_rno[0] = 0;
+            pcon_rno[1] = 0;
+            pcon_rno[2] = 0;
+            pcon_rno[3] = 0;
+            appear_type = APPEAR_TYPE_NON_ANIMATED;
             erase_extra_plef_work();
             compel_bg_init_position();
             win_lose_work_clear();
@@ -487,7 +487,7 @@ void Game_Manage_2_4() {
         vital_dec_timer = 40;
         sag_inc_timer[0] = sag_inc_timer[1] = 0;
 
-        if (gs.Play_Type == 0 && (EM_id == 0 || (My_char[Player_id] == 0 && EM_id == 1)) &&
+        if (Play_Type == 0 && (EM_id == 0 || (My_char[Player_id] == 0 && EM_id == 1)) &&
             !(Introduce_Boss[Player_id][1] & 0x80)) {
             Introduce_Boss[Player_id][1] |= 128;
             Check_Stage_BGM();
@@ -518,9 +518,9 @@ void Game_Manage_3rd() {
 }
 
 void setFinishType() {
-    if (gs.Play_Type == 0 && Mode_Type == MODE_ARCADE &&
-        PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] && VS_Index[Winner_id] > 8 &&
-        gs.plw[Winner_id].wu.operator != 0 && E_Number[Loser_id][0] != 2) {
+    if (Play_Type == 0 && Mode_Type == MODE_ARCADE &&
+        PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[Play_Type] && VS_Index[Winner_id] > 8 &&
+        plw[Winner_id].wu.operator != 0 && E_Number[Loser_id][0] != 2) {
         E_Number[Loser_id][0] = 99;
     }
 
@@ -557,7 +557,7 @@ void Game_Manage_4th() {
         PL_Wins[0]++;
         PL_Wins[1]++;
 
-        if (PL_Wins[0] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (PL_Wins[0] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             Winner_id = 0;
             Loser_id = 1;
             Update_VS_Data();
@@ -565,7 +565,7 @@ void Game_Manage_4th() {
             break;
         }
 
-        if (PL_Wins[1] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (PL_Wins[1] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             Winner_id = 1;
             Loser_id = 0;
             Update_VS_Data();
@@ -577,7 +577,7 @@ void Game_Manage_4th() {
     default:
         SsRequest(143);
 
-        if (gs.plw[0].wu.vital_new != gs.plw[1].wu.vital_new || Mode_Type == MODE_NORMAL_TRAINING ||
+        if (plw[0].wu.vital_new != plw[1].wu.vital_new || Mode_Type == MODE_NORMAL_TRAINING ||
             Mode_Type == MODE_PARRY_TRAINING) {
             C_No[0] = 6;
             Round_Result |= 1;
@@ -641,15 +641,15 @@ void Game_Manage_5_4() {
     if (Switch_Screen(0)) {
         C_No[1]++;
         Cover_Timer = 5;
-        gs.Suicide[6] = 1;
+        Suicide[6] = 1;
         judge_flag = 1;
         effect_J4_init(0xFF);
         compel_bg_init_position();
-        gs.pcon_rno[0] = 0;
-        gs.pcon_rno[1] = 0;
-        gs.pcon_rno[2] = 0;
-        gs.pcon_rno[3] = 0;
-        gs.appear_type = APPEAR_TYPE_UNKNOWN_3;
+        pcon_rno[0] = 0;
+        pcon_rno[1] = 0;
+        pcon_rno[2] = 0;
+        pcon_rno[3] = 0;
+        appear_type = APPEAR_TYPE_UNKNOWN_3;
     }
 }
 
@@ -658,8 +658,8 @@ void Game_Manage_5_5() {
 
     if (--Cover_Timer == 0) {
         C_No[1]++;
-        gs.pcon_rno[1] = 3;
-        gs.pcon_rno[2] = 1;
+        pcon_rno[1] = 3;
+        pcon_rno[2] = 1;
         Clear_Flash_No();
         Switch_Screen_Init(0);
     }
@@ -708,8 +708,8 @@ void Game_Manage_6th() {
 
         C_No[1]++;
         C_Timer = 60;
-        gs.pcon_rno[1] = 3;
-        gs.pcon_rno[2] = 0;
+        pcon_rno[1] = 3;
+        pcon_rno[2] = 0;
         grade_makeup_round_para_dko();
 
         if (Mode_Type != MODE_NORMAL_TRAINING && Mode_Type != MODE_PARRY_TRAINING && omop_cockpit) {
@@ -798,7 +798,7 @@ s32 Check_Disp_Combo() {
         return 1;
     }
 
-    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         return 0;
     }
 
@@ -806,7 +806,7 @@ s32 Check_Disp_Combo() {
 }
 
 void Game_Manage_7_3() {
-    if (gs.Play_Type == 0 && Perfect_Flag == 0) {
+    if (Play_Type == 0 && Perfect_Flag == 0) {
         if (--C_Timer) {
             return;
         }
@@ -853,7 +853,7 @@ void Game_Manage_7_5() {
 }
 
 void Game_Manage_7_6() {
-    if (gs.Scene_Cut) {
+    if (Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -898,7 +898,7 @@ void Game_Manage_8_0() {
     if (Round_Operator[Winner_id] != 0 || Mode_Type == MODE_VERSUS || Mode_Type == 5) {
         Pool_Score(Winner_id);
 
-        if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             C_No[1]++;
             Additional_Bonus(WINNER);
             grade_makeup_stage_parameter(WINNER);
@@ -915,7 +915,7 @@ void Game_Manage_8_0() {
     C_No[1] = 3;
     C_Timer = 30;
 
-    if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         grade_makeup_stage_parameter(WINNER);
         grade_makeup_stage_parameter(LOSER);
     }
@@ -986,7 +986,7 @@ void Game_Manage_81_1() {
 }
 
 void Game_Manage_81_2() {
-    if (gs.Scene_Cut) {
+    if (Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -1017,7 +1017,7 @@ void Game_Manage_8_2() {
         C_Timer = 1;
     }
 
-    if (gs.Scene_Cut) {
+    if (Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -1030,7 +1030,7 @@ void Game_Manage_8_2() {
     }
 
     Disp_Cockpit = 0;
-    gs.Suicide[2] = 1;
+    Suicide[2] = 1;
     gauge_stop_flag[0] = 1;
     gauge_stop_flag[1] = 1;
     C_No[0]++;
@@ -1039,7 +1039,7 @@ void Game_Manage_8_2() {
 }
 
 void Game_Manage_8_3() {
-    if (gs.Scene_Cut) {
+    if (Scene_Cut) {
         C_Timer = 1;
     }
 
@@ -1052,13 +1052,13 @@ void Game_Manage_8_3() {
 void Game_Manage_9th() {
     switch (C_No[1]) {
     case 0:
-        if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             C_No[0]++;
             C_No[1] = 0;
             C_Timer = 75;
             cpExitTask(TASK_PAUSE);
 
-            if (gs.Play_Type != 1 && Round_Operator[WINNER] && Battle_Q[WINNER]) {
+            if (Play_Type != 1 && Round_Operator[WINNER] && Battle_Q[WINNER]) {
                 C_No[0] = 10;
             }
 
@@ -1072,7 +1072,7 @@ void Game_Manage_9th() {
         break;
 
     case 1:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             C_Timer = 1;
         }
 
@@ -1100,8 +1100,8 @@ void Game_Manage_9th() {
             Cover_Timer = 5;
             C_No[0] = 1;
             C_No[1] = C_No[2] = C_No[3] = 0;
-            gs.Suicide[0] = 1;
-            gs.Suicide[6] = 1;
+            Suicide[0] = 1;
+            Suicide[6] = 1;
             judge_flag = 0;
         }
 
@@ -1130,11 +1130,11 @@ void Game_Manage_10th() {
             SE_All_Off();
             Check_Naming(0);
             Check_Naming(1);
-            gs.pcon_rno[0] = 0;
-            gs.pcon_rno[1] = 0;
-            gs.pcon_rno[2] = 0;
-            gs.pcon_rno[3] = 0;
-            gs.appear_type = APPEAR_TYPE_ANIMATED;
+            pcon_rno[0] = 0;
+            pcon_rno[1] = 0;
+            pcon_rno[2] = 0;
+            pcon_rno[3] = 0;
+            appear_type = APPEAR_TYPE_ANIMATED;
             Continue_Coin2[WINNER] = 0;
 
             if (Mode_Type == MODE_VERSUS || Mode_Type == 5 || Round_Operator[WINNER]) {
@@ -1197,7 +1197,7 @@ void Check_Naming(s16 PL_id) {
 s32 Check_Ending() {
     s16 xx;
 
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         return 0;
     }
 
@@ -1209,7 +1209,7 @@ s32 Check_Ending() {
         Extra_Break = 0;
         Pause_ID = WINNER;
         End_PL = My_char[WINNER];
-        gs.plw[WINNER].wu.operator = 0;
+        plw[WINNER].wu.operator = 0;
         Operator_Status[WINNER] = 0;
         SsBgmControl(0, 0);
         Control_Time = 481;
@@ -1252,13 +1252,13 @@ s32 Check_Ending_Sub() {
 
 void Additional_Bonus(s16 PL_id) {
     Complete_Bonus = Setup_Comp_Bonus();
-    Score[PL_id][gs.Play_Type] += Perfect_Bonus[Winner_id];
-    Score[PL_id][gs.Play_Type] += Vital_Bonus[Winner_id];
-    Score[PL_id][gs.Play_Type] += Time_Bonus[Winner_id];
-    Score[PL_id][gs.Play_Type] += Complete_Bonus;
+    Score[PL_id][Play_Type] += Perfect_Bonus[Winner_id];
+    Score[PL_id][Play_Type] += Vital_Bonus[Winner_id];
+    Score[PL_id][Play_Type] += Time_Bonus[Winner_id];
+    Score[PL_id][Play_Type] += Complete_Bonus;
 
-    if (Score[PL_id][gs.Play_Type] >= 99999900) {
-        Score[PL_id][gs.Play_Type] = 99999900;
+    if (Score[PL_id][Play_Type] >= 99999900) {
+        Score[PL_id][Play_Type] = 99999900;
     }
 }
 
@@ -1266,7 +1266,7 @@ u32 Setup_Comp_Bonus() {
     u32 xx;
     u16 zz;
 
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         if (PL_Wins[Loser_id]) {
             return 0;
         }
@@ -1335,7 +1335,7 @@ void Check_Perfect(s16 PL_id) {
         return;
     }
 
-    if (gs.plw[PL_id].wu.vitality != gs.plw[PL_id].wu.vital_new) {
+    if (plw[PL_id].wu.vitality != plw[PL_id].wu.vital_new) {
         return;
     }
 
@@ -1346,13 +1346,13 @@ void Check_Perfect(s16 PL_id) {
 }
 
 void Update_VS_Data() {
-    if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         WINNER = Winner_id;
         LOSER = Loser_id;
         Stock_My_char[LOSER] = My_char[LOSER];
         Stock_Player_Color[LOSER] = Player_Color[LOSER];
 
-        if (gs.Play_Type != 0) {
+        if (Play_Type != 0) {
             return;
         }
 
@@ -1445,7 +1445,7 @@ void BGM_Control() {
     case 2:
         BGM_No[0] = 0;
 
-        if (gs.Play_Type == 0 && EM_id == 17) {
+        if (Play_Type == 0 && EM_id == 17) {
             Stage_BGM(17, Round_num);
             break;
         }
@@ -1475,7 +1475,7 @@ void Setup_BGM_Fade_In(s16 Time) {
 }
 
 void Check_Stage_BGM() {
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         Stage_BGM(bg_w.stage, Round_num);
         return;
     }
@@ -1511,7 +1511,7 @@ void Control_Music_Fade(s16 Time) {
 }
 
 void Check_Conclusion_Type() {
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         return;
     }
 
@@ -1526,7 +1526,7 @@ void Check_Conclusion_Type() {
         break;
 
     case 2:
-        if (gs.plw[0].wu.vital_new != gs.plw[1].wu.vital_new) {
+        if (plw[0].wu.vital_new != plw[1].wu.vital_new) {
             Stage_Time_Finish[Winner_id]++;
             chkComWins();
         }
@@ -1543,17 +1543,17 @@ void chkComWins() {
 }
 
 void Update_BI_Term() {
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         return;
     }
 
-    if (gs.plw[Winner_id].sa_healing) {
+    if (plw[Winner_id].sa_healing) {
         Super_Arts_Finish[Winner_id]++;
         Stage_SA_Finish[Winner_id]++;
         return;
     }
 
-    if (gs.plw[Winner_id].wu.vitality == gs.plw[Winner_id].wu.vital_new) {
+    if (plw[Winner_id].wu.vitality == plw[Winner_id].wu.vital_new) {
         Perfect_Finish[Winner_id]++;
         Stage_Perfect_Finish[Winner_id]++;
 
@@ -1578,13 +1578,13 @@ void Update_BI_Term() {
 }
 
 void Ck_Win_Record() {
-    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         return;
     }
 
     switch (Mode_Type) {
     case MODE_ARCADE:
-        if (gs.Play_Type == 1) {
+        if (Play_Type == 1) {
             Win_Record[Loser_id] = 0;
 
             if (++Win_Record[Winner_id] > 999) {
@@ -1638,7 +1638,7 @@ s32 Judge_Next_Disposal() {
         return 0;
     }
 
-    if (PL_Wins[0] >= save_w[Present_Mode].Battle_Number[gs.Play_Type]) {
+    if (PL_Wins[0] >= save_w[Present_Mode].Battle_Number[Play_Type]) {
         return 1;
     }
 
@@ -1653,21 +1653,21 @@ void Quick_Entry() {
         Extra_Break = 0;
     }
 
-    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         return;
     }
 
-    if (gs.plw[LOSER].wu.operator) {
+    if (plw[LOSER].wu.operator) {
         Loser_Sub();
 
         if (Mode_Type != MODE_ARCADE) {
-            gs.plw[LOSER].wu.operator = 1;
+            plw[LOSER].wu.operator = 1;
         }
 
         Be_Continue();
     }
 
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         grade = judge_item[Winner_id][1].grade;
 
         if (grade > Best_Grade[Winner_id]) {
@@ -1681,7 +1681,7 @@ s32 Check_Entry_Again() {
         return 0;
     }
 
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         return 1;
     }
 
@@ -1697,12 +1697,12 @@ s32 Check_Entry_Again() {
 }
 
 void Loser_Sub() {
-    gs.plw[LOSER].wu.operator = 0;
+    plw[LOSER].wu.operator = 0;
     Operator_Status[LOSER] = 0;
-    gs.Sel_PL_Complete[LOSER] = 0;
+    Sel_PL_Complete[LOSER] = 0;
     Sel_Arts_Complete[LOSER] = 0;
 
-    if (gs.Play_Type == 0) {
+    if (Play_Type == 0) {
         if (--Round_Level < 0) {
             Round_Level = 0;
         }
@@ -1726,7 +1726,7 @@ void Be_Continue() {
 }
 
 void Disp_Winner() {
-    if (gs.Play_Type == 1) {
+    if (Play_Type == 1) {
         effect_56_init(My_char[Winner_id] + 7, 1);
         SsRequest(141);
         return;
@@ -1749,7 +1749,7 @@ void Pool_Score(s16 PL_id) {
         Perfect_Bonus[Winner_id] += 50000;
     }
 
-    Score_Buff = gs.plw[PL_id].wu.vital_new * 100 / Max_vitality;
+    Score_Buff = plw[PL_id].wu.vital_new * 100 / Max_vitality;
     Score_Buff *= 500;
     Vital_Bonus[Winner_id] += Score_Buff;
 
@@ -1758,7 +1758,7 @@ void Pool_Score(s16 PL_id) {
         return;
     }
 
-    Time_Bonus[Winner_id] += gs.round_timer * 300;
+    Time_Bonus[Winner_id] += round_timer * 300;
 }
 
 s32 Check_Break_Into_CPU(s16 PL_id) {
@@ -1794,7 +1794,7 @@ s32 Check_Break_Into_CPU(s16 PL_id) {
         return 0;
     }
 
-    if (Super_Arts_Finish[PL_id] < BIC_SA_Data[0][save_w[Present_Mode].Battle_Number[gs.Play_Type]]) {
+    if (Super_Arts_Finish[PL_id] < BIC_SA_Data[0][save_w[Present_Mode].Battle_Number[Play_Type]]) {
         return 0;
     }
 
@@ -1810,7 +1810,7 @@ void Judge_Winner() {
     grade_makeup_judgement_gals();
 
     if (judge_gals[0].grade == judge_gals[1].grade) {
-        if (gs.Play_Type == 0) {
+        if (Play_Type == 0) {
             Winner_id = Player_id;
             Loser_id = COM_id;
             return;
@@ -1836,7 +1836,7 @@ s32 Check_Disp_Winner() {
         return Disp_Win_Name = 0;
     }
 
-    if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         return Disp_Win_Name = 1;
     }
 
@@ -1852,7 +1852,7 @@ void Check_Fade_Out_BGM(s16 Time) {
         return;
     }
 
-    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+    if (PL_Wins[Winner_id] < save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
         return;
     }
 
@@ -1936,9 +1936,9 @@ void Game_Manage_12th() {
 void Game_Manage_12_0() {
     s16 ix;
 
-    gs.Suicide[0] = 0;
-    gs.Suicide[6] = 0;
-    gs.Suicide[5] = 0;
+    Suicide[0] = 0;
+    Suicide[6] = 0;
+    Suicide[5] = 0;
 
     if (effect_84_init()) {
         return;
@@ -1962,8 +1962,8 @@ void Game_Manage_12_0() {
 
     Complete_Judgement = 0;
     Music_Fade = 0;
-    Round_Operator[0] = gs.plw[0].wu.operator;
-    Round_Operator[1] = gs.plw[1].wu.operator;
+    Round_Operator[0] = plw[0].wu.operator;
+    Round_Operator[1] = plw[1].wu.operator;
     CP_No[0][0] = 0;
     CP_No[1][0] = 0;
 
@@ -1975,10 +1975,10 @@ void Game_Manage_12_0() {
 
     if (Bonus_Type == 20) {
         C_No[1] = 6;
-        gs.Time_Stop = 1;
-        gs.Time_Over = false;
+        Time_Stop = 1;
+        Time_Over = false;
         Exit_No = 0;
-        gs.Unit_Of_Timer = 0;
+        Unit_Of_Timer = 0;
         setup_bonus_car_parts();
         bcount_cont_init();
     }
@@ -2184,7 +2184,7 @@ void Game_Manage_12_4() {
             C_No[3] = 0;
             C_Timer = 10;
             Forbid_Break = 0;
-            gs.Suicide[5] = 1;
+            Suicide[5] = 1;
             Check_Fade_Out_BGM(546);
         }
 
@@ -2203,7 +2203,7 @@ void Game_Manage_12_5() {
         break;
 
     case 1:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             C_Timer = 1;
         }
 
@@ -2264,7 +2264,7 @@ void Game_Manage_12_8() {
             break;
 
         case 2:
-            if (C_Timer < 11 && gs.Scene_Cut) {
+            if (C_Timer < 11 && Scene_Cut) {
                 C_Timer = 1;
             }
 
@@ -2341,7 +2341,7 @@ void Game_Manage_12_8() {
             C_No[3] = 0;
             C_Timer = 10;
             Forbid_Break = 0;
-            gs.Suicide[5] = -128;
+            Suicide[5] = -128;
             Check_Fade_Out_BGM(546);
         }
 
@@ -2393,15 +2393,15 @@ void Disp_Bonus_Perfect() {
 void Flash_Bonus_Perfect() {
     switch (PB_Status) {
     case 1:
-        gs.Suicide[5] = 1;
+        Suicide[5] = 1;
         break;
 
     case 2:
-        gs.Suicide[5] = 1;
+        Suicide[5] = 1;
         break;
 
     case 3:
-        gs.Suicide[5] = 1;
+        Suicide[5] = 1;
         break;
     }
 }
@@ -2444,7 +2444,7 @@ u32 Setup_Final_Score(s16 Type) {
     }
 
     Bonus_Score = xx;
-    xx += gs.Counter_hi * 1000;
+    xx += Counter_hi * 1000;
     Bonus_Score_Plus = xx;
     xx += Score[Player_id][0];
 
@@ -2456,7 +2456,7 @@ u32 Setup_Final_Score(s16 Type) {
 }
 
 s32 Bonus_Cut_Sub() {
-    if (gs.Scene_Cut) {
+    if (Scene_Cut) {
         Sound_SE(100);
         Bonus_Game_result = 0;
         Score[Player_id][0] = Final_Bonus_Score;
@@ -2502,7 +2502,7 @@ s16 Check_Time_Over() {
 
     switch (C_No[2]) {
     case 0:
-        if (gs.Time_Over) {
+        if (Time_Over) {
             C_No[2]++;
             C_Timer = 60;
             request_center_message(2);
@@ -2516,7 +2516,7 @@ s16 Check_Time_Over() {
         if (--C_Timer == 0) {
             C_No[2]++;
             Game_pause = 0;
-            gs.Suicide[5] = 1;
+            Suicide[5] = 1;
         }
 
         break;

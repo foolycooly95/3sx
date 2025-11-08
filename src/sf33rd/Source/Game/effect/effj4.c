@@ -39,11 +39,11 @@ void effect_J4_move(WORK_Other* ewk) {
         break;
 
     case 1:
-        if (ewk->wu.dead_f == 1 || gs.Suicide[0] != 0) {
+        if (ewk->wu.dead_f == 1 || Suicide[0] != 0) {
             goto jump;
         }
 
-        if (Game_pause == 129 && !gs.pcon_dp_flag) {
+        if (Game_pause == 129 && !pcon_dp_flag) {
             break;
         }
 

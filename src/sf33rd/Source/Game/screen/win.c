@@ -45,7 +45,7 @@ s32 Winner_Scene() {
     }
 
     WIN_X = 0;
-    gs.Scene_Cut = Cut_Cut_Cut();
+    Scene_Cut = Cut_Cut_Cut();
     Win_Jmp_Tbl[M_No[0]]();
 
     if ((Check_Exit_Check() == 0) && (Debug_w[0x18] == -1)) {
@@ -84,7 +84,7 @@ void Win_1st() {
     Setup_BG(1, 0x200, 0);
     Setup_BG(3, 0x2C0, 0);
 
-    if (gs.Play_Type == 0) {
+    if (Play_Type == 0) {
         Last_Selected_EM[Winner_id] = 1;
     }
 
@@ -128,7 +128,7 @@ void Win_2nd() {
     Order_Timer[0x38] = 1;
     effect_76_init(0x38);
 
-    WGJ_Score = Continue_Coin[Winner_id] + Score[Winner_id][gs.Play_Type];
+    WGJ_Score = Continue_Coin[Winner_id] + Score[Winner_id][Play_Type];
     WGJ_Win = Win_Record[Winner_id];
 
     effect_L1_init(1);
@@ -195,7 +195,7 @@ void Win_4th() {
 void Win_5th() {
     switch (M_No[1]) {
     case 0:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             M_Timer = 9;
         }
 
@@ -225,7 +225,7 @@ s32 Loser_Scene() {
     void (*Lose_Jmp_Tbl[6])() = { Win_1st, Lose_2nd, Lose_3rd, Win_4th, Win_5th, Win_6th };
 
     WIN_X = 0;
-    gs.Scene_Cut = Cut_Cut_Loser();
+    Scene_Cut = Cut_Cut_Loser();
     Lose_Jmp_Tbl[M_No[0]]();
 
     if ((Check_Exit_Check() == 0) && (Debug_w[0x18] == -1)) {

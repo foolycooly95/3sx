@@ -37,7 +37,7 @@ void BG090() {
 void bg0901() {
     void (*bg0901_jmp[3])() = { bg0901_init00, demo90_base, bg_move_common };
 
-    if (gs.win_sp_flag) {
+    if (win_sp_flag) {
         jijii_win_bg2();
         return;
     }
@@ -55,7 +55,7 @@ void bg0901_init00() {
 void bg0902() {
     void (*bg0902_jmp[3])() = { bg0902_init00, demo90_base, bg_base_move_common };
 
-    if (gs.win_sp_flag) {
+    if (win_sp_flag) {
         jijii_win_bg();
         return;
     }
@@ -74,7 +74,7 @@ void bg0902_init00() {
 }
 
 void bg_fam0900() {
-    if (gs.win_sp_flag) {
+    if (win_sp_flag) {
         jijii_win_bg2();
         sync_fam_set3(bgw_ptr->fam_no);
         return;
@@ -126,7 +126,7 @@ void bg_fam0900() {
 void bg090_demo_check() {
     s16 pos_w;
 
-    if ((gs.plw->player_number != 9) && (gs.plw[1].player_number != 9)) {
+    if ((plw->player_number != 9) && (plw[1].player_number != 9)) {
         bgw_ptr->r_no_0 = 2;
         return;
     }
@@ -152,11 +152,11 @@ void demo90_base() {
     case 0:
         chk_pl = 0;
 
-        if (gs.plw->player_number == 9 && gs.plw[1].player_number == 9) {
+        if (plw->player_number == 9 && plw[1].player_number == 9) {
             if (Appear_hv[0]) {
                 chk_pl = 1;
             }
-        } else if (gs.plw[1].player_number == 9) {
+        } else if (plw[1].player_number == 9) {
             chk_pl = 1;
         }
 
@@ -197,12 +197,12 @@ void jijii_win_bg() {
 
     switch (bgw_ptr->r_no_1) {
     case 0:
-        if (gs.win_sp_flag == 2) {
+        if (win_sp_flag == 2) {
             bgw_ptr->xy[1].cal += 0xA0000;
             bgw_ptr->wxy[1].cal += 0xA0000;
             if (bgw_ptr->xy[1].disp.pos > 0xB0) {
                 bgw_ptr->r_no_1 += 1;
-                gs.win_sp_flag = 3;
+                win_sp_flag = 3;
             }
         }
         /* fallthrough */
@@ -222,7 +222,7 @@ void jijii_win_bg2() {
 
     switch (bg_w.bgw[1].r_no_1) {
     case 0:
-        if (gs.win_sp_flag == 2) {
+        if (win_sp_flag == 2) {
             zuu_work = 0xA;
             sp_work = bgw_ptr->speed_y * zuu_work;
             bgw_ptr->xy[1].cal += sp_work;

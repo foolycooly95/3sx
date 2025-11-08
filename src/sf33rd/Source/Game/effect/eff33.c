@@ -34,7 +34,7 @@ void effect_33_move(WORK_Other* ewk) {
         suzi_sync_pos_set(ewk);
         sort_push_request(&ewk->wu);
 
-        if (EXE_flag || Game_pause || gs.pcon_rno[2] != 1 || Event_Judge_Gals != -1 || !Complete_Judgement) {
+        if (EXE_flag || Game_pause || pcon_rno[2] != 1 || Event_Judge_Gals != -1 || !Complete_Judgement) {
             break;
         }
 
@@ -54,7 +54,7 @@ void effect_33_move(WORK_Other* ewk) {
 
     case 3:
         if (!EXE_flag && !Game_pause) {
-            if (ewk->wu.dead_f == 1 || gs.Suicide[0] != 0) {
+            if (ewk->wu.dead_f == 1 || Suicide[0] != 0) {
                 ewk->wu.disp_flag = 0;
                 ewk->wu.routine_no[0]++;
                 break;

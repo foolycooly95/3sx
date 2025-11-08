@@ -58,7 +58,7 @@ void Continue_1st() {
         Order_Timer[0x38] = 1;
         effect_58_init(0xC, 1, 3);
         effect_58_init(0xC, 1, 1);
-        gs.Suicide[2] = 1;
+        Suicide[2] = 1;
         effect_58_init(0x10, 5, 2);
 
         break;
@@ -72,7 +72,7 @@ void Continue_1st() {
         break;
 
     case 2:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             Cont_Timer = 1;
         }
 

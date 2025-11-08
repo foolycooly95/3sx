@@ -259,7 +259,7 @@ void Menu_Init(struct _TASK* task_ptr) {
     for (ix = 0; ix < 4; ix++) {
         Menu_Suicide[ix] = 0;
         Unsubstantial_BG[ix] = 0;
-        gs.Cursor_Y_Pos[0][ix] = 0;
+        Cursor_Y_Pos[0][ix] = 0;
     }
 
     All_Clear_Suicide();
@@ -317,10 +317,10 @@ void Mode_Select(struct _TASK* task_ptr) {
 
         Clear_Personal_Data(0);
         Clear_Personal_Data(1);
-        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
-        gs.Cursor_Y_Pos[0][1] = 0;
-        gs.Cursor_Y_Pos[0][2] = 0;
-        gs.Cursor_Y_Pos[0][3] = 0;
+        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
+        Cursor_Y_Pos[0][1] = 0;
+        Cursor_Y_Pos[0][2] = 0;
+        Cursor_Y_Pos[0][3] = 0;
 
         for (ix = 0; ix < 4; ix++) {
             Vital_Handicap[ix][0] = 7;
@@ -366,7 +366,7 @@ void Mode_Select(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -438,8 +438,8 @@ void Mode_Select(struct _TASK* task_ptr) {
 void Setup_VS_Mode(struct _TASK* task_ptr) {
     task_ptr->r_no[0] = 5;
     cpExitTask(TASK_SAVER);
-    gs.plw[0].wu.operator = 1;
-    gs.plw[1].wu.operator = 1;
+    plw[0].wu.operator = 1;
+    plw[1].wu.operator = 1;
     Operator_Status[0] = 1;
     Operator_Status[1] = 1;
     grade_check_work_1st_init(0, 0);
@@ -454,7 +454,7 @@ void Menu_in_Sub(struct _TASK* task_ptr) {
     task_ptr->r_no[2] += 1;
     task_ptr->timer = 5;
     Menu_Common_Init();
-    Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][1];
+    Menu_Cursor_Y[0] = Cursor_Y_Pos[0][1];
     Menu_Suicide[0] = 1;
     Menu_Suicide[1] = 0;
     Order[0x64] = 4;
@@ -600,7 +600,7 @@ void Training_Mode(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -653,7 +653,7 @@ void Training_Mode(struct _TASK* task_ptr) {
         Champion = PL_id;
         Pause_ID = PL_id;
         Training_ID = PL_id;
-        gs.New_Challenger = PL_id ^ 1;
+        New_Challenger = PL_id ^ 1;
         cpExitTask(TASK_ENTRY);
 
         break;
@@ -721,7 +721,7 @@ void Option_Select(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -831,7 +831,7 @@ void System_Direction(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -1474,13 +1474,13 @@ void Load_Replay_Sub(struct _TASK* task_ptr) {
         task_ptr->r_no[3] += 1;
         FadeInit();
         FadeOut(0, 0xFF, 8);
-        gs.Play_Type = 1;
+        Play_Type = 1;
         Mode_Type = MODE_REPLAY;
         Present_Mode = 3;
         Bonus_Game_Flag = 0;
 
         for (ix = 0; ix < 2; ix++) {
-            gs.plw[ix].wu.operator = Replay_w.game_infor.player_infor[ix].player_type;
+            plw[ix].wu.operator = Replay_w.game_infor.player_infor[ix].player_type;
             Operator_Status[ix] = Replay_w.game_infor.player_infor[ix].player_type;
             My_char[ix] = Replay_w.game_infor.player_infor[ix].my_char;
             Super_Arts[ix] = Replay_w.game_infor.player_infor[ix].sa;
@@ -1582,7 +1582,7 @@ void Load_Replay_Sub(struct _TASK* task_ptr) {
         if (Switch_Screen(0) != 0) {
             Game01_Sub();
             Cover_Timer = 5;
-            gs.appear_type = APPEAR_TYPE_ANIMATED;
+            appear_type = APPEAR_TYPE_ANIMATED;
             set_hitmark_color();
             Purge_texcash_of_list(3);
             Make_texcash_of_list(3);
@@ -1594,11 +1594,11 @@ void Load_Replay_Sub(struct _TASK* task_ptr) {
             E_No[2] = 0;
             E_No[3] = 0;
 
-            if (gs.plw->wu.operator != 0) {
+            if (plw->wu.operator != 0) {
                 Sel_Arts_Complete[0] = -1;
             }
 
-            if (gs.plw[1].wu.operator != 0) {
+            if (plw[1].wu.operator != 0) {
                 Sel_Arts_Complete[1] = -1;
             }
 
@@ -1718,7 +1718,7 @@ void Game_Option(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -1854,7 +1854,7 @@ void Button_Config(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -2043,8 +2043,8 @@ void Return_Option_Mode_Sub(struct _TASK* task_ptr) {
     task_ptr->r_no[2] = 0;
     task_ptr->r_no[3] = 0;
     task_ptr->free[0] = 0;
-    gs.Cursor_Y_Pos[0][2] = Menu_Cursor_Y[0];
-    gs.Cursor_Y_Pos[1][2] = Menu_Cursor_Y[1];
+    Cursor_Y_Pos[0][2] = Menu_Cursor_Y[0];
+    Cursor_Y_Pos[1][2] = Menu_Cursor_Y[1];
 }
 
 void Screen_Adjust(struct _TASK* task_ptr) {
@@ -2104,7 +2104,7 @@ void Screen_Adjust(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -2380,7 +2380,7 @@ void Sound_Test(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -2591,7 +2591,7 @@ void Memory_Card(struct _TASK* task_ptr) {
     case 2:
         if (FadeIn(1, 0x19, 8) != 0) {
             task_ptr->r_no[2] += 1;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -2911,8 +2911,8 @@ s32 Exit_Sub(struct _TASK* task_ptr, s16 cursor_ix, s16 next_routine) {
             task_ptr->r_no[2] = 0;
             task_ptr->r_no[3] = 0;
             task_ptr->free[0] = 0;
-            gs.Cursor_Y_Pos[0][cursor_ix] = Menu_Cursor_Y[0];
-            gs.Cursor_Y_Pos[1][cursor_ix] = Menu_Cursor_Y[1];
+            Cursor_Y_Pos[0][cursor_ix] = Menu_Cursor_Y[0];
+            Cursor_Y_Pos[1][cursor_ix] = Menu_Cursor_Y[1];
             pulpul_stop();
             return 1;
         }
@@ -3007,7 +3007,7 @@ void Menu_Select(struct _TASK* task_ptr) {
     case 1:
         task_ptr->r_no[2]++;
         Menu_Common_Init();
-        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
+        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
         Menu_Suicide[0] = 0;
         Menu_Suicide[1] = 0;
         Menu_Suicide[2] = 0;
@@ -3139,7 +3139,7 @@ s32 Yes_No_Cursor_Move_Sub(struct _TASK* task_ptr) {
             task_ptr->r_no[2] = 1;
             Menu_Suicide[0] = 0;
             Menu_Suicide[1] = 1;
-            gs.Cursor_Y_Pos[0][0] = 2;
+            Cursor_Y_Pos[0][0] = 2;
             return 1;
         }
 
@@ -3239,7 +3239,7 @@ void Return_Pause_Sub(struct _TASK* task_ptr) {
     task[TASK_PAUSE].free[0] = 1;
     task_ptr->r_no[1] = 1;
     task_ptr->r_no[2] = 1;
-    gs.Cursor_Y_Pos[0][0] = 1;
+    Cursor_Y_Pos[0][0] = 1;
     Order[138] = 3;
     Order_Timer[138] = 1;
     effect_66_init(138, 9, 2, 7, -1, -1, -0x3FFC);
@@ -3483,9 +3483,9 @@ void VS_Result(struct _TASK* task_ptr) {
         task_ptr->r_no[1] = 16;
         task_ptr->r_no[2] = 1;
         task_ptr->r_no[3] = 0;
-        gs.Sel_PL_Complete[0] = 0;
+        Sel_PL_Complete[0] = 0;
         Sel_Arts_Complete[0] = 0;
-        gs.Sel_PL_Complete[1] = 0;
+        Sel_PL_Complete[1] = 0;
         Sel_Arts_Complete[1] = 0;
         Clear_Flash_Init(4);
         break;
@@ -3495,8 +3495,8 @@ void VS_Result(struct _TASK* task_ptr) {
         task_ptr->r_no[2]++;
         task_ptr->timer = 5;
         Menu_Common_Init();
-        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
-        Menu_Cursor_Y[1] = gs.Cursor_Y_Pos[1][0];
+        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
+        Menu_Cursor_Y[1] = Cursor_Y_Pos[1][0];
         Menu_Suicide[0] = 0;
         Menu_Suicide[1] = 1;
         Menu_Cursor_X[0] = 0;
@@ -3564,7 +3564,7 @@ void VS_Result(struct _TASK* task_ptr) {
     case 3:
         if (FadeIn(1, 25, 8)) {
             task_ptr->r_no[2]++;
-            gs.Suicide[3] = 0;
+            Suicide[3] = 0;
         }
 
         break;
@@ -3665,7 +3665,7 @@ s32 VS_Result_Select_Sub(struct _TASK* task_ptr, s16 PL_id) {
 u16 After_VS_Move_Sub(u16 sw, s16 cursor_id, s16 menu_max) {
     s16 skip;
 
-    if (gs.plw[0].wu.operator == 0 || gs.plw[1].wu.operator == 0) {
+    if (plw[0].wu.operator == 0 || plw[1].wu.operator == 0) {
         skip = 1;
     } else {
         skip = 99;
@@ -3920,10 +3920,10 @@ void Exit_Replay_Save(struct _TASK* task_ptr) {
 }
 
 void Decide_PL(s16 PL_id) {
-    gs.plw[PL_id].wu.operator = 1;
+    plw[PL_id].wu.operator = 1;
     Operator_Status[PL_id] = 1;
     Champion = PL_id;
-    gs.plw[PL_id ^ 1].wu.operator = 0;
+    plw[PL_id ^ 1].wu.operator = 0;
     Operator_Status[PL_id ^ 1] = 0;
 
     if (Continue_Coin[PL_id] == 0) {
@@ -4107,7 +4107,7 @@ s32 Check_Pause_Term_Tr(s16 PL_id) {
 s32 Pause_Check_Tr(s16 PL_id) {
     u16 sw;
 
-    if (gs.plw[PL_id].wu.operator == 0) {
+    if (plw[PL_id].wu.operator == 0) {
         return 0;
     }
 
@@ -4131,7 +4131,7 @@ void Setup_Tr_Pause(struct _TASK* task_ptr) {
     task_ptr->r_no[2] = 0;
     task_ptr->r_no[3] = 0;
     task_ptr->free[0] = 60;
-    gs.Cursor_Y_Pos[0][0] = 0;
+    Cursor_Y_Pos[0][0] = 0;
     Disp_Attack_Data = 0;
     Game_pause = 0x81;
     Pause_Down = 1;
@@ -4185,7 +4185,7 @@ s32 Pause_in_Normal_Tr(struct _TASK* task_ptr) {
     case 1:
         task_ptr->r_no[2]++;
         Menu_Common_Init();
-        Menu_Cursor_Y[0] = gs.Cursor_Y_Pos[0][0];
+        Menu_Cursor_Y[0] = Cursor_Y_Pos[0][0];
 
         for (ix = 0; ix < 4; ix++) {
             Menu_Suicide[ix] = 0;
@@ -4225,7 +4225,7 @@ s32 Pause_in_Normal_Tr(struct _TASK* task_ptr) {
                 break;
 
             case 1:
-                gs.Cursor_Y_Pos[0][0] = 0;
+                Cursor_Y_Pos[0][0] = 0;
                 return 2;
 
             case 2:
@@ -4268,7 +4268,7 @@ s32 Pause_1st_Sub(struct _TASK* task_ptr) {
 
     if (sw & SWK_START) {
         if (((Mode_Type == MODE_NORMAL_TRAINING) || (Mode_Type == MODE_PARRY_TRAINING)) &&
-            (Check_Pause_Term_Tr(Pause_ID ^ 1) != 0) && gs.plw[Pause_ID ^ 1].wu.operator &&
+            (Check_Pause_Term_Tr(Pause_ID ^ 1) != 0) && plw[Pause_ID ^ 1].wu.operator &&
             (Interface_Type[Pause_ID ^ 1] == 0)) {
             Pause_ID = Pause_ID ^ 1;
             return 0;
@@ -4282,7 +4282,7 @@ s32 Pause_1st_Sub(struct _TASK* task_ptr) {
 
     if (sw & SWK_SOUTH) {
         task_ptr->r_no[2] += 1;
-        gs.Cursor_Y_Pos[0][0] = 0;
+        Cursor_Y_Pos[0][0] = 0;
         SE_selected();
     }
 
@@ -4335,8 +4335,8 @@ void Reset_Training(struct _TASK* task_ptr) {
         BGM_Timer[0] = 1;
         G_Timer = 10;
         Cover_Timer = 5;
-        gs.Suicide[0] = 1;
-        gs.Suicide[6] = 1;
+        Suicide[0] = 1;
+        Suicide[6] = 1;
         judge_flag = 0;
         Lever_LR[0] = 0;
         Lever_LR[1] = 0;
@@ -4394,8 +4394,8 @@ void Reset_Replay(struct _TASK* task_ptr) {
         Cover_Timer = 5;
         effect_work_kill_mod_plcol();
         move_effect_work(6);
-        gs.Suicide[0] = 1;
-        gs.Suicide[6] = 1;
+        Suicide[0] = 1;
+        Suicide[6] = 1;
         judge_flag = 0;
         cpExitTask(TASK_PAUSE);
         break;
@@ -4507,31 +4507,31 @@ void Normal_Training(struct _TASK* task_ptr) {
                 Training_Disp_Work_Clear();
                 CP_No[0][0] = 0;
                 CP_No[1][0] = 0;
-                gs.plw[gs.New_Challenger].wu.operator = 1;
-                Operator_Status[gs.New_Challenger] = 1;
+                plw[New_Challenger].wu.operator = 1;
+                Operator_Status[New_Challenger] = 1;
                 Setup_NTr_Data(Menu_Cursor_Y[0]);
                 count_cont_init(0);
 
                 switch (Training[0].contents[0][0][0]) {
                 case 0:
                     control_pl_rno = 0;
-                    control_player = gs.New_Challenger;
+                    control_player = New_Challenger;
                     break;
 
                 case 1:
                     control_pl_rno = 1;
-                    control_player = gs.New_Challenger;
+                    control_player = New_Challenger;
                     break;
 
                 case 2:
                     control_pl_rno = 2;
-                    control_player = gs.New_Challenger;
+                    control_player = New_Challenger;
                     break;
 
                 case 3:
                     control_pl_rno = 99;
-                    gs.plw[gs.New_Challenger].wu.operator = 0;
-                    Operator_Status[gs.New_Challenger] = 0;
+                    plw[New_Challenger].wu.operator = 0;
+                    Operator_Status[New_Challenger] = 0;
                     break;
 
                 case 4:
@@ -4544,8 +4544,8 @@ void Normal_Training(struct _TASK* task_ptr) {
                 Training[0].contents[0][1][3] = Menu_Cursor_Y[0];
                 init_omop();
                 set_init_A4_flag();
-                setup_vitality(&gs.plw[0].wu, My_char[0] + 0);
-                setup_vitality(&gs.plw[1].wu, My_char[1] + 0);
+                setup_vitality(&plw[0].wu, My_char[0] + 0);
+                setup_vitality(&plw[1].wu, My_char[1] + 0);
                 Setup_Training_Difficulty();
                 Training_Cursor = Menu_Cursor_Y[0];
                 break;
@@ -4684,7 +4684,7 @@ void Yes_No_Cursor_Exit_Training(struct _TASK* task_ptr, s16 cursor_id) {
             task_ptr->r_no[2] = 0;
             Menu_Suicide[0] = 0;
             Menu_Suicide[1] = 1;
-            gs.Cursor_Y_Pos[0][0] = cursor_id;
+            Cursor_Y_Pos[0][0] = cursor_id;
             break;
         }
 
@@ -4950,9 +4950,9 @@ void Blocking_Training(struct _TASK* task_ptr) {
         Training_Index = 1;
         x = 112;
         y = 72;
-        gs.plw[0].wu.operator = 1;
+        plw[0].wu.operator = 1;
         Operator_Status[0] = 1;
-        gs.plw[1].wu.operator = 1;
+        plw[1].wu.operator = 1;
         Operator_Status[1] = 1;
 
         for (ix = 0; ix < 6; ix++, s2 = y += 16) {
@@ -5142,8 +5142,8 @@ void Blocking_Tr_Option(struct _TASK* task_ptr) {
         task_ptr->r_no[3] = 0;
         Training[0] = Training[2];
 
-        gs.plw[gs.New_Challenger].wu.operator = 1;
-        Operator_Status[gs.New_Challenger] = 1;
+        plw[New_Challenger].wu.operator = 1;
+        Operator_Status[New_Challenger] = 1;
 
         switch (Training[0].contents[1][0][0]) {
         case 0:
@@ -5219,9 +5219,9 @@ void Character_Change(struct _TASK* task_ptr) {
                 G_No[3] = 0;
 
                 for (ix = 0; ix < 2; ix++) {
-                    gs.Sel_PL_Complete[ix] = 0;
+                    Sel_PL_Complete[ix] = 0;
                     Sel_Arts_Complete[ix] = 0;
-                    gs.plw[ix].wu.operator = 1;
+                    plw[ix].wu.operator = 1;
                     Operator_Status[ix] = 1;
                 }
 

@@ -75,7 +75,7 @@ void win_player(PLW* wk) {
         return;
     }
 
-    if (gs.pcon_rno[0] == 2 && gs.pcon_rno[1] == 3) {
+    if (pcon_rno[0] == 2 && pcon_rno[1] == 3) {
         Judge_normal_winner(wk);
         return;
     }
@@ -100,8 +100,8 @@ void Win_01000(PLW* wk) {
         wk->wu.routine_no[3]++;
         work = win_select(wk, 7);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             if (Round_Result & 0x800) {
                 wk->wu.cmwk[0] = 0;
                 set_char_move_init(&wk->wu, 9, 42);
@@ -181,7 +181,7 @@ void jijii_nebukuro(PLW* wk) {
 
         if (wk->wu.xyz[1].disp.pos > 256) {
             win_rno[1]++;
-            gs.win_sp_flag = 2;
+            win_sp_flag = 2;
             set_char_move_init(&wk->wu, 9, 40);
             wk->wu.xyz[1].disp.pos = 200;
         }
@@ -199,7 +199,7 @@ void jijii_jump(PLW* wk) {
 
     bg_app_stop = 1;
     id_w = wk->wu.id ^ 1;
-    wk->wu.position_z = gs.plw[id_w].wu.position_z - 1;
+    wk->wu.position_z = plw[id_w].wu.position_z - 1;
     wk->wu.my_priority = wk->wu.position_z;
 
     switch (win_rno[1]) {
@@ -327,8 +327,8 @@ void Win_02000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         work = win_select(wk, 3);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             if (win_2000_tbl[bg_w.bg_index]) {
                 set_char_move_init(&wk->wu, 9, work + 36);
             } else if (work & 1) {
@@ -340,8 +340,8 @@ void Win_02000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -367,8 +367,8 @@ void Win_03000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         work = win_select(wk, 15);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             if (bg_w.stage == 7) {
                 set_char_move_init(&wk->wu, 9, 43);
                 break;
@@ -402,8 +402,8 @@ void Win_03000(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -420,8 +420,8 @@ void Win_04000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         work = win_select(wk, 3);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             set_char_move_init(&wk->wu, 9, work + 36);
             break;
         }
@@ -452,8 +452,8 @@ void Win_04000(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -475,8 +475,8 @@ void Normal_normal_Winner(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -499,8 +499,8 @@ void Judge_normal_winner(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -514,8 +514,8 @@ void Win_05000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         wk->wu.routine_no[3]++;
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type]) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type]) {
             set_char_move_init(&wk->wu, 9, 36);
 
             if (wk->wu.rl_flag) {
@@ -562,8 +562,8 @@ void Win_05000(PLW* wk) {
         }
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -577,8 +577,8 @@ void Win_06000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         wk->wu.routine_no[3]++;
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             work = win_select(wk, 3);
             set_char_move_init(&wk->wu, 9, work + 36);
         } else {
@@ -586,8 +586,8 @@ void Win_06000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, work + 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -608,12 +608,12 @@ void Win_07000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         wk->wu.routine_no[3]++;
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             work = win_select(wk, 7);
 
             if (work < 4) {
-                if (gs.plw[0].player_number == 5 && gs.plw[1].player_number == 5) {
+                if (plw[0].player_number == 5 && plw[1].player_number == 5) {
                     win_rno[0] = 0;
                     set_char_move_init(&wk->wu, 9, work + 32);
                     break;
@@ -626,7 +626,7 @@ void Win_07000(PLW* wk) {
                 break;
             }
 
-            if (gs.plw[0].player_number == 5 && gs.plw[1].player_number == 5) {
+            if (plw[0].player_number == 5 && plw[1].player_number == 5) {
                 win_rno[0] = 0;
                 set_char_move_init(&wk->wu, 9, work + 32);
                 break;
@@ -672,8 +672,8 @@ void Win_07000(PLW* wk) {
         }
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -689,8 +689,8 @@ void Win_08000(PLW* wk) {
 
         if (Round_Result & 0x800) {
             set_char_move_init(&wk->wu, 9, 40);
-        } else if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-                   PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        } else if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+                   PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             work = win_select(wk, 3);
             set_char_move_init(&wk->wu, 9, work + 36);
         } else {
@@ -698,8 +698,8 @@ void Win_08000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, work + 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -727,8 +727,8 @@ void Win_09000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, (work) + 32);
         }
 
-        if (Round_num < (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) &&
-            PL_Wins[wk->wu.id] < save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num < (save_w[Present_Mode].Battle_Number[Play_Type] * 2) &&
+            PL_Wins[wk->wu.id] < save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             break;
         }
 
@@ -788,8 +788,8 @@ void Win_09000(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -801,7 +801,7 @@ void Win_10000(PLW* wk) {
     bg_app_stop = 1;
 
     id_w = wk->wu.id ^ 1;
-    wk->wu.position_z = wk->wu.next_z = gs.plw[id_w].wu.position_z + 1;
+    wk->wu.position_z = wk->wu.next_z = plw[id_w].wu.position_z + 1;
 
     switch (wk->wu.routine_no[3]) {
     case 0:
@@ -809,9 +809,9 @@ void Win_10000(PLW* wk) {
         wk->wu.routine_no[3]++;
         work = win_select(wk, 3);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
-            work2 = wk->wu.xyz[0].disp.pos - gs.plw[id_w].wu.xyz[0].disp.pos;
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
+            work2 = wk->wu.xyz[0].disp.pos - plw[id_w].wu.xyz[0].disp.pos;
 
             if (work2 < 0) {
                 work2 = -work2;
@@ -825,12 +825,12 @@ void Win_10000(PLW* wk) {
                 }
             } else if (work > 1) {
                 if (work & 1) {
-                    if (gs.plw[id_w].wu.char_index != 67) {
+                    if (plw[id_w].wu.char_index != 67) {
                         win_rno[0] = 1;
                     } else {
                         win_rno[0] = 3;
                     }
-                } else if (gs.plw[id_w].wu.char_index != 67) {
+                } else if (plw[id_w].wu.char_index != 67) {
                     win_rno[0] = 2;
                 } else {
                     win_rno[0] = 4;
@@ -844,8 +844,8 @@ void Win_10000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, work + 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -877,18 +877,18 @@ const s16 q_em_distance_tbl[20][2] = { { -96, -16 }, { -104, 0 },  { -90, -16 },
 s16 q_em_distance_chk(PLW* wk) {
     s16 work;
     s16 id_w = wk->wu.id ^ 1;
-    s16 rl_w = wk->wu.rl_flag ^ gs.plw[id_w].wu.rl_flag;
+    s16 rl_w = wk->wu.rl_flag ^ plw[id_w].wu.rl_flag;
 
     if (wk->wu.rl_flag) {
-        work = wk->wu.xyz[0].disp.pos - gs.plw[id_w].wu.xyz[0].disp.pos;
+        work = wk->wu.xyz[0].disp.pos - plw[id_w].wu.xyz[0].disp.pos;
 
-        if (work >= q_em_distance_tbl[gs.plw[id_w].player_number][rl_w]) {
+        if (work >= q_em_distance_tbl[plw[id_w].player_number][rl_w]) {
             return 1;
         }
     } else {
-        work = gs.plw[id_w].wu.xyz[0].disp.pos - wk->wu.xyz[0].disp.pos;
+        work = plw[id_w].wu.xyz[0].disp.pos - wk->wu.xyz[0].disp.pos;
 
-        if (work >= q_em_distance_tbl[gs.plw[id_w].player_number][rl_w]) {
+        if (work >= q_em_distance_tbl[plw[id_w].player_number][rl_w]) {
             return 1;
         }
     }
@@ -901,7 +901,7 @@ s32 q_em_dir(PLW* wk) {
     s16 pos_w;
     s16 id_w = wk->wu.id ^ 1;
 
-    work = wk->wu.xyz[0].disp.pos - gs.plw[id_w].wu.xyz[0].disp.pos;
+    work = wk->wu.xyz[0].disp.pos - plw[id_w].wu.xyz[0].disp.pos;
 
     if (work < 0) {
         wk->wu.direction = 1;
@@ -1105,8 +1105,8 @@ void Win_11000(PLW* wk) {
         wk->wu.routine_no[3]++;
         work = win_select(wk, 3);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             if (Perfect_Flag) {
                 win_rno[0] = 1;
                 set_char_move_init(&wk->wu, 9, 38);
@@ -1132,8 +1132,8 @@ void Win_11000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, work + 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -1223,8 +1223,8 @@ void twelve_win_backjump(PLW* wk) {
             }
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -1240,8 +1240,8 @@ void twelve_win_backjump(PLW* wk) {
             wk->wu.xyz[1].cal = 0;
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -1282,13 +1282,13 @@ void Win_12000(PLW* wk) {
         work = win_select(wk, 7);
         set_char_move_init(&wk->wu, 9, work + 32);
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             effect_M2_init(&wk->wu, 1);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -1309,8 +1309,8 @@ void Win_13000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         wk->wu.routine_no[3]++;
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             if (wk->wu.id) {
                 if (p2sw_0 & 1) {
                     set_char_move_init(&wk->wu, 9, 40);
@@ -1328,8 +1328,8 @@ void Win_13000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, work + 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -1350,8 +1350,8 @@ void Win_14000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         wk->wu.routine_no[3]++;
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             work = win_select(wk, 3);
 
             if (!(work & 1)) {
@@ -1376,14 +1376,14 @@ void Win_14000(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
 s32 urien_dash_chk(PLW* wk) {
     s16 id_w = wk->wu.id ^ 1;
-    s16 pos_w = wk->wu.xyz[0].disp.pos - gs.plw[id_w].wu.xyz[0].disp.pos;
+    s16 pos_w = wk->wu.xyz[0].disp.pos - plw[id_w].wu.xyz[0].disp.pos;
 
     if (pos_w < 0) {
         pos_w = -pos_w;
@@ -1491,8 +1491,8 @@ void Win_15000(PLW* wk) {
         win_rno[0] = win_rno[1] = 0;
         wk->wu.routine_no[3]++;
 
-        if (Round_num >= (save_w[Present_Mode].Battle_Number[gs.Play_Type] * 2) ||
-            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[gs.Play_Type] + 1) {
+        if (Round_num >= (save_w[Present_Mode].Battle_Number[Play_Type] * 2) ||
+            PL_Wins[wk->wu.id] >= save_w[Present_Mode].Battle_Number[Play_Type] + 1) {
             work = win_select(wk, 7);
             set_char_move_init(&wk->wu, 9, Win_15000_tbl[work]);
         } else {
@@ -1500,8 +1500,8 @@ void Win_15000(PLW* wk) {
             set_char_move_init(&wk->wu, 9, work + 32);
         }
 
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
 
         break;
@@ -1528,7 +1528,7 @@ void bonus_game_win_pause(PLW* wk) {
 
         if (Bonus_Game_Flag == 20) {
             if (wk->wu.operator) {
-                if (gs.Time_Over) {
+                if (Time_Over) {
                     set_char_move_init(&wk->wu, 9, 67);
                 } else {
                     set_char_move_init(&wk->wu, 9, 65);
@@ -1582,12 +1582,12 @@ void bonus_game_win_pause(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[1], bs_scrrrl[1][0], 1)) {
-        set_field_hosei_flag(&gs.plw[1], bs_scrrrl[1][1], 0);
+    if (set_field_hosei_flag(&plw[1], bs_scrrrl[1][0], 1)) {
+        set_field_hosei_flag(&plw[1], bs_scrrrl[1][1], 0);
     }
 
-    if (set_field_hosei_flag(&gs.plw[0], bs_scrrrl[0][0], 1)) {
-        set_field_hosei_flag(&gs.plw[0], bs_scrrrl[0][1], 0);
+    if (set_field_hosei_flag(&plw[0], bs_scrrrl[0][0], 1)) {
+        set_field_hosei_flag(&plw[0], bs_scrrrl[0][1], 0);
     }
 }
 
@@ -1609,16 +1609,16 @@ void meta_win_pause(PLW* wk) {
     }
 
     if (Bonus_Game_Flag) {
-        if (set_field_hosei_flag(&gs.plw[1], bs_scrrrl[1][0], 1)) {
-            set_field_hosei_flag(&gs.plw[1], bs_scrrrl[1][1], 0);
+        if (set_field_hosei_flag(&plw[1], bs_scrrrl[1][0], 1)) {
+            set_field_hosei_flag(&plw[1], bs_scrrrl[1][1], 0);
         }
 
-        if (set_field_hosei_flag(&gs.plw[0], bs_scrrrl[0][0], 1)) {
-            set_field_hosei_flag(&gs.plw[0], bs_scrrrl[0][1], 0);
+        if (set_field_hosei_flag(&plw[0], bs_scrrrl[0][0], 1)) {
+            set_field_hosei_flag(&plw[0], bs_scrrrl[0][1], 0);
         }
     } else {
-        if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1)) {
-            set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+        if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1)) {
+            set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
         }
     }
 }

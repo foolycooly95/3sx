@@ -3,6 +3,7 @@
 #include "sf33rd/Source/Game/Game.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/grade.h"
+#include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/io/gd3rd.h"
 #include "sf33rd/Source/Game/io/pulpul.h"
@@ -47,8 +48,7 @@ typedef struct EffectState {
 } EffectState;
 
 typedef struct State {
-    GameState gs; // FIXME: merge two GameState structs together
-    _GameState _gs;
+    GameState gs;
     EffectState es;
 } State;
 
@@ -92,8 +92,8 @@ static void setup_vs_mode() {
     // This is pretty much a copy of logic from menu.c
     task[TASK_MENU].r_no[0] = 5; // go to idle routine (doing nothing)
     cpExitTask(TASK_SAVER);
-    gs.plw[0].wu.operator = 1;
-    gs.plw[1].wu.operator = 1;
+    plw[0].wu.operator = 1;
+    plw[1].wu.operator = 1;
     Operator_Status[0] = 1;
     Operator_Status[1] = 1;
     grade_check_work_1st_init(0, 0);
@@ -260,11 +260,10 @@ static void dump_state(int frame) {
 static void save_state(GekkoGameEvent* event) {
     *event->data.save.state_len = sizeof(State);
     State* dst = (State*)event->data.save.state;
-    SDL_memcpy(&dst->gs, &gs, sizeof(gs));
 
-    // _GameState
-    _GameState* _gs = &dst->_gs;
-    GameState_Save(_gs);
+    // GameState
+    GameState* gs = &dst->gs;
+    GameState_Save(gs);
 
     // EffectState
     EffectState* es = &dst->es;
@@ -288,11 +287,10 @@ static void save_state(GekkoGameEvent* event) {
 
 static void load_state(GekkoGameEvent* event) {
     const State* src = (State*)event->data.load.state;
-    SDL_memcpy(&gs, &src->gs, sizeof(gs));
 
-    // _GameState
-    const _GameState* _gs = &src->_gs;
-    GameState_Load(_gs);
+    // GameState
+    const GameState* gs = &src->gs;
+    GameState_Load(gs);
 
     // EffectState
     const EffectState* es = &src->es;

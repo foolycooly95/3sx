@@ -48,7 +48,7 @@ void effect_B8_move(WORK_Other_CONN* ewk) {
         break;
 
     case 1:
-        if (gs.Suicide[2] == 1) {
+        if (Suicide[2] == 1) {
             ewk->wu.disp_flag = 0;
             ewk->wu.routine_no[0] = 3;
             break;
@@ -69,7 +69,7 @@ void effect_B8_move(WORK_Other_CONN* ewk) {
         break;
 
     case 2:
-        if (gs.Suicide[2] == 1) {
+        if (Suicide[2] == 1) {
             ewk->wu.disp_flag = 0;
             ewk->wu.routine_no[0]++;
             break;
@@ -95,7 +95,7 @@ s32 effect_B8_init(s8 WIN_PL_NO, s16 timer) {
     u16 mes_no;
 
     test_in = 0;
-    wk = &gs.plw[WIN_PL_NO];
+    wk = &plw[WIN_PL_NO];
 
     if ((ix = pull_effect_work(4)) == -1) {
         return -1;

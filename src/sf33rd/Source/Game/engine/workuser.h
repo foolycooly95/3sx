@@ -7,79 +7,6 @@
 
 #include <stdbool.h>
 
-typedef enum AppearanceType {
-    APPEAR_TYPE_NON_ANIMATED,
-    APPEAR_TYPE_ANIMATED,
-    APPEAR_TYPE_UNKNOWN_2, // FIXME: document
-    APPEAR_TYPE_UNKNOWN_3, // FIXME: document
-} AppearanceType;
-
-typedef struct GameState {
-    PLW plw[2];
-
-    /// Afterimage data
-    ZanzouTableEntry zanzou_table[2][48];
-
-    SA_WORK super_arts[2];
-
-    /// Stun data
-    PiyoriType piyori_type[2];
-
-    AppearanceType appear_type;
-
-    /// Player controller routine indices
-    s16 pcon_rno[4];
-
-    /// `true` if the game has been slowed down at round end
-    bool round_slow_flag;
-
-    bool pcon_dp_flag;
-    u8 win_sp_flag;
-
-    /// `true` if death SFX playback needs to be requested
-    bool dead_voice_flag;
-
-    /// Go faster during a non-gameplay animation
-    bool Scene_Cut;
-
-    bool Time_Over;
-
-    // Round timer
-
-    s8 round_timer;
-    s8 flash_timer;
-    s8 flash_r_num;
-    s8 flash_col;
-    s8 math_counter_hi;
-    s8 math_counter_low;
-    u8 counter_color;
-    bool mugen_flag;
-    s8 hoji_counter;
-
-    s8 Counter_hi;
-    s8 Counter_low;
-    s16 Unit_Of_Timer;
-    s8 Select_Timer;
-    s8 Cursor_X[2];
-    s8 Cursor_Y[2];
-    s8 Cursor_Y_Pos[2][4];
-    s8 Cursor_Timer[2];
-    SelectTimerState select_timer_state;
-    s8 Time_Stop;
-    s8 Suicide[8];
-    s8 Complete_Face;
-    u8 Play_Type;
-    s16 Sel_PL_Complete[2];
-    s8 New_Challenger;
-
-    // Character select routine indices
-    u8 S_No[4];
-
-    s8 Select_Start[2];
-} GameState;
-
-extern GameState gs;
-
 // MARK: - Non-serializable
 
 extern const_s16_arr Tech_Address[2];
@@ -117,11 +44,36 @@ extern s8 Forbid_Break;
 extern s8 Request_Break[2];
 extern s8 Continue_Count[2];
 
+/// Go faster during a non-gameplay animation
+extern bool Scene_Cut;
+
+extern bool Time_Over;
+
+extern s8 Counter_hi;
+extern s8 Counter_low;
+extern s16 Unit_Of_Timer;
+extern s8 Select_Timer;
+extern s8 Cursor_X[2];
+extern s8 Cursor_Y[2];
+extern s8 Cursor_Y_Pos[2][4];
+extern s8 Cursor_Timer[2];
+extern s8 Time_Stop;
+extern s8 Suicide[8];
+extern s8 Complete_Face;
+extern u8 Play_Type;
+extern s16 Sel_PL_Complete[2];
+extern s8 New_Challenger;
+
+// Character select routine indices
+extern u8 S_No[4];
+
+extern s8 Select_Start[2];
+
 // MARK: - Unhandled
 
 extern s8 Personal_Continue_Flag[2]; // FIXME: remove
-extern s8 Personal_Disp_Flag; // FIXME: remove
-extern s8 win_pause_go; // FIXME: remove
+extern s8 Personal_Disp_Flag;        // FIXME: remove
+extern s8 win_pause_go;              // FIXME: remove
 extern s8 request_message;
 extern s8 judge_flag;
 extern s8 WINNER;

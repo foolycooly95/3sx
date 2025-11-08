@@ -93,9 +93,9 @@ s16 Next_CPU() {
     }
 
     SEL_CPU_X = 0;
-    gs.Scene_Cut = Cut_Cut_Cut();
+    Scene_Cut = Cut_Cut_Cut();
     Next_CPU_Tbl[SC_No[0]]();
-    gs.Time_Over = false;
+    Time_Over = false;
 
     if (Check_Exit_Check() == 0 && Debug_w[0x18] == -1) {
         SEL_CPU_X = 0;
@@ -115,7 +115,7 @@ void Next_CPU_1st() {
     bg_mvxy.d[0].sp = 0;
     Sel_EM_Complete[Player_id] = 0;
     Temporary_EM[Player_id] = Last_Selected_EM[Player_id];
-    gs.Select_Timer = 0x20;
+    Select_Timer = 0x20;
     Setup_EM_List();
 
     if (VS_Index[Player_id] == 0) {
@@ -139,13 +139,13 @@ void Next_CPU_1st() {
         Order_Timer[56] = 1;
     }
 
-    gs.Time_Stop = 1;
-    gs.Unit_Of_Timer = 60;
+    Time_Stop = 1;
+    Unit_Of_Timer = 60;
     SelectTimer_Init();
     Rnd = random_16() & 3;
     effect_58_init(6, 10, EM_Select_Voice_Data[Rnd]);
     Next_Step = 0;
-    gs.Suicide[2] = 1;
+    Suicide[2] = 1;
     Cut_Scroll = 2;
     effect_58_init(13, 1, 3);
     effect_58_init(16, 5, 2);
@@ -237,7 +237,7 @@ void Next_CPU_3rd() {
     case 3:
         switch (SC_No[2]) {
         case 0:
-            if (gs.Scene_Cut) {
+            if (Scene_Cut) {
                 S_Timer = 9;
             }
 
@@ -276,7 +276,7 @@ void Next_CPU_4th() {
         break;
 
     default:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -309,7 +309,7 @@ void Next_CPU_4th_0_Sub() {
     Setup_BG(1, bg_w.bgw[1].wxy[0].disp.pos + 512, bg_w.bgw[1].wxy[1].disp.pos);
     Setup_BG(3, bg_w.bgw[3].wxy[0].disp.pos, bg_w.bgw[3].wxy[1].disp.pos);
     Setup_VS_OBJ(0);
-    gs.Suicide[0] = 1;
+    Suicide[0] = 1;
     FadeInit();
 }
 
@@ -361,7 +361,7 @@ void Next_CPU_5th() {
         Setup_BG(1, bg_w.bgw[1].wxy[0].disp.pos, bg_w.bgw[1].wxy[1].disp.pos);
         Setup_BG(3, bg_w.bgw[3].wxy[0].disp.pos, bg_w.bgw[3].wxy[1].disp.pos);
         Setup_VS_OBJ(1);
-        gs.Suicide[0] = 1;
+        Suicide[0] = 1;
         Next_Step = 0;
         Order[67] = 1;
         Order_Timer[67] = 10;
@@ -406,7 +406,7 @@ void Next_CPU_5th() {
             FadeIn(0, 4, 8);
             SC_No[1]++;
             Forbid_Break = 0;
-            gs.Suicide[3] = 1;
+            Suicide[3] = 1;
             effect_43_init(1, 0);
             BGM_Request(0x33);
             S_Timer = 0xb2;
@@ -430,7 +430,7 @@ void Next_CPU_5th() {
         break;
 
     default:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -530,9 +530,9 @@ s32 After_Bonus() {
     }
 
     SEL_CPU_X = 0;
-    gs.Scene_Cut = Cut_Cut_Cut();
+    Scene_Cut = Cut_Cut_Cut();
     After_Bonus_Tbl[SC_No[0]]();
-    gs.Time_Over = false;
+    Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -601,7 +601,7 @@ s16 Select_CPU_First() {
 
     SEL_CPU_X = 0;
     Select_CPU_First_Tbl[SC_No[0]]();
-    gs.Time_Over = false;
+    Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -609,7 +609,7 @@ void Select_CPU_1st() {
     SC_No[0]++;
     Sel_EM_Complete[Player_id] = 0;
     Temporary_EM[Player_id] = Last_Selected_EM[Player_id];
-    gs.Select_Timer = 0x20;
+    Select_Timer = 0x20;
     Setup_EM_List();
     Target_BG_X[3] = bg_w.bgw[3].wxy[0].disp.pos + 458;
     Offset_BG_X[3] = 0;
@@ -675,7 +675,7 @@ void NC_Cut_Sub() {
     if (Next_Step) {
         SC_No[0]++;
         SC_No[1] = 0;
-        gs.Time_Stop = 0;
+        Time_Stop = 0;
     }
 }
 
@@ -747,7 +747,7 @@ void Select_CPU_3rd() {
         break;
 
     case 3:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -817,7 +817,7 @@ void Select_CPU_3rd() {
     case 7:
         switch (SC_No[2]) {
         case 0:
-            if (gs.Scene_Cut) {
+            if (Scene_Cut) {
                 S_Timer = 9;
             }
 
@@ -862,7 +862,7 @@ void Next_Bonus_1st() {
     Order_Timer[56] = 1;
     Rnd = random_16() & 3;
     effect_58_init(6, 10, EM_Select_Voice_Data[Rnd]);
-    gs.Suicide[2] = 1;
+    Suicide[2] = 1;
     Next_Step = 0;
     Cut_Scroll = 2;
     effect_58_init(13, 1, 3);
@@ -886,7 +886,7 @@ void Next_Bonus_2nd() {
     case 1:
         switch (SC_No[2]) {
         case 0:
-            if (gs.Scene_Cut) {
+            if (Scene_Cut) {
                 S_Timer = 9;
             }
 
@@ -925,7 +925,7 @@ void Next_Bonus_3rd() {
         break;
 
     default:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -956,14 +956,14 @@ s16 Next_Q() {
     }
 
     SEL_CPU_X = 0;
-    gs.Scene_Cut = Cut_Cut_Cut();
+    Scene_Cut = Cut_Cut_Cut();
     Next_Q_Tbl[SC_No[0]]();
 
     if (Check_Exit_Check() == 0 && Debug_w[0x18] == -1) {
         SEL_CPU_X = 0;
     }
 
-    gs.Time_Over = false;
+    Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -1047,7 +1047,7 @@ void Next_Q_3rd() {
         return;
 
     default:
-        if (gs.Scene_Cut) {
+        if (Scene_Cut) {
             S_Timer = 1;
         }
 
@@ -1070,7 +1070,7 @@ void Sel_CPU_Sub(s16 PL_id, u16 sw, u16 /* unused */) {
         return;
     }
 
-    if (gs.Time_Over) {
+    if (Time_Over) {
         sw = SWK_WEST;
     }
 
@@ -1106,7 +1106,7 @@ void Sel_CPU_Sub(s16 PL_id, u16 sw, u16 /* unused */) {
         Sel_EM_Complete[PL_id] = 1;
         EM_id = EM_List[Player_id][Temporary_EM[Player_id] - 1];
         My_char[COM_id] = EM_id;
-        gs.Time_Stop = 2;
+        Time_Stop = 2;
 
         if (VS_Index[PL_id] < 8) {
             Sound_SE(ID + 98);
@@ -1196,7 +1196,7 @@ void Setup_PL_Color(s16 PL_id, u16 sw) {
 
     sw_new = 0;
 
-    if (gs.plw[PL_id ^ 1].wu.operator == 0) {
+    if (plw[PL_id ^ 1].wu.operator == 0) {
         id_0 = -1;
         id_1 = 1;
     } else {
@@ -1204,11 +1204,11 @@ void Setup_PL_Color(s16 PL_id, u16 sw) {
         id_1 = My_char[PL_id ^ 1];
     }
 
-    if (gs.Sel_PL_Complete[PL_id ^ 1] == 0) {
+    if (Sel_PL_Complete[PL_id ^ 1] == 0) {
         id_0 = 127;
     }
 
-    if (gs.plw[PL_id].wu.operator != 0 && My_char[PL_id] == 0) {
+    if (plw[PL_id].wu.operator != 0 && My_char[PL_id] == 0) {
         sw_new = 0;
     } else {
         if (Debug_w[53]) {
@@ -1585,11 +1585,11 @@ void Check_Auto_Cut() {
 }
 
 s32 Auto_Cut_Sub() {
-    if (gs.plw[0].wu.operator && ~p1sw_1 & p1sw_0 & 0xFF0) {
+    if (plw[0].wu.operator && ~p1sw_1 & p1sw_0 & 0xFF0) {
         return 1;
     }
 
-    if (gs.plw[1].wu.operator && ~p2sw_1 & p2sw_0 & 0xFF0) {
+    if (plw[1].wu.operator && ~p2sw_1 & p2sw_0 & 0xFF0) {
         return 1;
     }
 

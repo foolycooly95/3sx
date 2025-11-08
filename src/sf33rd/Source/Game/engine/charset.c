@@ -919,7 +919,7 @@ s32 comm_if_s(WORK* wk, UNK11* ctc) {
     shdat = get_comm_if_shot(wk);
 
     if (wk->work_id == 1 && ((PLW*)wk)->player_number == 16 && ((PLW*)wk)->spmv_ng_flag & DIP_TAUNT_AFTER_KO_DISABLED &&
-        my_shdat == 0x440 && gs.pcon_dp_flag) {
+        my_shdat == 0x440 && pcon_dp_flag) {
         shdat = 0;
     }
 
@@ -2451,7 +2451,7 @@ u16 check_xcopy_filter_se_req(WORK* wk) {
             return voif;
         }
 
-        if (gs.plw[HI_2_BYTES(WK_AS_PLW->spmv_ng_flag)].metamorphose == 0) {
+        if (plw[HI_2_BYTES(WK_AS_PLW->spmv_ng_flag)].metamorphose == 0) {
             return voif;
         }
 
