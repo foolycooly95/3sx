@@ -1,4 +1,5 @@
 #include "netplay/game_state.h"
+#include "sf33rd/Source/Game/engine/charset.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/select_timer.h"
@@ -450,8 +451,8 @@ void GameState_Save(GameState* dst) {
     GS_SAVE(Cont_Timer);
     GS_SAVE(Plate_X);
     GS_SAVE(Plate_Y);
-    GS_SAVE(Demo_Timer);
-    GS_SAVE(Condense_Buff);
+    // GS_SAVE(Demo_Timer);
+    // GS_SAVE(Condense_Buff);
     GS_SAVE(Keep_Grade);
     GS_SAVE(IO_Result);
     GS_SAVE(VS_Win_Record);
@@ -492,6 +493,14 @@ void GameState_Save(GameState* dst) {
     GS_SAVE(cmb_calc_now);
     GS_SAVE(cst_read);
     GS_SAVE(cst_write);
+
+    // bg
+
+    GS_SAVE(bg_w);
+
+    // charset
+
+    GS_SAVE(att_req);
 }
 
 #define GS_LOAD(member) SDL_memcpy(&member, &src->member, sizeof(member))
@@ -938,8 +947,8 @@ void GameState_Load(const GameState* src) {
     GS_LOAD(Cont_Timer);
     GS_LOAD(Plate_X);
     GS_LOAD(Plate_Y);
-    GS_LOAD(Demo_Timer);
-    GS_LOAD(Condense_Buff);
+    // GS_LOAD(Demo_Timer);
+    // GS_LOAD(Condense_Buff);
     GS_LOAD(Keep_Grade);
     GS_LOAD(IO_Result);
     GS_LOAD(VS_Win_Record);
@@ -980,4 +989,12 @@ void GameState_Load(const GameState* src) {
     GS_LOAD(cmb_calc_now);
     GS_LOAD(cst_read);
     GS_LOAD(cst_write);
+
+    // bg
+
+    GS_LOAD(bg_w);
+
+    // charset
+
+    GS_LOAD(att_req);
 }
