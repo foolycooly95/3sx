@@ -227,6 +227,7 @@ static void clean_work_pointers(WORK* work) {
     work->my_effadrs = NULL;
 
     work->current_colcd = 0;
+    work->colcd = 0;
 }
 
 static void clean_plw_pointers(PLW* plw) {
@@ -245,6 +246,9 @@ static void clean_state_pointers(State* state) {
         for (int j = 0; j < 56; j++) {
             state->gs.waza_work[i][j].w_ptr = NULL;
         }
+
+        state->gs.spg_dat[i].spgtbl_ptr = NULL;
+        state->gs.spg_dat[i].spgptbl_ptr = NULL;
     }
 
     for (int i = 0; i < EFFECT_MAX; i++) {

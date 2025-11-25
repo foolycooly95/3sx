@@ -1,8 +1,12 @@
 #include "netplay/game_state.h"
+#include "sf33rd/Source/Game/animation/win_pl.h"
 #include "sf33rd/Source/Game/engine/charset.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
+#include "sf33rd/Source/Game/engine/slowf.h"
+#include "sf33rd/Source/Game/engine/spgauge.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/select_timer.h"
+#include "sf33rd/Source/Game/stage/ta_sub.h"
 #include "sf33rd/Source/Game/ui/count.h"
 
 #include <SDL3/SDL.h>
@@ -10,16 +14,6 @@
 #define GS_SAVE(member) SDL_memcpy(&dst->member, &member, sizeof(member))
 
 void GameState_Save(GameState* dst) {
-    GS_SAVE(plw);
-    GS_SAVE(zanzou_table);
-    GS_SAVE(super_arts);
-    GS_SAVE(piyori_type);
-    GS_SAVE(appear_type);
-    GS_SAVE(pcon_rno);
-    GS_SAVE(round_slow_flag);
-    GS_SAVE(pcon_dp_flag);
-    GS_SAVE(win_sp_flag);
-    GS_SAVE(dead_voice_flag);
     GS_SAVE(Scene_Cut);
     GS_SAVE(Time_Over);
     GS_SAVE(round_timer);
@@ -467,6 +461,24 @@ void GameState_Save(GameState* dst) {
     GS_SAVE(Random_ix16_bg);
     GS_SAVE(Opening_Now);
 
+    // plcnt
+
+    GS_SAVE(plw);
+    GS_SAVE(zanzou_table);
+    GS_SAVE(super_arts);
+    GS_SAVE(piyori_type);
+    GS_SAVE(appear_type);
+    GS_SAVE(pcon_rno);
+    GS_SAVE(round_slow_flag);
+    GS_SAVE(pcon_dp_flag);
+    GS_SAVE(win_sp_flag);
+    GS_SAVE(dead_voice_flag);
+    GS_SAVE(rambod);
+    GS_SAVE(ramhan);
+    GS_SAVE(vital_inc_timer);
+    GS_SAVE(vital_dec_timer);
+    GS_SAVE(sag_inc_timer);
+
     // cmd_data
 
     GS_SAVE(wcp);
@@ -501,21 +513,62 @@ void GameState_Save(GameState* dst) {
     // charset
 
     GS_SAVE(att_req);
+
+    // slowf
+
+    GS_SAVE(SLOW_timer);
+    GS_SAVE(SLOW_flag);
+    GS_SAVE(EXE_flag);
+
+    // grade
+
+    GS_SAVE(judge_gals);
+    GS_SAVE(judge_com);
+    GS_SAVE(last_judge_dada);
+    GS_SAVE(judge_final);
+    GS_SAVE(judge_item);
+    GS_SAVE(ji_sat);
+
+    // spgauge
+
+    GS_SAVE(Old_Stop_SG);
+    GS_SAVE(Exec_Wipe_F);
+    GS_SAVE(time_clear);
+    GS_SAVE(spg_number);
+    GS_SAVE(spg_work);
+    GS_SAVE(spg_offset);
+    GS_SAVE(time_num);
+    GS_SAVE(time_timer);
+    GS_SAVE(time_flag);
+    GS_SAVE(col);
+    GS_SAVE(time_operate);
+    GS_SAVE(sast_now);
+    GS_SAVE(max2);
+    GS_SAVE(max_rno2);
+    GS_SAVE(spg_dat);
+
+    // stun
+
+    GS_SAVE(sdat);
+
+    // vital
+
+    GS_SAVE(vit);
+
+    // win_pl
+
+    GS_SAVE(win_free);
+    GS_SAVE(win_rno);
+    GS_SAVE(poison_flag);
+
+    // ta_sub
+
+    GS_SAVE(eff_hit_flag);
 }
 
 #define GS_LOAD(member) SDL_memcpy(&member, &src->member, sizeof(member))
 
 void GameState_Load(const GameState* src) {
-    GS_LOAD(plw);
-    GS_LOAD(zanzou_table);
-    GS_LOAD(super_arts);
-    GS_LOAD(piyori_type);
-    GS_LOAD(appear_type);
-    GS_LOAD(pcon_rno);
-    GS_LOAD(round_slow_flag);
-    GS_LOAD(pcon_dp_flag);
-    GS_LOAD(win_sp_flag);
-    GS_LOAD(dead_voice_flag);
     GS_LOAD(Scene_Cut);
     GS_LOAD(Time_Over);
     GS_LOAD(round_timer);
@@ -963,6 +1016,24 @@ void GameState_Load(const GameState* src) {
     GS_LOAD(Random_ix16_bg);
     GS_LOAD(Opening_Now);
 
+    // plcnt
+
+    GS_LOAD(plw);
+    GS_LOAD(zanzou_table);
+    GS_LOAD(super_arts);
+    GS_LOAD(piyori_type);
+    GS_LOAD(appear_type);
+    GS_LOAD(pcon_rno);
+    GS_LOAD(round_slow_flag);
+    GS_LOAD(pcon_dp_flag);
+    GS_LOAD(win_sp_flag);
+    GS_LOAD(dead_voice_flag);
+    GS_LOAD(rambod);
+    GS_LOAD(ramhan);
+    GS_LOAD(vital_inc_timer);
+    GS_LOAD(vital_dec_timer);
+    GS_LOAD(sag_inc_timer);
+
     // cmd_data
 
     GS_LOAD(wcp);
@@ -997,4 +1068,55 @@ void GameState_Load(const GameState* src) {
     // charset
 
     GS_LOAD(att_req);
+
+    // slowf
+
+    GS_LOAD(SLOW_timer);
+    GS_LOAD(SLOW_flag);
+    GS_LOAD(EXE_flag);
+
+    // grade
+
+    GS_LOAD(judge_gals);
+    GS_LOAD(judge_com);
+    GS_LOAD(last_judge_dada);
+    GS_LOAD(judge_final);
+    GS_LOAD(judge_item);
+    GS_LOAD(ji_sat);
+
+    // spgauge
+
+    GS_LOAD(Old_Stop_SG);
+    GS_LOAD(Exec_Wipe_F);
+    GS_LOAD(time_clear);
+    GS_LOAD(spg_number);
+    GS_LOAD(spg_work);
+    GS_LOAD(spg_offset);
+    GS_LOAD(time_num);
+    GS_LOAD(time_timer);
+    GS_LOAD(time_flag);
+    GS_LOAD(col);
+    GS_LOAD(time_operate);
+    GS_LOAD(sast_now);
+    GS_LOAD(max2);
+    GS_LOAD(max_rno2);
+    GS_LOAD(spg_dat);
+
+    // stun
+
+    GS_LOAD(sdat);
+
+    // vital
+
+    GS_LOAD(vit);
+
+    // win_pl
+
+    GS_LOAD(win_free);
+    GS_LOAD(win_rno);
+    GS_LOAD(poison_flag);
+
+    // ta_sub
+
+    GS_LOAD(eff_hit_flag);
 }

@@ -2,7 +2,11 @@
 #define NETPLAY_GAME_STATE_H
 
 #include "sf33rd/Source/Game/engine/cmb_win.h"
+#include "sf33rd/Source/Game/engine/grade.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
+#include "sf33rd/Source/Game/engine/spgauge.h"
+#include "sf33rd/Source/Game/engine/stun.h"
+#include "sf33rd/Source/Game/engine/vital.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -10,16 +14,6 @@
 #include "types.h"
 
 typedef struct GameState {
-    PLW plw[2];
-    ZanzouTableEntry zanzou_table[2][48];
-    SA_WORK super_arts[2];
-    PiyoriType piyori_type[2];
-    AppearanceType appear_type;
-    s16 pcon_rno[4];
-    bool round_slow_flag;
-    bool pcon_dp_flag;
-    u8 win_sp_flag;
-    bool dead_voice_flag;
     bool Scene_Cut;
     bool Time_Over;
 
@@ -471,6 +465,24 @@ typedef struct GameState {
     s16 Random_ix16_bg;
     s16 Opening_Now;
 
+    // plcnt
+
+    PLW plw[2];
+    ZanzouTableEntry zanzou_table[2][48];
+    SA_WORK super_arts[2];
+    PiyoriType piyori_type[2];
+    AppearanceType appear_type;
+    s16 pcon_rno[4];
+    bool round_slow_flag;
+    bool pcon_dp_flag;
+    u8 win_sp_flag;
+    bool dead_voice_flag;
+    UNK_1 rambod[2];
+    UNK_2 ramhan[2];
+    u16 vital_inc_timer;
+    u16 vital_dec_timer;
+    s16 sag_inc_timer[2];
+
     // cmd_data
 
     WORK_CP wcp[2];
@@ -505,6 +517,57 @@ typedef struct GameState {
     // charset
 
     u16 att_req;
+
+    // slowf
+
+    s16 SLOW_timer;
+    s16 SLOW_flag;
+    s16 EXE_flag;
+
+    // grade
+
+    JudgeGals judge_gals[2];
+    JudgeCom judge_com[2];
+    s16 last_judge_dada[2][5];
+    GradeFinalData judge_final[2][2];
+    GradeData judge_item[2][2];
+    u8 ji_sat[2][384];
+
+    // spgauge
+
+    s8 Old_Stop_SG;
+    s8 Exec_Wipe_F;
+    s8 time_clear[2];
+    s16 spg_number;
+    s16 spg_work;
+    s16 spg_offset;
+    s8 time_num;
+    s8 time_timer;
+    s8 time_flag[2];
+    s16 col;
+    s8 time_operate[2];
+    s8 sast_now[2];
+    s8 max2[2];
+    s8 max_rno2[2];
+    SPG_DAT spg_dat[2];
+
+    // stun
+
+    SDAT sdat[2];
+
+    // vital
+
+    VIT vit[2];
+
+    // win_pl
+
+    s16 win_free[2];
+    s16 win_rno[2];
+    s16 poison_flag[2];
+
+    // ta_sub
+
+    s16 eff_hit_flag[11];
 } GameState;
 
 void GameState_Save(GameState* dst);

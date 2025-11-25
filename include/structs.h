@@ -2066,40 +2066,6 @@ typedef struct {
 } TAMA;
 
 typedef struct {
-    s16 cyerw;
-    s16 cred;
-    s16 ored;
-    s8 colnum;
-} VIT;
-
-typedef struct {
-    s16 offence_total;
-    s16 defence_total;
-    s16 tech_pts_total;
-    s16 ex_point_total;
-    s16 grade;
-} JudgeGals;
-
-typedef struct {
-    s16 offence_total;
-    s16 defence_total;
-    s16 tech_pts_total;
-    s16 ex_point_total;
-    s16 round;
-    s16 grade;
-} JudgeCom;
-
-typedef struct {
-    s16 cstn;
-    s8 sflag;
-    s8 osflag;
-    s8 g_or_s;
-    s8 stimer;
-    s16 slen;
-    s8 proccess_dead;
-} SDAT;
-
-typedef struct {
     s16 timer;
     s16 jmplv;
     s16 kosuu;
