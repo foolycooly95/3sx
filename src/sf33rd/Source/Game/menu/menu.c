@@ -5,6 +5,7 @@
 
 #include "sf33rd/Source/Game/menu/menu.h"
 #include "common.h"
+#include "main.h"
 #include "netplay/netplay.h"
 #include "port/sdl/sdl_app.h"
 #include "sf33rd/AcrSDK/common/pad.h"
