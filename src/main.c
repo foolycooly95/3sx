@@ -1,5 +1,6 @@
 #include "main.h"
 #include "common.h"
+#include "netplay/netplay.h"
 #include "port/sdl/sdl_app.h"
 #include "sf33rd/AcrSDK/common/mlPAD.h"
 #include "sf33rd/AcrSDK/ps2/flps2debug.h"
@@ -18,7 +19,6 @@
 #include "sf33rd/Source/Game/io/gd3rd.h"
 #include "sf33rd/Source/Game/io/ioconv.h"
 #include "sf33rd/Source/Game/menu/menu.h"
-#include "sf33rd/Source/Game/netplay.h"
 #include "sf33rd/Source/Game/rendering/color3rd.h"
 #include "sf33rd/Source/Game/rendering/dc_ghost.h"
 #include "sf33rd/Source/Game/rendering/mtrans.h"
@@ -139,15 +139,11 @@ int main(int argc, char* argv[]) {
     init_windows_console();
     SDLApp_Init();
 
-    int player = 0;
-
-    if (argc > 1) {
-        player = SDL_atoi(argv[1]);
-    } else {
-        player = 1;
+    if (argc >= 3) {
+        const int player = SDL_atoi(argv[1]);
+        const char* ip = argv[2];
+        Netplay_SetParams(player, ip);
     }
-
-    Netplay_SetPlayer(player);
 
     while (is_running) {
         is_running = SDLApp_PollEvents();
@@ -255,8 +251,6 @@ static void game_step_0() {
     }
 #endif
 
-    Interrupt_Flag = 0;
-
     if ((Play_Mode != 3 && Play_Mode != 1) || (Game_pause != 0x81)) {
         p1sw_1 = p1sw_0;
         p2sw_1 = p2sw_0;
@@ -290,7 +284,6 @@ static void game_step_0() {
 }
 
 static void game_step_1() {
-    Interrupt_Flag = 1;
     Interrupt_Timer += 1;
     Record_Timer += 1;
 
@@ -330,6 +323,7 @@ s32 mppGetFavoritePlayerNumber() {
 }
 
 void appCopyKeyData() {
+    // FIXME: Should PLsw be saved/restored too?
     PLsw[0][1] = PLsw[0][0];
     PLsw[1][1] = PLsw[1][0];
     PLsw[0][0] = p1sw_buff;
@@ -389,7 +383,7 @@ void njUserMain() {
     cpLoopTask();
 
     if ((Game_pause != 0x81) && (Mode_Type == MODE_VERSUS) && (Play_Mode == 1)) {
-        if ((gs.plw[0].wu.operator == 0) && (CPU_Rec[0] == 0) && (Replay_Status[0] == 1)) {
+        if ((plw[0].wu.operator == 0) && (CPU_Rec[0] == 0) && (Replay_Status[0] == 1)) {
             p1sw_0 = 0;
 
             Check_Replay_Status(0, 1);
@@ -400,7 +394,7 @@ void njUserMain() {
             }
         }
 
-        if ((gs.plw[1].wu.operator == 0) && (CPU_Rec[1] == 0) && (Replay_Status[1] == 1)) {
+        if ((plw[1].wu.operator == 0) && (CPU_Rec[1] == 0) && (Replay_Status[1] == 1)) {
             p2sw_0 = 0;
 
             Check_Replay_Status(1, 1);

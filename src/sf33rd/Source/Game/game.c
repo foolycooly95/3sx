@@ -42,6 +42,7 @@
 #include "sf33rd/Source/Game/screen/ranking.h"
 #include "sf33rd/Source/Game/screen/sel_pl.h"
 #include "sf33rd/Source/Game/screen/win.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -291,6 +292,7 @@ void Game01() {
     BG_Draw_System();
     Basic_Sub();
     Setup_Play_Type();
+    SelectTimer_Run();
 
     switch (G_No[2]) {
     case 0:
@@ -345,7 +347,7 @@ void Game01() {
         if (Switch_Screen(0) != 0) {
             Game01_Sub();
             Cover_Timer = 5;
-            gs.appear_type = APPEAR_TYPE_ANIMATED;
+            appear_type = APPEAR_TYPE_ANIMATED;
             set_hitmark_color();
 
             if (Debug_w[0x1D]) {
@@ -369,21 +371,21 @@ void Game01() {
                 E_No[3] = 0;
             } else {
                 Demo_Time_Stop = 1;
-                gs.plw[0].wu.operator = 0;
+                plw[0].wu.operator = 0;
                 Operator_Status[0] = 0;
-                gs.plw[1].wu.operator = 0;
+                plw[1].wu.operator = 0;
                 Operator_Status[1] = 0;
             }
 
-            if (gs.plw[0].wu.operator != 0) {
+            if (plw[0].wu.operator != 0) {
                 Sel_Arts_Complete[0] = -1;
             }
 
-            if (gs.plw[1].wu.operator != 0) {
+            if (plw[1].wu.operator != 0) {
                 Sel_Arts_Complete[1] = -1;
             }
 
-            if ((gs.plw[0].wu.operator != 0) && (gs.plw[1].wu.operator != 0)) {
+            if ((plw[0].wu.operator != 0) && (plw[1].wu.operator != 0)) {
                 Play_Type = 1;
             } else {
                 Play_Type = 0;
@@ -426,7 +428,7 @@ void Game2_0() {
     case MODE_VERSUS:
         for (ix = 0; ix < 2; ix++) {
             if (save_w[1].Partner_Type[ix]) {
-                gs.plw[ix].wu.operator = 0;
+                plw[ix].wu.operator = 0;
                 Operator_Status[ix] = 0;
             }
         }
@@ -484,7 +486,7 @@ void Game2_0() {
     Time_in_Time = 60;
     init_slow_flag();
     clear_hit_queue();
-    gs.pcon_rno[0] = gs.pcon_rno[1] = gs.pcon_rno[2] = gs.pcon_rno[3] = 0;
+    pcon_rno[0] = pcon_rno[1] = pcon_rno[2] = pcon_rno[3] = 0;
     ca_check_flag = 1;
     bg_work_clear();
     win_lose_work_clear();
@@ -565,13 +567,13 @@ void Game2_2() {
     init_slow_flag();
     effect_work_quick_init();
     clear_hit_queue();
-    gs.pcon_rno[0] = gs.pcon_rno[1] = gs.pcon_rno[2] = gs.pcon_rno[3] = 0;
+    pcon_rno[0] = pcon_rno[1] = pcon_rno[2] = pcon_rno[3] = 0;
     ca_check_flag = 1;
     bg_work_clear();
     win_lose_work_clear();
     player_face_init();
     Game01_Sub();
-    gs.appear_type = APPEAR_TYPE_ANIMATED;
+    appear_type = APPEAR_TYPE_ANIMATED;
     TATE00();
 
     for (i = 0; i < 3; i++) {
@@ -618,11 +620,11 @@ void Game2_5() {
         Score[1][2] = 0;
         Suicide[0] = 1;
         Game_pause = 0;
-        gs.pcon_rno[0] = 0;
-        gs.pcon_rno[1] = 0;
-        gs.pcon_rno[2] = 0;
-        gs.pcon_rno[3] = 0;
-        gs.appear_type = APPEAR_TYPE_NON_ANIMATED;
+        pcon_rno[0] = 0;
+        pcon_rno[1] = 0;
+        pcon_rno[2] = 0;
+        pcon_rno[3] = 0;
+        appear_type = APPEAR_TYPE_NON_ANIMATED;
         erase_extra_plef_work();
         compel_bg_init_position();
         win_lose_work_clear();
@@ -1067,7 +1069,7 @@ void Game06() {
 
 void Request_Break_Sub(s16 PL_id) {
     if ((Request_Break[PL_id] != 0) && (Ck_Break_Into(0, 0, PL_id) != 0)) {
-        gs.plw[PL_id].wu.operator = 1;
+        plw[PL_id].wu.operator = 1;
         Operator_Status[PL_id] = 1;
     }
 }
@@ -1233,8 +1235,8 @@ void Game08() {
             E_No[3] = 0;
             Clear_Personal_Data(0);
             Clear_Personal_Data(1);
-            gs.plw[0].wu.operator = 0;
-            gs.plw[1].wu.operator = 0;
+            plw[0].wu.operator = 0;
+            plw[1].wu.operator = 0;
             Operator_Status[0] = 0;
             Operator_Status[1] = 0;
             Last_Player_id = Player_Number = -1;
@@ -1270,7 +1272,7 @@ void Game09() {
         Time_in_Time = 60;
         init_slow_flag();
         clear_hit_queue();
-        gs.pcon_rno[0] = gs.pcon_rno[1] = gs.pcon_rno[2] = gs.pcon_rno[3] = 0;
+        pcon_rno[0] = pcon_rno[1] = pcon_rno[2] = pcon_rno[3] = 0;
         bbbs_com_initialize();
         ca_check_flag = 1;
         Bonus_Game_Work = 20;
@@ -1773,10 +1775,10 @@ s16 Ck_Coin() {
         ToneDown(0xFF, 0);
         Request_LDREQ_Break();
         G_No[3] = 1;
-        gs.plw[PL_id].wu.operator = 1;
+        plw[PL_id].wu.operator = 1;
         Operator_Status[PL_id] = 1;
         Champion = PL_id;
-        gs.plw[PL_id ^ 1].wu.operator = 0;
+        plw[PL_id ^ 1].wu.operator = 0;
         Operator_Status[PL_id ^ 1] = 0;
         return 0;
 

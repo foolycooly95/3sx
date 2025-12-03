@@ -16,10 +16,8 @@
 #include "sf33rd/Source/Game/stage/bg_sub.h"
 #include "structs.h"
 
-// sdata
 s16 eff_hit_data[4][4] = { { -67, 59, 13, 29 }, { 31, 95, 24, 15 }, { 4, 123, 28, 15 }, { 20, 15, 67, 37 } };
 
-// sbss
 s16 eff_hit_flag[11];
 
 s32 eff_hit_check_sub(WORK_Other* ewk, PLW* pl);
@@ -232,13 +230,13 @@ void pl_eff_trans_entry(WORK_Other* ewk) {
 s16 eff_hit_check(WORK_Other* ewk, s16 type) {
     if (!EXE_obroll) {
         if (type) {
-            if (gs.pcon_dp_flag) {
-                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &gs.plw[0]);
-                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &gs.plw[1]);
+            if (pcon_dp_flag) {
+                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &plw[0]);
+                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &plw[1]);
             }
         } else {
-            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &gs.plw[0]);
-            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &gs.plw[1]);
+            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &plw[0]);
+            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub(ewk, &plw[1]);
         }
     }
 
@@ -259,8 +257,7 @@ s32 eff_hit_check_sub(WORK_Other* ewk, PLW* pl) {
             return 0;
         }
 
-        if (hit_check_subroutine(
-                &pl->wu, &ewk->wu, &pl_hit_eff[pl->player_number][0], &eff_hit_data[ewk->wu.type][0])) {
+        if (hit_check_subroutine(&pl->wu, &ewk->wu, pl_hit_eff[pl->player_number], eff_hit_data[ewk->wu.type])) {
             return 1;
         }
     }
@@ -271,13 +268,13 @@ s32 eff_hit_check_sub(WORK_Other* ewk, PLW* pl) {
 s16 eff_hit_check2(WORK_Other* ewk, s16 type, s16 where_type) {
     if (!EXE_obroll) {
         if (type) {
-            if (gs.pcon_dp_flag) {
-                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &gs.plw[0], where_type);
-                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &gs.plw[1], where_type);
+            if (pcon_dp_flag) {
+                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &plw[0], where_type);
+                eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &plw[1], where_type);
             }
         } else {
-            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &gs.plw[0], where_type);
-            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &gs.plw[1], where_type);
+            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &plw[0], where_type);
+            eff_hit_flag[ewk->wu.type] += eff_hit_check_sub2(ewk, &plw[1], where_type);
         }
     }
 
@@ -361,16 +358,10 @@ s32 compel_dead_check(WORK_Other* ewk) {
 }
 
 void win_lose_work_clear() {
-    a_rno = 0;
-    lose_rno[2] = 0;
     win_rno[0] = 0;
     win_free[0] = 0;
-    lose_rno[0] = 0;
-    lose_free[0] = 0;
     win_rno[1] = 0;
     win_free[1] = 0;
-    lose_rno[1] = 0;
-    lose_free[1] = 0;
 }
 
 void cal_bg_speed_data_x(s16 bg_num, s16 tm, s16 unk) {

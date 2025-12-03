@@ -24,6 +24,8 @@
 #define HI_2_BYTES(_val) (((s16*)&_val)[1])
 #define WK_AS_PLW ((PLW*)wk)
 
+u16 att_req = 0;
+
 extern s32 (*const decode_chcmd[125])();
 extern s32 (*const decode_if_lever[16])();
 extern const s16 jphos_table[16];
@@ -324,7 +326,7 @@ void check_cm_extended_code(WORK* wk) {
 
         if (cpc->code >= 0x100) {
             check_cgd_patdat(wk);
-            return;
+            break;
         }
 
         if (decode_chcmd[cpc->code](wk, cpc) == 0) {
@@ -919,7 +921,7 @@ s32 comm_if_s(WORK* wk, UNK11* ctc) {
     shdat = get_comm_if_shot(wk);
 
     if (wk->work_id == 1 && ((PLW*)wk)->player_number == 16 && ((PLW*)wk)->spmv_ng_flag & DIP_TAUNT_AFTER_KO_DISABLED &&
-        my_shdat == 0x440 && gs.pcon_dp_flag) {
+        my_shdat == 0x440 && pcon_dp_flag) {
         shdat = 0;
     }
 
@@ -2451,7 +2453,7 @@ u16 check_xcopy_filter_se_req(WORK* wk) {
             return voif;
         }
 
-        if (gs.plw[HI_2_BYTES(WK_AS_PLW->spmv_ng_flag)].metamorphose == 0) {
+        if (plw[HI_2_BYTES(WK_AS_PLW->spmv_ng_flag)].metamorphose == 0) {
             return voif;
         }
 
@@ -2524,7 +2526,6 @@ void check_cgd_patdat2(WORK* wk) {
 
 void set_new_attnum(WORK* wk) {
     s16 aag_sw;
-    static u16 att_req;
 
     wk->renew_attack = wk->cg_att_ix;
 

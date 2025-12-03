@@ -14,31 +14,31 @@
 #include "sf33rd/Source/Game/ui/sc_data.h"
 #include "sf33rd/Source/Game/ui/sc_sub.h"
 
-Round_Timer round_timer;
+s8 round_timer;
 s8 flash_timer;
 s8 flash_r_num;
 s8 flash_col;
 s8 math_counter_hi;
 s8 math_counter_low;
 u8 counter_color;
-s8 mugen_flag;
+bool mugen_flag;
 s8 hoji_counter;
 
 void count_cont_init(u8 type) {
-    Counter_hi = save_w[Present_Mode].Time_Limit;
+    Counter_hi = save_w[Present_Mode].Time_Limit; // FIXME: use a consistent value in netplay
 
     if (Counter_hi == -1) {
-        mugen_flag = 1;
-        round_timer.size.half.h = 1;
+        mugen_flag = true;
+        round_timer = 1;
 
         if (type == 0) {
             counter_write(4);
         }
     } else {
-        mugen_flag = 0;
+        mugen_flag = false;
         hoji_counter = 60;
         Counter_low = hoji_counter;
-        round_timer.size.half.h = Counter_hi;
+        round_timer = Counter_hi;
         math_counter_hi = Counter_hi;
         math_counter_hi /= 10;
         math_counter_low = Counter_hi - (math_counter_hi * 10);
@@ -46,8 +46,6 @@ void count_cont_init(u8 type) {
         if (type == 0) {
             counter_write(4);
         }
-
-        round_timer.size.half.l = 0;
     }
 
     flash_r_num = 0;
@@ -85,7 +83,7 @@ void count_cont_main() {
         return;
     }
 
-    if (mugen_flag == 1) {
+    if (mugen_flag) {
         counter_write(4);
         return;
     }
@@ -138,7 +136,7 @@ void counter_control() {
         counter_color = 4;
     }
 
-    round_timer.size.half.h = Counter_hi;
+    round_timer = Counter_hi;
     math_counter_hi = Counter_hi;
     math_counter_hi /= 10;
     math_counter_low = Counter_hi - (math_counter_hi * 10);
@@ -156,7 +154,7 @@ void counter_write(u8 atr) {
             for (i = 0; i < 4; i++) {
                 scfont_sqput(i + 22, 1, 9, 2, 31, 2, 1, 3, 2);
             }
-        } else if (mugen_flag == 0) {
+        } else if (!mugen_flag) {
             scfont_sqput(22, 0, atr, 2, math_counter_hi << 1, 2, 2, 4, 2);
             scfont_sqput(24, 0, atr, 2, math_counter_low << 1, 2, 2, 4, 2);
         } else {
@@ -196,11 +194,10 @@ void bcount_cont_init() {
     Counter_hi = 50;
     hoji_counter = 60;
     Counter_low = hoji_counter;
-    round_timer.size.half.h = Counter_hi;
+    round_timer = Counter_hi;
     math_counter_hi = 5;
     math_counter_low = 0;
     bcounter_write();
-    round_timer.size.half.l = 0;
     Time_Stop = 0;
 }
 
@@ -215,25 +212,27 @@ void bcount_cont_main() {
 }
 
 void bcounter_control() {
-    if (Counter_hi != 0) {
-        if (Counter_low != 0) {
-            Counter_low -= 1;
-            return;
-        }
+    if (Counter_hi == 0) {
+        return;
+    }
 
-        hoji_counter = 60;
-        Counter_low = hoji_counter;
-        Counter_hi -= 1;
-        round_timer.size.half.h = Counter_hi;
-        math_counter_hi = Counter_hi;
-        math_counter_hi /= 10;
-        math_counter_low = Counter_hi - (math_counter_hi * 10);
+    if (Counter_low != 0) {
+        Counter_low -= 1;
+        return;
+    }
 
-        if (Counter_hi == 0) {
-            math_counter_hi = math_counter_low = 0;
-            Allow_a_battle_f = 0;
-            Time_Over = 1;
-        }
+    hoji_counter = 60;
+    Counter_low = hoji_counter;
+    Counter_hi -= 1;
+    round_timer = Counter_hi;
+    math_counter_hi = Counter_hi;
+    math_counter_hi /= 10;
+    math_counter_low = Counter_hi - (math_counter_hi * 10);
+
+    if (Counter_hi == 0) {
+        math_counter_hi = math_counter_low = 0;
+        Allow_a_battle_f = 0;
+        Time_Over = true;
     }
 }
 

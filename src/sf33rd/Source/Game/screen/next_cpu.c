@@ -16,7 +16,6 @@
 #include "sf33rd/Source/Game/effect/eff75.h"
 #include "sf33rd/Source/Game/effect/eff76.h"
 #include "sf33rd/Source/Game/effect/eff98.h"
-#include "sf33rd/Source/Game/effect/effa5.h"
 #include "sf33rd/Source/Game/effect/effa9.h"
 #include "sf33rd/Source/Game/effect/effe0.h"
 #include "sf33rd/Source/Game/effect/effect.h"
@@ -28,6 +27,7 @@
 #include "sf33rd/Source/Game/io/gd3rd.h"
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
 #include "sf33rd/Source/Game/screen/sel_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -95,7 +95,7 @@ s16 Next_CPU() {
     SEL_CPU_X = 0;
     Scene_Cut = Cut_Cut_Cut();
     Next_CPU_Tbl[SC_No[0]]();
-    Time_Over = 0;
+    Time_Over = false;
 
     if (Check_Exit_Check() == 0 && Debug_w[0x18] == -1) {
         SEL_CPU_X = 0;
@@ -141,7 +141,7 @@ void Next_CPU_1st() {
 
     Time_Stop = 1;
     Unit_Of_Timer = 60;
-    effect_A5_init();
+    SelectTimer_Init();
     Rnd = random_16() & 3;
     effect_58_init(6, 10, EM_Select_Voice_Data[Rnd]);
     Next_Step = 0;
@@ -532,7 +532,7 @@ s32 After_Bonus() {
     SEL_CPU_X = 0;
     Scene_Cut = Cut_Cut_Cut();
     After_Bonus_Tbl[SC_No[0]]();
-    Time_Over = 0;
+    Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -601,7 +601,7 @@ s16 Select_CPU_First() {
 
     SEL_CPU_X = 0;
     Select_CPU_First_Tbl[SC_No[0]]();
-    Time_Over = 0;
+    Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -963,7 +963,7 @@ s16 Next_Q() {
         SEL_CPU_X = 0;
     }
 
-    Time_Over = 0;
+    Time_Over = false;
     return SEL_CPU_X;
 }
 
@@ -1196,7 +1196,7 @@ void Setup_PL_Color(s16 PL_id, u16 sw) {
 
     sw_new = 0;
 
-    if (gs.plw[PL_id ^ 1].wu.operator == 0) {
+    if (plw[PL_id ^ 1].wu.operator == 0) {
         id_0 = -1;
         id_1 = 1;
     } else {
@@ -1208,7 +1208,7 @@ void Setup_PL_Color(s16 PL_id, u16 sw) {
         id_0 = 127;
     }
 
-    if (gs.plw[PL_id].wu.operator != 0 && My_char[PL_id] == 0) {
+    if (plw[PL_id].wu.operator != 0 && My_char[PL_id] == 0) {
         sw_new = 0;
     } else {
         if (Debug_w[53]) {
@@ -1585,11 +1585,11 @@ void Check_Auto_Cut() {
 }
 
 s32 Auto_Cut_Sub() {
-    if (gs.plw[0].wu.operator && ~p1sw_1 & p1sw_0 & 0xFF0) {
+    if (plw[0].wu.operator && ~p1sw_1 & p1sw_0 & 0xFF0) {
         return 1;
     }
 
-    if (gs.plw[1].wu.operator && ~p2sw_1 & p2sw_0 & 0xFF0) {
+    if (plw[1].wu.operator && ~p2sw_1 & p2sw_0 & 0xFF0) {
         return 1;
     }
 

@@ -2,62 +2,45 @@
 #define WORKUSER_H
 
 #include "sf33rd/Source/Game/engine/cmd_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "types.h"
 
 #include <stdbool.h>
 
-typedef enum AppearanceType {
-    APPEAR_TYPE_NON_ANIMATED,
-    APPEAR_TYPE_ANIMATED,
-    APPEAR_TYPE_UNKNOWN_2, // FIXME: document
-    APPEAR_TYPE_UNKNOWN_3, // FIXME: document
-} AppearanceType;
+typedef enum ModeType {
+    MODE_ARCADE,
+    MODE_VERSUS,
+    MODE_NETWORK,
+    MODE_NORMAL_TRAINING,
+    MODE_PARRY_TRAINING,
+    MODE_REPLAY,
+} ModeType;
 
-typedef struct GameState {
-    PLW plw[2];
+// MARK: - Non-serializable
 
-    /// Afterimage data
-    ZanzouTableEntry zanzou_table[2][48];
+extern const_s16_arr Tech_Address[2];
+extern void* Shell_Address[2];
+extern void* Synchro_Address[2][2];
 
-    SA_WORK super_arts[2];
+// MARK: - Unhandled
 
-    /// Stun data
-    PiyoriType piyori_type[2];
+extern const u8* Free_Ptr[2];
+extern u8* Lag_Ptr;
+extern u16* Demo_Ptr[2];
 
-    AppearanceType appear_type;
+// MARK: - Serialized
 
-    /// Player controller routine indices
-    s16 pcon_rno[4];
-
-    /// `true` if the game has been slowed down at round end
-    bool round_slow_flag;
-
-    bool pcon_dp_flag;
-    u8 win_sp_flag;
-
-    /// `true` if death SFX playback needs to be requested
-    bool dead_voice_flag;
-} GameState;
-
-extern GameState gs;
-
-// bss
 extern u8 Order[148];
 extern u8 Order_Timer[148];
 extern u8 Order_Dir[148];
-
-// sbss
 extern u32 Score[2][3];
-extern const_s16_arr Tech_Address[2];
 extern u32 Complete_Bonus;
-extern void* Shell_Address[2];
 extern u32 Stock_Score[2];
 extern u32 Vital_Bonus[2];
 extern u32 Time_Bonus[2];
 extern u32 Stage_Stock_Score[2];
 extern u32 Bonus_Score;
 extern u32 Final_Bonus_Score;
-extern void* Synchro_Address[2][2];
 extern u32 WGJ_Score;
 extern u32 Bonus_Score_Plus;
 extern u32 Perfect_Bonus[2];
@@ -65,8 +48,6 @@ extern u32 Keep_Score[2];
 extern u32 Disp_Score_Buff[2];
 extern s8 Winner_id;
 extern s8 Loser_id;
-extern s8 Counter_hi;
-extern s8 Counter_low;
 extern s8 Break_Into;
 extern u8 My_char[2];
 extern u8 Allow_a_battle_f;
@@ -77,14 +58,36 @@ extern s8 Super_Arts[2];
 extern s8 Forbid_Break;
 extern s8 Request_Break[2];
 extern s8 Continue_Count[2];
-extern s8 Personal_Continue_Flag[2];
-extern s8 Personal_Disp_Flag;
-extern s8 win_pause_go;
+
+/// Go faster during a non-gameplay animation
+extern bool Scene_Cut;
+
+extern bool Time_Over;
+
+extern s8 Counter_hi;
+extern s8 Counter_low;
+extern s16 Unit_Of_Timer;
+extern s8 Select_Timer;
+extern s8 Cursor_X[2];
+extern s8 Cursor_Y[2];
+extern s8 Cursor_Y_Pos[2][4];
+extern s8 Cursor_Timer[2];
+extern s8 Time_Stop;
+extern s8 Suicide[8];
+extern s8 Complete_Face;
+extern u8 Play_Type;
+extern s16 Sel_PL_Complete[2];
+extern s8 New_Challenger;
+
+// Character select routine indices
+extern u8 S_No[4];
+
+extern s8 Select_Start[2];
+
 extern s8 request_message;
 extern s8 judge_flag;
 extern s8 WINNER;
 extern s8 LOSER;
-extern s8 New_Challenger;
 extern s8 Champion;
 extern s8 Fade_Half_Flag;
 extern s8 Reserve_Cut;
@@ -97,7 +100,6 @@ extern s8 Request_E_No;
 extern s8 Request_G_No;
 extern u8 Present_Rank[2];
 extern s8 Best_Grade[2];
-extern s8 Cursor_Timer[2];
 extern s8 Demo_Type;
 extern s8 Rank_Type;
 extern s8 Flash_Sign[2];
@@ -114,10 +116,6 @@ extern s8 Demo_PL_Index;
 extern s8 Demo_Stage_Index;
 extern s8 Face_MV_Request;
 extern s8 Face_Move;
-extern s8 Appear_Cursor;
-extern s8 Select_Timer;
-extern s8 Time_Stop;
-extern s8 Time_Over;
 extern s8 Player_id;
 extern s8 Last_Player_id;
 extern s8 Player_Number;
@@ -184,7 +182,7 @@ extern s8 Jump_Pass_Timer[2][4];
 extern s8 sa_gauge_flash[2];
 extern s8 Receive_Flag[2];
 extern s8 Disposal_Again[2];
-extern volatile s8 BGM_Vol;
+extern s8 BGM_Vol;
 extern u8 Used_char[2];
 extern s8 Break_Com[2][20];
 extern s8 aiuchi_flag;
@@ -246,12 +244,10 @@ extern u8 Stage_Time_Finish[2];
 extern u8 Bonus_Type;
 extern s8 Completion_Bonus[2][2];
 extern s8 ichikannkei;
-extern s8 Complete_Face;
 extern u8 Plate_Disposal_No[2][3];
 extern u8 SO_No[2];
 extern u8 Disp_Command_Name[2][3];
 extern u8 SC_No[4];
-extern const u8* Free_Ptr[2];
 extern u8 BGM_No[2];
 extern u8 BGM_Timer[2];
 extern u8 EM_List[2][2];
@@ -260,10 +256,6 @@ extern s8 Temporary_EM[2];
 extern s8 OK_Moving_SA_Plate[2];
 extern u8 Battle_Q[2];
 extern u8 EM_History[2][10];
-
-// Go faster during a non-gameplay animation
-extern bool Scene_Cut;
-
 extern u8 GO_No[4];
 extern u8 Aborigine;
 extern u8 Continue_Count_Down[2];
@@ -273,7 +265,6 @@ extern s8 Last_Selected_EM[2];
 extern u8 Q_Country;
 extern u8 Continue_Cut[2];
 extern u8 Introduce_Boss[2][2];
-extern s8 Suicide[8];
 extern u8 Final_Play_Type[2];
 extern s8 Rank_In[2][4];
 extern s8 Request_Disp_Rank[2][4];
@@ -288,9 +279,6 @@ extern u8 E_Number[2][4];
 extern u8 E_No[4];
 extern u8 C_No[4];
 
-// Character select routine indices
-extern u8 S_No[4];
-
 // Game routine indices
 extern u8 G_No[4];
 
@@ -299,10 +287,6 @@ extern u8 M_No[4];
 extern u8 Exit_No;
 extern u8 SP_No[2][4];
 extern u8 Face_No[2];
-extern s8 Select_Start[2];
-extern s8 Cursor_X[2];
-extern s8 Cursor_Y[2];
-extern s8 Cursor_Y_Pos[2][4];
 extern s8 Stop_Cursor[2];
 extern u8 Training_Index;
 extern u8 Connect_Status;
@@ -311,7 +295,6 @@ extern u8 Game_pause;
 extern u8 Game_difficulty;
 extern u8 Pause;
 extern u8 Pause_ID;
-extern u8 Play_Type;
 extern u8 Exit_Menu;
 extern u8 Conclusion_Flag;
 extern u8 CP_No[2][4];
@@ -353,18 +336,7 @@ extern u8 Play_Game;
 extern s8 Menu_Cursor_Move;
 extern u8 flash_win_type[2][4];
 extern u8 sync_win_type[2][4];
-
-typedef enum ModeType {
-    MODE_ARCADE,
-    MODE_VERSUS,
-    MODE_NETWORK,
-    MODE_NORMAL_TRAINING,
-    MODE_PARRY_TRAINING,
-    MODE_REPLAY,
-} ModeType;
-
 extern ModeType Mode_Type;
-
 extern s8 Menu_Page;
 extern s8 Menu_Max;
 extern u8 reset_NG_flag;
@@ -387,7 +359,6 @@ extern u8 Reset_Bootrom;
 extern u8 Decide_ID;
 extern s8 Training_Cursor;
 extern s8 Lag_Timer;
-extern u8* Lag_Ptr;
 extern u8 CPU_Time_Lag[2];
 extern u8 Forbid_Reset;
 extern u8 CPU_Rec[2];
@@ -408,13 +379,11 @@ extern s16 ENTRY_X;
 extern s16 C_Timer;
 extern s16 S_Timer;
 extern s16 Flash_Complete[2];
-extern s16 Sel_PL_Complete[2];
 extern s16 Sel_Arts_Complete[2];
 extern s16 Arts_Y[2];
 extern s16 Move_Super_Arts[2];
 extern s16 Battle_Country;
 extern s16 Face_Status;
-extern s16 Unit_Of_Timer;
 
 // ID of the player currently operated on during player selection routines
 extern s16 ID;
@@ -499,7 +468,6 @@ extern u16 vital_stop_flag[2];
 extern u16 gauge_stop_flag[2];
 extern s16 Lamp_Timer;
 extern s16 Cont_Timer;
-extern u16* Demo_Ptr[2];
 extern s16 Plate_X[2][3];
 extern s16 Plate_Y[2][3];
 extern u16 Demo_Timer[2];

@@ -13,9 +13,6 @@
 #include "sf33rd/Source/Game/stage/bg_data.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
 
-s16 lose_rno[3];
-s16 lose_free[2];
-
 const s16 loser_type_tbl[20] = { 0, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0 };
 
 const s16 meta_lose_tbl[20] = { 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 28, 24, 24, 24, 24, 24, 24 };
@@ -32,7 +29,7 @@ void lose_player(PLW* wk) {
 }
 
 void Lose_00000(PLW* wk) {
-    if ((gs.pcon_rno[0] == 2) && (gs.pcon_rno[1] == 3)) {
+    if ((pcon_rno[0] == 2) && (pcon_rno[1] == 3)) {
         Judge_normal_loser(wk);
         return;
     }
@@ -41,11 +38,10 @@ void Lose_00000(PLW* wk) {
 }
 
 void Lose_10000(PLW* wk) {
-    if ((gs.pcon_rno[0] == 2) && (gs.pcon_rno[1] == 3)) {
+    if ((pcon_rno[0] == 2) && (pcon_rno[1] == 3)) {
         switch (wk->wu.routine_no[3]) {
         case 0:
             wk->wu.routine_no[3]++;
-            lose_rno[0] = lose_rno[1] = lose_rno[2] = 0;
             wk->wu.char_index = random_16();
             wk->wu.char_index &= 3;
             set_char_move_init(&wk->wu, 9, wk->wu.char_index + 0x38);
@@ -57,13 +53,12 @@ void Lose_10000(PLW* wk) {
             char_move(&wk->wu);
             break;
         }
-    } else if ((gs.pcon_rno[1] == 0) || (gs.pcon_rno[1] == 4)) {
+    } else if ((pcon_rno[1] == 0) || (pcon_rno[1] == 4)) {
         return;
     } else {
         switch (wk->wu.routine_no[3]) {
         case 0:
             wk->wu.routine_no[3]++;
-            lose_rno[0] = lose_rno[1] = lose_rno[2] = 0;
             wk->wu.char_index = random_16();
             wk->wu.char_index &= 7;
             set_char_move_init(&wk->wu, 9, wk->wu.char_index + 0x18);
@@ -76,15 +71,15 @@ void Lose_10000(PLW* wk) {
         }
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1) != 0) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1) != 0) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
 void Lose_20000(PLW* wk) {
     s16 work;
 
-    if ((gs.pcon_rno[0] == 2) && (gs.pcon_rno[1] == 3)) {
+    if ((pcon_rno[0] == 2) && (pcon_rno[1] == 3)) {
         Judge_normal_loser(wk);
         return;
     }
@@ -98,8 +93,7 @@ void Lose_20000(PLW* wk) {
             effect_C1_init(&wk->wu);
         }
 
-        if ((gs.pcon_rno[1] != 0) && (gs.pcon_rno[1] != 4)) {
-            lose_rno[0] = lose_rno[1] = lose_rno[2] = 0;
+        if ((pcon_rno[1] != 0) && (pcon_rno[1] != 4)) {
             work = random_16();
             work &= 7;
             set_char_move_init(&wk->wu, 9, work + 0x18);
@@ -113,22 +107,23 @@ void Lose_20000(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1) != 0) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1) != 0) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
 void Lose_30000(PLW* wk) {
-    if ((gs.pcon_rno[0] == 2) && (gs.pcon_rno[1] == 3)) {
+    if ((pcon_rno[0] == 2) && (pcon_rno[1] == 3)) {
         switch (wk->wu.routine_no[3]) {
         case 0:
             wk->wu.routine_no[3]++;
-            lose_rno[0] = lose_rno[1] = lose_rno[2] = 0;
+
             if (Country != 1) {
                 set_char_move_init(&wk->wu, 9, 0x3A);
             } else {
                 set_char_move_init(&wk->wu, 9, 0x38);
             }
+
             break;
 
         default:
@@ -138,18 +133,19 @@ void Lose_30000(PLW* wk) {
             break;
         }
 
-    } else if ((gs.pcon_rno[1] == 0) || (gs.pcon_rno[1] == 4)) {
+    } else if ((pcon_rno[1] == 0) || (pcon_rno[1] == 4)) {
         return;
     } else {
         switch (wk->wu.routine_no[3]) {
         case 0:
             wk->wu.routine_no[3]++;
-            lose_rno[0] = lose_rno[1] = lose_rno[2] = 0;
+
             if (Country != 1) {
                 set_char_move_init(&wk->wu, 9, 0x1C);
             } else {
                 set_char_move_init(&wk->wu, 9, 0x18);
             }
+
             break;
 
         case 1:
@@ -159,22 +155,21 @@ void Lose_30000(PLW* wk) {
         }
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1) != 0) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1) != 0) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
 void Normal_normal_Loser(PLW* wk) {
     s16 work;
 
-    if ((gs.pcon_rno[1] == 0) || (gs.pcon_rno[1] == 4)) {
+    if ((pcon_rno[1] == 0) || (pcon_rno[1] == 4)) {
         return;
     }
 
     switch (wk->wu.routine_no[3]) {
     case 0:
         wk->wu.routine_no[3]++;
-        lose_rno[0] = lose_rno[1] = lose_rno[2] = 0;
         work = random_16();
         work &= 7;
         set_char_move_init(&wk->wu, 9, work + 0x18);
@@ -186,8 +181,8 @@ void Normal_normal_Loser(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1) != 0) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1) != 0) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
@@ -209,15 +204,15 @@ void Judge_normal_loser(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1) != 0) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1) != 0) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }
 
 void meta_lose_pause(PLW* wk) {
     bg_app_stop = 1;
 
-    if ((gs.pcon_rno[1] == 0) || (gs.pcon_rno[1] == 4)) {
+    if ((pcon_rno[1] == 0) || (pcon_rno[1] == 4)) {
         return;
     }
 
@@ -233,7 +228,7 @@ void meta_lose_pause(PLW* wk) {
         break;
     }
 
-    if (set_field_hosei_flag(&gs.plw[wk->wu.id], scrr, 1) != 0) {
-        set_field_hosei_flag(&gs.plw[wk->wu.id], scrl, 0);
+    if (set_field_hosei_flag(&plw[wk->wu.id], scrr, 1) != 0) {
+        set_field_hosei_flag(&plw[wk->wu.id], scrl, 0);
     }
 }

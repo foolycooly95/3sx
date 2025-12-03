@@ -245,9 +245,10 @@ void Damage_00000(PLW* wk) {
             wk->wu.routine_no[3]++;
         }
 
-        /* fallthrough */
+        break;
 
     case 2:
+        // Do nothing
         break;
     }
 }
@@ -889,7 +890,7 @@ void Damage_25000(PLW* wk) {
         break;
 
     case 1:
-        if ((gs.pcon_dp_flag != 0) && (wk->py->time > 48)) {
+        if ((pcon_dp_flag != 0) && (wk->py->time > 48)) {
             wk->py->time = 48;
         }
 
@@ -1267,7 +1268,7 @@ void buttobi_chakuchi_cg_type_check(PLW* wk) {
 
     case 5:
         if (!(wk->spmv_ng_flag2 & DIP2_QUICK_STAND_DISABLED) && wk->ukemi_success && (wk->dead_flag == 0) &&
-            (wk->py->flag == 0) && (wk->wu.vital_new > 0) && (gs.pcon_dp_flag == 0)) {
+            (wk->py->flag == 0) && (wk->wu.vital_new > 0) && (pcon_dp_flag == 0)) {
             wk->wu.routine_no[2] = oki_select_table2[wk->wu.rl_waza + (wk->wu.rl_flag * 2)];
             wk->wu.routine_no[3] = 0;
             add_sp_arts_gauge_ukemi(wk);
@@ -1462,15 +1463,15 @@ void subtract_dm_vital(PLW* wk) {
         if (wk->wu.vital_new < 0) {
             wk->wu.vital_new = -1;
             wk->dead_flag = 1;
-            gs.dead_voice_flag = true;
+            dead_voice_flag = true;
 
             if (wk->wu.dm_guard_success != -1) {
                 wk->kezurijini_flag = 1;
             }
 
-            if (!gs.round_slow_flag) {
+            if (!round_slow_flag) {
                 set_conclusion_slow();
-                gs.round_slow_flag = true;
+                round_slow_flag = true;
             }
         } else if (wk->py->flag == 0) {
             wk->py->now.quantity.h += wk->wu.dm_piyo;
@@ -1538,15 +1539,15 @@ void subtract_dm_vital_aiuchi(PLW* wk) {
         if (wk->wu.vital_new < 0) {
             wk->wu.vital_new = -1;
             wk->dead_flag = 1;
-            gs.dead_voice_flag = true;
+            dead_voice_flag = true;
 
             if (wk->wu.dm_guard_success != -1) {
                 wk->kezurijini_flag = 1;
             }
 
-            if (!gs.round_slow_flag) {
+            if (!round_slow_flag) {
                 set_conclusion_slow();
-                gs.round_slow_flag = true;
+                round_slow_flag = true;
             }
         } else if (wk->py->flag == 0) {
             wk->py->now.quantity.h += wk->wu.dm_piyo;
@@ -1637,7 +1638,7 @@ s32 setup_kuzureochi(PLW* wk) {
         return 0;
     }
 
-    if (gs.pcon_dp_flag && Conclusion_Type != 1 && wk->wu.id == Winner_id) {
+    if (pcon_dp_flag && Conclusion_Type != 1 && wk->wu.id == Winner_id) {
         wk->wu.vital_new = 0;
         return 0;
     }

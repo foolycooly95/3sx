@@ -287,8 +287,8 @@ void remake_mvxy_PoGR(WORK* wk) {
 
 /// Check player push box collision and push them if needed
 void check_body_touch() {
-    PLW* p1w = &gs.plw[0];
-    PLW* p2w = &gs.plw[1];
+    PLW* p1w = &plw[0];
+    PLW* p2w = &plw[1];
     s16 meri;
 
     if (p1w->wu.h_hos->hos_box[0] != 0 && p2w->wu.h_hos->hos_box[0] != 0) {
@@ -364,12 +364,12 @@ void check_body_touch2() {
     s16 dad2[4];
     s16 dad3[4];
 
-    if (gs.plw->wu.operator) {
-        hmw = &gs.plw[0];
-        cmw = &gs.plw[1];
+    if (plw->wu.operator) {
+        hmw = &plw[0];
+        cmw = &plw[1];
     } else {
-        hmw = &gs.plw[1];
-        cmw = &gs.plw[0];
+        hmw = &plw[1];
+        cmw = &plw[0];
     }
 
     if (!saishin_bs2_on_car(hmw)) {
@@ -431,14 +431,14 @@ two:
 s32 check_be_car_object() {
     PLW* com;
 
-    if (gs.pcon_rno[0] == 0) {
+    if (pcon_rno[0] == 0) {
         return 1;
     }
 
-    if (gs.plw[0].wu.operator) {
-        com = &gs.plw[1];
+    if (plw[0].wu.operator) {
+        com = &plw[1];
     } else {
-        com = &gs.plw[0];
+        com = &plw[0];
     }
 
     if (com->wu.routine_no[0] <= 0) {
@@ -1032,7 +1032,7 @@ void add_sp_arts_gauge_nagenuke(PLW* wk) {
 }
 
 void add_sp_arts_gauge_maxbit(PLW* wk) {
-    if (gs.pcon_rno[0] != 1) {
+    if (pcon_rno[0] != 1) {
         return;
     }
 
@@ -1067,12 +1067,12 @@ void add_super_arts_gauge(SA_WORK* wk, s16 ix, s16 asag, u8 mf) {
             return;
         }
 
-        if (!gs.pcon_dp_flag && !Bonus_Game_Flag && (sa_gauge_omake[omop_sa_gauge_ix[ix]] != 0) && (asag > 0) &&
+        if (!pcon_dp_flag && !Bonus_Game_Flag && (sa_gauge_omake[omop_sa_gauge_ix[ix]] != 0) && (asag > 0) &&
             (wk->store != wk->store_max)) {
-            asag = asag * 0x78 / 100;
+            asag = asag * 120 / 100;
 
             if (save_w[Present_Mode].Battle_Number[Play_Type] == 0) {
-                asag = asag * 0x96 / 100;
+                asag = asag * 150 / 100;
             }
 
             asag = asag * sa_gauge_omake[omop_sa_gauge_ix[ix]] / 32;
@@ -1144,17 +1144,17 @@ void setup_lvdir_after_autodir(PLW* wk) {
 }
 
 void dead_voice_request() {
-    if (gs.dead_voice_flag) {
-        if (gs.plw[0].dead_flag) {
-            dead_voice_request2(&gs.plw[0]);
+    if (dead_voice_flag) {
+        if (plw[0].dead_flag) {
+            dead_voice_request2(&plw[0]);
         }
 
-        if (gs.plw[1].dead_flag) {
-            dead_voice_request2(&gs.plw[1]);
+        if (plw[1].dead_flag) {
+            dead_voice_request2(&plw[1]);
         }
     }
 
-    gs.dead_voice_flag = false;
+    dead_voice_flag = false;
 }
 
 void dead_voice_request2(PLW* wk) {

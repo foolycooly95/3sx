@@ -24,7 +24,6 @@
 #include "sf33rd/Source/Game/effect/eff79.h"
 #include "sf33rd/Source/Game/effect/eff93.h"
 #include "sf33rd/Source/Game/effect/eff99.h"
-#include "sf33rd/Source/Game/effect/effa5.h"
 #include "sf33rd/Source/Game/effect/effd8.h"
 #include "sf33rd/Source/Game/effect/effk6.h"
 #include "sf33rd/Source/Game/engine/grade.h"
@@ -39,6 +38,7 @@
 #include "sf33rd/Source/Game/rendering/mtrans.h"
 #include "sf33rd/Source/Game/screen/next_cpu.h"
 #include "sf33rd/Source/Game/screen/sel_data.h"
+#include "sf33rd/Source/Game/select_timer.h"
 #include "sf33rd/Source/Game/sound/se.h"
 #include "sf33rd/Source/Game/sound/sound3rd.h"
 #include "sf33rd/Source/Game/stage/bg.h"
@@ -156,7 +156,7 @@ s16 Select_Player() {
     Sel_PL();
     ID = 1;
     Sel_PL();
-    Time_Over = 0;
+    Time_Over = false;
 
     if (Check_Exit_Check() == 0 && Debug_w[24] == -1) {
         SEL_PL_X = 0;
@@ -261,14 +261,13 @@ void Sel_PL_Cont_1st() {
     Setup_1st_Play_Type();
     Setup_Face_Sub();
     Time_Stop = 1;
-    effect_A5_init();
-    Appear_Cursor = 0;
+    SelectTimer_Init();
     Face_MV_Request = 0;
     Face_Status = 0;
     Face_Move = 0;
     Break_Into_CPU = 0;
     Explosion = 0;
-    Time_Over = 0;
+    Time_Over = false;
     Move_Super_Arts[0] = 0;
     Move_Super_Arts[1] = 0;
     Flash_Complete[0] = 0;
@@ -325,7 +324,9 @@ void Sel_PL_Cont_3rd() {
     }
 }
 
-void Sel_PL_Cont_4th() {}
+void Sel_PL_Cont_4th() {
+    // Do nothing
+}
 
 void Setup_Face_ID() {
     s16 x;
@@ -341,10 +342,9 @@ void Setup_Face_ID() {
 void Setup_1st_Play_Type() {
     if (Play_Type == 1) {
         Play_Type_1st = 99;
-        return;
+    } else {
+        Play_Type_1st = Aborigine;
     }
-
-    Play_Type_1st = Aborigine;
 }
 
 void Setup_Face_Sub() {
@@ -358,23 +358,23 @@ void Setup_Face_Sub() {
 }
 
 void Setup_Select_Status() {
-    if (gs.plw[0].wu.operator) {
+    if (plw[0].wu.operator) {
         Select_Status[0] = 1;
     } else {
         Select_Status[0] = 0;
     }
 
-    if (gs.plw[1].wu.operator) {
+    if (plw[1].wu.operator) {
         Select_Status[0] |= 2;
     }
 
-    if (Sel_Arts_Complete[0] != -1 && gs.plw[0].wu.operator != 0) {
+    if (Sel_Arts_Complete[0] != -1 && plw[0].wu.operator != 0) {
         Select_Status[1] = 1;
     } else {
         Select_Status[1] = 0;
     }
 
-    if (Sel_Arts_Complete[1] != -1 && gs.plw[1].wu.operator != 0) {
+    if (Sel_Arts_Complete[1] != -1 && plw[1].wu.operator != 0) {
         Select_Status[1] |= 2;
     }
 }
@@ -478,8 +478,6 @@ void Face_1st() {
     } else {
         Face_No[0] = 1;
     }
-
-    Appear_Cursor = 1;
 }
 
 void Face_2nd() {
@@ -759,7 +757,7 @@ void Go_Away_Red_Lines() {
 void Player_Select_Control() {
     void (*PL_Sel_Jmp_Tbl[5])() = { PL_Sel_1st, PL_Sel_2nd, PL_Sel_3rd, PL_Sel_4th, PL_Sel_5th };
 
-    if (gs.plw[ID2].wu.operator != 0) {
+    if (plw[ID2].wu.operator != 0) {
         PL_Sel_Jmp_Tbl[SP_No[ID2][1]]();
     }
 }
@@ -880,7 +878,7 @@ void Setup_Plates(s8 PL_id, s16 Time) {
 void Sel_PL() {
     void (*Sel_PL_Jmp_Tbl[6])() = { Sel_PL_1st, Sel_PL_2nd, Sel_PL_3rd, Sel_PL_4th, Sel_PL_5th, Sel_PL_6th };
 
-    if (gs.plw[ID].wu.operator != 0) {
+    if (plw[ID].wu.operator != 0) {
         Sel_PL_Jmp_Tbl[SP_No[ID][0]]();
     }
 }
@@ -1080,7 +1078,7 @@ void Sel_PL_5th() {
         S_No[3] = 1;
     }
 
-    if (gs.plw[0].wu.operator == 0 || gs.plw[1].wu.operator == 0) {
+    if (plw[0].wu.operator == 0 || plw[1].wu.operator == 0) {
         Check_Boss(ID);
     }
 }
@@ -1533,11 +1531,11 @@ void Check_Exit() {
 }
 
 void Exit_1st() {
-    if (gs.plw[0].wu.operator != 0 && Sel_Arts_Complete[0] >= 0) {
+    if (plw[0].wu.operator != 0 && Sel_Arts_Complete[0] >= 0) {
         return;
     }
 
-    if (gs.plw[1].wu.operator != 0 && Sel_Arts_Complete[1] >= 0) {
+    if (plw[1].wu.operator != 0 && Sel_Arts_Complete[1] >= 0) {
         return;
     }
 
@@ -1626,7 +1624,7 @@ void Exit_4th() {
     Menu_Suicide[0] = 1;
     bgPalCodeOffset[0] = 144;
     BGM_Request(51);
-    Exit_Timer = 180;
+    Exit_Timer = 240;
     effect_58_init(17, 2, 0);
 
     if (Select_Status[0] != 3) {
@@ -1686,15 +1684,12 @@ void Exit_6th() {
         return;
     }
 
-    if (!adx_now_playend()) {
-        return;
-    }
-
     if (!sndCheckVTransStatus(0)) {
         return;
     }
 
-    if (Scene_Cut) {
+    // We shouldn't skip VS screen in network mode, because that can lead to IO race conditions
+    if (Scene_Cut && (Mode_Type != MODE_NETWORK)) {
         Exit_Timer = 1;
     }
 

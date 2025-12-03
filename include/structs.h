@@ -49,7 +49,7 @@ struct _TASK {
 
 typedef enum {
     BGM_ARRANGED,
-    BGM_ORIGINAL
+    BGM_ORIGINAL,
 } BgmType;
 
 struct _SYSTEM_W {
@@ -293,6 +293,7 @@ typedef struct {
     s16 now_koc;
     s16 char_index;
     s16 current_colcd;
+
     s16 cgd_type;
     u8 pat_status;
     u8 kind_of_waza;
@@ -300,6 +301,7 @@ typedef struct {
     u8 total_paring;
     u8 total_att_set;
     u8 sp_tech_id;
+
     u8 cg_type;
     u8 cg_ctr;
     u16 cg_se;
@@ -316,6 +318,7 @@ typedef struct {
     u16 cg_add_xy;
     u8 cg_next_ix;
     u8 cg_status;
+
     s16 cg_wca_ix;
     s16 cg_jphos;
     u16 cg_meoshi;
@@ -835,89 +838,6 @@ typedef struct {
 } _MEMMAN_OBJ;
 
 typedef struct {
-    s8 be_flag;
-    s8 disp_flag;
-    s16 fam_no;
-    s16 r_no_0;
-    s16 r_no_1;
-    s16 r_no_2;
-    s16 position_x;
-    s16 position_y;
-    s32 speed_x;
-    s32 speed_y;
-    XY xy[2];
-    XY wxy[2];
-    u16* bg_address;
-    u16* suzi_adrs;
-    s16 old_pos_x;
-    s32 zuubun;
-    s16 no_suzi_line;
-    u16* start_suzi;
-    s16 u_line;
-    s16 d_line;
-    s16 bg_adrs_c_no;
-    s16 suzi_c_no;
-    s16 pos_x_work;
-    s16 pos_y_work;
-    s8 rewrite_flag;
-    s8 suzi_base_flag;
-    XY hos_xy[2];
-    XY chase_xy[2];
-    s16 free;
-    s16 frame_deff;
-    s16 r_limit;
-    s16 r_limit2;
-    s16 l_limit;
-    s16 l_limit2;
-    s16 y_limit;
-    s16 y_limit2;
-    u16* suzi_adrs2;
-    u16* start_suzi2;
-    s16 suzi_c_no2;
-    s32 max_x_limit;
-    s16* deff_rl;
-    s16* deff_plus;
-    s16* deff_minus;
-    s16 abs_x;
-    s16 abs_y;
-} BGW;
-
-typedef struct {
-    s8 bg_routine;
-    s8 bg_r_1;
-    s8 bg_r_2;
-    s8 stage;
-    s8 area;
-    s8 compel_flag;
-    s32 scroll_cg_adr;
-    s32 ake_cg_adr;
-    u8 scno;
-    u8 scrno;
-    s16 bg2_sp_x;
-    s16 bg2_sp_y;
-    s16 scr_stop;
-    s8 frame_flag;
-    s8 chase_flag;
-    s8 old_chase_flag;
-    s8 old_frame_flag;
-    s16 pos_offset;
-    s16 quake_x_index;
-    s16 quake_y_index;
-    s16 bg_f_x;
-    s16 bg_f_y;
-    s16 bg2_sp_x2;
-    s16 bg2_sp_y2;
-    s16 frame_deff;
-    s16 center_x;
-    s16 center_y;
-    s16 bg_index;
-    s8 frame_vol;
-    s16 max_x;
-    u8 bg_opaque;
-    BGW bgw[7];
-} BG;
-
-typedef struct {
     u8* memoryblock;
     u8* baseandcap[2];
     u8* frame[2];
@@ -1414,7 +1334,7 @@ typedef struct {
     f32 u;
     f32 v;
     u32 col;
-} Polygon;
+} Polygon; // FIXME: This is more like a vertex, not a full polygon
 
 typedef struct {
     f32 x;
@@ -2106,32 +2026,6 @@ typedef union {
 
 typedef struct {
     union {
-        s16 full;
-        struct {
-            s8 l;
-            s8 h;
-        } half;
-    } size;
-    s32 step;
-} Round_Timer;
-
-typedef struct {
-    s16 x_pos_num;
-    s8 routine_num;
-    u8 hit_hi;
-    u8 hit_low;
-    s8 kind;
-    u32 pts;
-    s8 pts_digit[4];
-    s8 pts_flag;
-    s8 first_digit;
-    u8 move[2];
-    u8 x_posnum[2];
-    s16 timer[2];
-} CMST_BUFF;
-
-typedef struct {
-    union {
         u16 results;
         struct {
             s8 att_result;
@@ -2170,40 +2064,6 @@ typedef struct {
     u8 kz_blocking;
     u8 free;
 } TAMA;
-
-typedef struct {
-    s16 cyerw;
-    s16 cred;
-    s16 ored;
-    s8 colnum;
-} VIT;
-
-typedef struct {
-    s16 offence_total;
-    s16 defence_total;
-    s16 tech_pts_total;
-    s16 ex_point_total;
-    s16 grade;
-} JudgeGals;
-
-typedef struct {
-    s16 offence_total;
-    s16 defence_total;
-    s16 tech_pts_total;
-    s16 ex_point_total;
-    s16 round;
-    s16 grade;
-} JudgeCom;
-
-typedef struct {
-    s16 cstn;
-    s8 sflag;
-    s8 osflag;
-    s8 g_or_s;
-    s8 stimer;
-    s16 slen;
-    s8 proccess_dead;
-} SDAT;
 
 typedef struct {
     s16 timer;
