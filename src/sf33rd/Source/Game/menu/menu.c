@@ -45,6 +45,7 @@
 #include "sf33rd/Source/Game/io/vm_sub.h"
 #include "sf33rd/Source/Game/menu/dir_data.h"
 #include "sf33rd/Source/Game/menu/ex_data.h"
+#include "sf33rd/Source/Game/message/en/msgtable_en.h"
 #include "sf33rd/Source/Game/rendering/color3rd.h"
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
 #include "sf33rd/Source/Game/rendering/texgroup.h"
