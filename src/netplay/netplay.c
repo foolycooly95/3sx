@@ -1,6 +1,5 @@
 #include "netplay/netplay.h"
 #include "netplay/game_state.h"
-#include "sf33rd/Source/Game/Game.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/grade.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
