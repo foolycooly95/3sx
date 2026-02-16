@@ -9,6 +9,7 @@
 #include "sf33rd/Source/Game/io/gd3rd.h"
 #include "sf33rd/Source/Game/io/pulpul.h"
 #include "sf33rd/Source/Game/rendering/color3rd.h"
+#include "sf33rd/Source/Game/rendering/dc_ghost.h"
 #include "sf33rd/Source/Game/rendering/mtrans.h"
 #include "sf33rd/Source/Game/rendering/texcash.h"
 #include "sf33rd/Source/Game/system/sys_sub.h"
@@ -34,6 +35,7 @@ typedef enum SessionState {
     SESSION_TRANSITIONING,
     SESSION_CONNECTING,
     SESSION_RUNNING,
+    SESSION_EXITING,
 } SessionState;
 
 typedef struct EffectState {
@@ -88,6 +90,18 @@ static void LossyAdapter_SendData(GekkoNetAddress* addr, const char* data, int l
 }
 #endif
 
+static void clean_input_buffers() {
+    p1sw_0 = 0;
+    p2sw_0 = 0;
+    p1sw_1 = 0;
+    p2sw_1 = 0;
+    p1sw_buff = 0;
+    p2sw_buff = 0;
+    SDL_zeroa(PLsw);
+    SDL_zeroa(plsw_00);
+    SDL_zeroa(plsw_01);
+}
+
 static void setup_vs_mode() {
     // This is pretty much a copy of logic from menu.c
     task[TASK_MENU].r_no[0] = 5; // go to idle routine (doing nothing)
@@ -107,10 +121,17 @@ static void setup_vs_mode() {
     Mode_Type = MODE_NETWORK;
     cpExitTask(TASK_MENU);
 
-    // Stop game task. We'll run game logic manually
-    task[TASK_GAME].condition = 3;
-
     E_Timer = 0; // E_Timer can have different values depending on when the session was initiated
+
+    Deley_Shot_No[0] = 0;
+    Deley_Shot_No[1] = 0;
+    Deley_Shot_Timer[0] = 15;
+    Deley_Shot_Timer[1] = 15;
+    Random_ix16 = 0;
+    Random_ix32 = 0;
+    Clear_Flash_Init(4);
+
+    clean_input_buffers();
 }
 
 #if defined(LOSSY_ADAPTER)
@@ -136,8 +157,11 @@ static void configure_gekko() {
     config.desync_detection = true;
 #endif
 
-    gekko_create(&session);
-    gekko_start(session, &config);
+    if (gekko_create(&session)) {
+        gekko_start(session, &config);
+    } else {
+        printf("Session is already running! probably incorrect.\n");
+    }
 
 #if defined(LOSSY_ADAPTER)
     configure_lossy_adapter();
@@ -270,6 +294,12 @@ static void clean_state_pointers(State* state) {
         state->gs.bg_w.bgw[i].deff_plus = NULL;
         state->gs.bg_w.bgw[i].deff_minus = NULL;
     }
+
+    state->gs.ci_pointer = NULL;
+
+    for (int i = 0; i < SDL_arraysize(state->gs.task); i++) {
+        state->gs.task[i].func_adrs = NULL;
+    }
 }
 
 /// Save state in state buffer.
@@ -285,24 +315,25 @@ static const State* note_state(const State* state, int frame) {
     return dst;
 }
 
-static void dump_state(int frame) {
-    State* src = &state_buffer[frame % STATE_BUFFER_MAX];
+static void dump_state(const State* src, const char* filename) {
+    SDL_IOStream* io = SDL_IOFromFile(filename, "w");
+    SDL_WriteIO(io, src, sizeof(State));
+    SDL_CloseIO(io);
+}
+
+static void dump_saved_state(int frame) {
+    const State* src = &state_buffer[frame % STATE_BUFFER_MAX];
 
     char filename[100];
     SDL_snprintf(filename, sizeof(filename), "states/%d_%d", player_handle, frame);
 
-    SDL_IOStream* io = SDL_IOFromFile(filename, "w");
-    SDL_WriteIO(io, src, sizeof(State));
-    SDL_CloseIO(io);
+    dump_state(src, filename);
 }
 #endif
 
 #define SDL_copya(dst, src) SDL_memcpy(dst, src, sizeof(src))
 
-static void save_state(GekkoGameEvent* event) {
-    *event->data.save.state_len = sizeof(State);
-    State* dst = (State*)event->data.save.state;
-
+static void gather_state(State* dst) {
     // GameState
     GameState* gs = &dst->gs;
     GameState_Save(gs);
@@ -316,6 +347,13 @@ static void save_state(GekkoGameEvent* event) {
     SDL_copya(es->tail_ix, tail_ix);
     es->frwctr = frwctr;
     es->frwctr_min = frwctr_min;
+}
+
+static void save_state(GekkoGameEvent* event) {
+    *event->data.save.state_len = sizeof(State);
+    State* dst = (State*)event->data.save.state;
+
+    gather_state(dst);
 
 #if defined(DEBUG)
     const int frame = event->data.save.frame;
@@ -324,9 +362,7 @@ static void save_state(GekkoGameEvent* event) {
 #endif
 }
 
-static void load_state(GekkoGameEvent* event) {
-    const State* src = (State*)event->data.load.state;
-
+static void load_state(const State* src) {
     // GameState
     const GameState* gs = &src->gs;
     GameState_Load(gs);
@@ -342,6 +378,11 @@ static void load_state(GekkoGameEvent* event) {
     frwctr_min = es->frwctr_min;
 }
 
+static void load_state_from_event(GekkoGameEvent* event) {
+    const State* src = (State*)event->data.load.state;
+    load_state(src);
+}
+
 static bool game_ready_to_run_character_select() {
     return G_No[1] == 1;
 }
@@ -351,32 +392,22 @@ static bool need_to_catch_up() {
 }
 
 static void step_game(bool render) {
-    if (render) {
-        init_color_trans_req();
-    }
-
     No_Trans = !render;
-    Play_Game = 0;
 
-    init_texcash_before_process();
+    njUserMain();
     seqsBeforeProcess();
-
-    Game();
-
+    njdp2d_draw();
     seqsAfterProcess();
-    texture_cash_update();
-    move_pulpul_work();
-    Check_LDREQ_Queue();
 }
 
 static void advance_game(GekkoGameEvent* event, bool render) {
     const u16* inputs = (u16*)event->data.adv.inputs;
     const int frame = event->data.adv.frame;
-    p1sw_0 = inputs[0];
-    p2sw_0 = inputs[1];
 
-    p1sw_1 = recall_input(0, frame - 1);
-    p2sw_1 = recall_input(1, frame - 1);
+    p1sw_0 = PLsw[0][0] = inputs[0];
+    p2sw_0 = PLsw[1][0] = inputs[1];
+    p1sw_1 = PLsw[0][1] = recall_input(0, frame - 1);
+    p2sw_1 = PLsw[1][1] = recall_input(1, frame - 1);
 
     note_input(inputs[0], 0, frame);
     note_input(inputs[1], 1, frame);
@@ -427,7 +458,7 @@ static void process_session() {
             printf("⚠️ desync detected at frame %d\n", frame);
 
 #if defined(DEBUG)
-            dump_state(frame);
+            dump_saved_state(frame);
 #endif
             break;
 
@@ -449,7 +480,7 @@ static void process_events(bool drawing_allowed) {
 
         switch (event->type) {
         case LoadEvent:
-            load_state(event);
+            load_state_from_event(event);
             break;
 
         case AdvanceEvent:
@@ -533,8 +564,28 @@ void Netplay_Run() {
         run_netplay();
         break;
 
+    case SESSION_EXITING:
+        if (session != NULL) {
+            // cleanup session and then return to idle
+            gekko_destroy(&session);
+            // also cleanup default socket.
+            #ifndef LOSSY_ADAPTER
+            gekko_default_adapter_destroy();
+            #endif
+            
+        }
+        session_state = SESSION_IDLE;
+        break;
+
     case SESSION_IDLE:
-        // Do nothing
         break;
     }
+}
+
+bool Netplay_IsRunning() {
+    return session_state != SESSION_IDLE;
+}
+
+void Netplay_HandleMenuExit() {
+    session_state = SESSION_EXITING;
 }

@@ -454,6 +454,7 @@ typedef struct GameState {
     u16 Keep_Grade[2];
     u16 IO_Result;
     u16 VS_Win_Record[2];
+    u16 PLsw[2][2];
     u16 plsw_00[2];
     u16 plsw_01[2];
     s16 Flash_Synchro;
@@ -464,6 +465,7 @@ typedef struct GameState {
     s16 Random_ix32_ex_com;
     s16 Random_ix16_bg;
     s16 Opening_Now;
+    struct _TASK task[11];
 
     // plcnt
 
@@ -568,6 +570,73 @@ typedef struct GameState {
     // ta_sub
 
     s16 eff_hit_flag[11];
+
+    // sc_sub
+
+    u8 FadeLimit;
+    u8 WipeLimit;
+
+    // appear
+
+    s8 Appear_car_stop[2];
+    s8 Appear_hv[2];
+    s8 Appear_free[2];
+    s8 Appear_flag[2];
+    s16 app_counter[2];
+    s16 appear_work[2];
+    s16 Appear_end;
+
+    // bg_data
+
+    s16 y_sitei_pos;
+    u8 y_sitei_flag;
+    u8 c_number;
+    u8 c_kakikae;
+    u8 g_number[2];
+    u8 g_kakikae[2];
+    u8 nosekae;
+    s16 scrn_adgjust_y;
+    s16 scrn_adgjust_x;
+    u16 zoom_add;
+    s16 ls_cnt1;
+    s8 bg_app;
+    s8 sa_pa_flag;
+    s8 aku_flag;
+    s8 seraph_flag;
+    s8 akebono_flag;
+    MVXY bg_mvxy;
+    s16 chase_time_y;
+    s16 chase_time_x;
+    s16 chase_y;
+    s16 chase_x;
+    s8 demo_car_flag[2];
+    Ideal_W ideal_w;
+    s8 bg_app_stop;
+    s16 bg_stop;
+    s16 base_y_pos;
+    s32 etcBgPalCnvTable[7];
+    u8 etcBgGixCnvTable[7][16];
+
+    // eff56
+
+    const u8* ci_pointer;
+    u8 ci_col;
+    u8 ci_timer;
+
+    // effb2
+
+    s16 rf_b2_flag;
+    s16 b2_curr_no;
+
+    // effb8
+
+    s16 test_pl_no;
+    s16 test_mes_no;
+    s16 test_in;
+    s16 old_mes_no2;
+    s16 old_mes_no3;
+    s16 old_mes_no_pl;
+    s16 mes_timer;
 } GameState;
 
 void GameState_Save(GameState* dst);
