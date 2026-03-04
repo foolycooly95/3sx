@@ -7,16 +7,20 @@
 #include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
+#include "sf33rd/Source/Game/ui/count.h"
 
 #include <SDL3/SDL.h>
 
 #include <stdio.h>
 
+#define COUNTER_HI_OFFSET 0x11376
+#define COUNTER_LOW_OFFSET 0x11378
 #define MY_CHAR_OFFSET 0x11387
 #define ALLOW_A_BATTLE_F_OFFSET 0x11389
 #define SUPER_ARTS_OFFSET 0x1138B
 #define GAME_ROUTINE_OFFSET 0x15438
 #define C_NO_OFFSET 0x154A6
+#define ROUND_TIMER_OFFSET 0x28679
 #define PLW_OFFSET 0x68C6C
 #define P1SW_OFFSET 0x6AA8C
 #define P2SW_OFFSET 0x6AA90
@@ -227,6 +231,31 @@ static void initialize_data() {
     inputs_index = 0;
 }
 
+static void compare_values(SDL_IOStream* io) {
+    const u8 allow_a_battle_f_cps3 = read_u8(io, ALLOW_A_BATTLE_F_OFFSET);
+    stop_if(Allow_a_battle_f != allow_a_battle_f_cps3);
+
+    const s16 counter_hi_cps3 = read_s16(io, COUNTER_HI_OFFSET);
+    stop_if(Counter_hi != counter_hi_cps3);
+
+    const s16 counter_low_cps3 = read_s16(io, COUNTER_LOW_OFFSET);
+    stop_if(Counter_low != counter_low_cps3);
+
+    const u8 round_timer_cps3 = read_u8(io, ROUND_TIMER_OFFSET);
+    stop_if(round_timer != round_timer_cps3);
+
+    for (int i = 0; i < 2; i++) {
+        const Position pos_3sx = get_position(i);
+        const Position pos_cps3 = read_position(io, i);
+        stop_if(pos_3sx.x != pos_cps3.x);
+        stop_if(pos_3sx.y != pos_cps3.y);
+
+        const s16 vital_new_3sx = plw[i].wu.vital_new;
+        const s16 vital_new_cps3 = read_s16(io, calc_plw_offset(i) + WORK_VITAL_NEW_OFFSET);
+        stop_if(vital_new_3sx != vital_new_cps3);
+    }
+}
+
 void TestRunner_Prologue() {
     p1sw_buff = 0;
     p2sw_buff = 0;
@@ -348,16 +377,7 @@ void TestRunner_Epilogue() {
             break;
         }
 
-        for (int i = 0; i < 2; i++) {
-            const Position pos_3sx = get_position(i);
-            const Position pos_cps3 = read_position(io, i);
-            stop_if(pos_3sx.x != pos_cps3.x);
-            stop_if(pos_3sx.y != pos_cps3.y);
-
-            const s16 vital_new_3sx = plw[i].wu.vital_new;
-            const s16 vital_new_cps3 = read_s16(io, calc_plw_offset(i) + WORK_VITAL_NEW_OFFSET);
-            stop_if(vital_new_3sx != vital_new_cps3);
-        }
+        compare_values(io);
 
         SDL_CloseIO(io);
         comparison_index += 1;

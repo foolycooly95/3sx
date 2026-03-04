@@ -1733,17 +1733,13 @@ void Disp_Winner() {
     if (Play_Type == 1) {
         effect_56_init(My_char[Winner_id] + 7, 1);
         SsRequest(141);
-        return;
-    }
-
-    if (Round_Operator[Winner_id]) {
+    } else if (Round_Operator[Winner_id]) {
         effect_56_init(5, 1);
         SsRequest(141);
-        return;
+    } else {
+        effect_56_init(6, 1);
+        SsRequest(142);
     }
-
-    effect_56_init(6, 1);
-    SsRequest(142);
 }
 
 void Pool_Score(s16 PL_id) {
@@ -1759,10 +1755,9 @@ void Pool_Score(s16 PL_id) {
 
     if (save_w[Present_Mode].Time_Limit == -1) {
         Time_Bonus[Winner_id] = 0;
-        return;
+    } else {
+        Time_Bonus[Winner_id] += round_timer * 300;
     }
-
-    Time_Bonus[Winner_id] += round_timer * 300;
 }
 
 s32 Check_Break_Into_CPU(s16 PL_id) {

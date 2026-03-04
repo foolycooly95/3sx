@@ -510,6 +510,11 @@ void Game2_1() {
 
     set_EXE_flag();
     ppgPurgeFromVRAM(5);
+
+    if (Disp_Cockpit) {
+        Time_Control();
+    }
+
     Player_control();
     TATE00();
     Game_Management();
@@ -519,7 +524,6 @@ void Game2_1() {
     Basic_Sub_Ex();
 
     if (Disp_Cockpit) {
-        Time_Control();
         vital_cont_main();
         player_face();
         player_name();
@@ -1758,16 +1762,15 @@ void Time_Control() {
         return;
     }
 
-    if (Game_pause != 0x81) {
-        if (Control_Time >= Limit_Time) {
-            Control_Time = Limit_Time;
-            return;
-        }
+    if (Game_pause == 0x81) {
+        return;
+    }
 
-        if (--Time_in_Time == 0) {
-            Time_in_Time = 60;
-            Control_Time += 1;
-        }
+    if (Control_Time >= Limit_Time) {
+        Control_Time = Limit_Time;
+    } else if (--Time_in_Time == 0) {
+        Time_in_Time = 60;
+        Control_Time += 1;
     }
 }
 
