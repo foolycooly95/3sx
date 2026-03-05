@@ -188,6 +188,7 @@ void Setup_Save_Replay_1st(struct _TASK* task_ptr);
 s32 Save_Replay_MC_Sub(struct _TASK* task_ptr, s16 /* unused */);
 void Button_Exit_Check_in_Tr(struct _TASK* task_ptr, s16 PL_id);
 s32 VS_Result_Select_Sub(struct _TASK* task_ptr, s16 PL_id);
+void Setup_Replay_Sub(s16 type, MenuHeader char_type, s16 master_player);
 
 typedef void (*MenuFunc)(struct _TASK*);
 
@@ -280,7 +281,7 @@ void Menu_Init(struct _TASK* task_ptr) {
 
         Order[0x4E] = 5;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x4E, 0, 0, 0x45, fade_on);
+        effect_57_init(0x4E, MODE_MENU, 0, 0x45, fade_on);
         load_any_texture_patnum(0x7F30, 0xC, 0);
     }
 
@@ -354,7 +355,7 @@ void Mode_Select(struct _TASK* task_ptr) {
             Message_Data[ix].order = 3;
         }
 
-        effect_57_init(0x64, 0, 0, 0x3F, 2);
+        effect_57_init(0x64, MODE_MENU, 0, 0x3F, 2);
         Order[0x64] = 1;
         Order_Dir[0x64] = 8;
         Order_Timer[0x64] = 1;
@@ -594,7 +595,7 @@ void Training_Mode(struct _TASK* task_ptr) {
     case 0:
         Menu_in_Sub(task_ptr);
         mpp_w.initTrainingData = true;
-        effect_57_init(0x6F, 0xB, 0, 0x3F, 2);
+        effect_57_init(0x6F, TRAINING, 0, 0x3F, 2);
         Order[0x6F] = 1;
         Order_Dir[0x6F] = 8;
         Order_Timer[0x6F] = 1;
@@ -694,7 +695,7 @@ void Option_Select(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 0;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x4F, 1, 0, 0x3F, 2);
+        effect_57_init(0x4F, OPTION_MENU, 0, 0x3F, 2);
         Order[0x4F] = 1;
         Order_Dir[0x4F] = 8;
         Order_Timer[0x4F] = 1;
@@ -821,7 +822,7 @@ void System_Direction(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 3;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x6D, 0xA, 0, 0x3F, 2);
+        effect_57_init(0x6D, SYSTEM_DIRECTION, 0, 0x3F, 2);
         Order[0x6D] = 1;
         Order_Dir[0x6D] = 8;
         Order_Timer[0x6D] = 1;
@@ -1266,11 +1267,11 @@ void Setup_Next_Page(struct _TASK* task_ptr, u8 /* unused */) {
         Menu_Max = Ex_Page_Data[Menu_Page];
         save_w[1].extra_option.contents[Menu_Page][Menu_Max] = 1;
         Order_Dir[0x4E] = 1;
-        effect_57_init(0x4E, 1, 0, 0x45, 0);
+        effect_57_init(0x4E, OPTION_MENU, 0, 0x45, 0);
         Order[0x73] = 3;
         Order_Dir[0x73] = 8;
         Order_Timer[0x73] = 1;
-        effect_57_init(0x73, 6, 0, 0x3F, 2);
+        effect_57_init(0x73, EXTRA_OPTION, 0, 0x3F, 2);
         effect_66_init(0x5C, 0x27, 2, 0, 0x47, 0xB, 0);
         Order[0x5C] = 3;
         Order_Timer[0x5C] = 1;
@@ -1294,7 +1295,7 @@ void Setup_Next_Page(struct _TASK* task_ptr, u8 /* unused */) {
         Order_Timer[0x5B] = 1;
         Order[0x4E] = 5;
         Order_Dir[0x4E] = 3;
-        effect_57_init(0x4E, 0, 0, 0x45, 0);
+        effect_57_init(0x4E, MODE_MENU, 0, 0x45, 0);
         effect_66_init(0x5C, 0x15, 2, 0, 0x47, 0xB, 0);
         Order[0x5C] = 3;
         Order_Timer[0x5C] = 1;
@@ -1354,7 +1355,7 @@ void Save_Direction(struct _TASK* task_ptr) {
         Menu_Suicide[2] = 0;
         Menu_Cursor_X[0] = 0;
         Setup_BG(1, 0x200, 0);
-        Setup_Replay_Sub(1, 0x70, 0xA, 2);
+        Setup_Replay_Sub(0x70, SYSTEM_DIRECTION, 2);
         Setup_File_Property(2, 0);
         Clear_Flash_Init(4);
         Message_Data->kind_req = 5;
@@ -1394,7 +1395,7 @@ void Load_Direction(struct _TASK* task_ptr) {
         Menu_Suicide[2] = 0;
         Menu_Cursor_X[0] = 0;
         Setup_BG(1, 0x200, 0);
-        Setup_Replay_Sub(1, 0x70, 0xA, 2);
+        Setup_Replay_Sub(0x70, SYSTEM_DIRECTION, 2);
         Setup_File_Property(2, 0);
         Clear_Flash_Init(4);
         Message_Data->kind_req = 5;
@@ -1435,7 +1436,7 @@ void Load_Replay(struct _TASK* task_ptr) {
         Menu_in_Sub(task_ptr);
         Menu_Cursor_X[0] = 0;
         Setup_BG(1, 0x200, 0);
-        Setup_Replay_Sub(1, 0x6E, 9, 1);
+        Setup_Replay_Sub(0x6E, REPLAY, 1);
         Clear_Flash_Init(4);
         Message_Data->kind_req = 5;
         break;
@@ -1712,7 +1713,7 @@ void Game_Option(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 2;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x6A, 7, 0, 0x3F, 2);
+        effect_57_init(0x6A, GAME_OPTION, 0, 0x3F, 2);
         Order[0x6A] = 1;
         Order_Dir[0x6A] = 8;
         Order_Timer[0x6A] = 1;
@@ -1827,7 +1828,7 @@ void Button_Config(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 2;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x6B, 2, 0, 0x3F, 2);
+        effect_57_init(0x6B, BUTTON_CONFIG, 0, 0x3F, 2);
         Order[0x6B] = 1;
         Order_Dir[0x6B] = 8;
         Order_Timer[0x6B] = 1;
@@ -2099,7 +2100,7 @@ void Screen_Adjust(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 2;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x65, 3, 0, 0x3F, 2);
+        effect_57_init(0x65, SCREEN_ADJUST, 0, 0x3F, 2);
         Order[0x65] = 1;
         Order_Dir[0x65] = 8;
         Order_Timer[0x65] = 1;
@@ -2356,7 +2357,7 @@ void Sound_Test(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 2;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x72, 4, 0, 0x3F, 2);
+        effect_57_init(0x72, SOUND, 0, 0x3F, 2);
         Order[0x72] = 1;
         Order_Dir[0x72] = 8;
         Order_Timer[0x72] = 1;
@@ -2584,7 +2585,7 @@ void Memory_Card(struct _TASK* task_ptr) {
         Order[0x4E] = 2;
         Order_Dir[0x4E] = 4;
         Order_Timer[0x4E] = 1;
-        effect_57_init(0x69, 5, 0, 0x3F, 2);
+        effect_57_init(0x69, SAVE_LOAD, 0, 0x3F, 2);
         Order[0x69] = 1;
         Order_Dir[0x69] = 8;
         Order_Timer[0x69] = 1;
@@ -3861,7 +3862,7 @@ void Setup_Save_Replay_1st(struct _TASK* task_ptr) {
     Menu_Suicide[2] = 0;
     Menu_Suicide[3] = 0;
     Setup_BG(1, 512, 0);
-    Setup_Replay_Sub(1, 110, 9, 1);
+    Setup_Replay_Sub(110, REPLAY, 1);
     Setup_File_Property(1, 0xFF);
     Clear_Flash_Init(4);
 }
@@ -3874,7 +3875,7 @@ void Setup_Save_Replay_2nd(struct _TASK* task_ptr, s16 arg1) {
     }
 }
 
-void Setup_Replay_Sub(s16 /* unused */, s16 type, s16 char_type, s16 master_player) {
+void Setup_Replay_Sub(s16 type, MenuHeader char_type, s16 master_player) {
     effect_57_init(type, char_type, 0, 63, 2);
     Order[type] = 1;
     Order_Dir[type] = 8;

@@ -157,7 +157,7 @@ void EFF57_KILL(WORK_Other* ewk) {
     }
 }
 
-s32 effect_57_init(s16 dir_old, s16 ID, s16 Target_BG, s16 char_ix, s16 option) {
+s32 effect_57_init(s16 dir_old, MenuHeader ID, s16 Target_BG, s16 char_ix, s16 option) {
     WORK_Other* ewk;
     s16 ix;
 
