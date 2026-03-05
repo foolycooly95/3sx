@@ -1,6 +1,6 @@
 /**
  * @file eff57.c
- * TODO: identify what this effect does
+ * Header for menus
  */
 
 #include "sf33rd/Source/Game/effect/eff57.h"
