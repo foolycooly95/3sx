@@ -120,6 +120,7 @@ void Save_Replay(struct _TASK* task_ptr);
 void Direction_Menu(struct _TASK* task_ptr);
 void Save_Direction(struct _TASK* task_ptr);
 void Load_Direction(struct _TASK* task_ptr);
+void Netplay_Menu(struct _TASK* task_ptr);
 void Setup_VS_Mode(struct _TASK* task_ptr);
 void Setup_Next_Page(struct _TASK* task_ptr, u8 /* unused */);
 void Load_Replay_Sub(struct _TASK* task_ptr);
@@ -232,11 +233,16 @@ void Setup_Pad_or_Stick() {
 }
 
 void After_Title(struct _TASK* task_ptr) {
-    void (*AT_Jmp_Tbl[21])() = { Menu_Init,        Mode_Select,   Option_Select, Option_Select,  Training_Mode,
-                                 System_Direction, Load_Replay,   Option_Select, toSelectGame,   Game_Option,
-                                 Button_Config,    Screen_Adjust, Sound_Test,    Memory_Card,    Extra_Option,
-                                 Option_Select,    VS_Result,     Save_Replay,   Direction_Menu, Save_Direction,
-                                 Load_Direction };
+    void (*AT_Jmp_Tbl[21])() = { Menu_Init,        Mode_Select,    Option_Select,  Option_Select, Training_Mode,
+                                 System_Direction,
+#if defined(NETPLAY_ENABLED)
+                                 Netplay_Menu,
+#else
+                                 Load_Replay,
+#endif
+                                 Option_Select,    toSelectGame,   Game_Option,    Button_Config, Screen_Adjust,
+                                 Sound_Test,       Memory_Card,    Extra_Option,   Option_Select, VS_Result,
+                                 Save_Replay,      Direction_Menu, Save_Direction, Load_Direction };
 
     AT_Jmp_Tbl[task_ptr->r_no[1]](task_ptr);
 }
@@ -392,11 +398,6 @@ void Mode_Select(struct _TASK* task_ptr) {
         break;
 
     case 3:
-#if defined(NETPLAY_ENABLED)
-        if (check_netplay_cancelled()) {
-            break;
-        }
-#endif
         if (Connect_Status == 0 && Menu_Cursor_Y[0] == 1) {
             Menu_Cursor_Y[0] = 2;
         } else {
@@ -427,16 +428,9 @@ void Mode_Select(struct _TASK* task_ptr) {
                 cpExitTask(TASK_MENU);
                 break;
 
-            case 4:
-#if defined(NETPLAY_ENABLED)
-                Netplay_BeginMatchmaking();
-                Netplay_BeginDirectP2P();
-                break;
-#endif
-                /* fallthrough */
-
             case 2:
             case 3:
+            case 4:
             case 5:
             case 6:
                 task_ptr->r_no[2] += 1;
@@ -1426,6 +1420,80 @@ void Load_Direction(struct _TASK* task_ptr) {
         break;
     }
 }
+
+#if defined(NETPLAY_ENABLED)
+void Netplay_Menu(struct _TASK* task_ptr) {
+    s16 ix;
+    s16 char_index;
+
+    switch (task_ptr->r_no[2]) {
+    case 0:
+        Menu_in_Sub(task_ptr);
+        effect_57_init(0x70, NETWORK, 0, 0x3F, 2);
+        Order[0x70] = 1;
+        Order_Dir[0x70] = 8;
+        Order_Timer[0x70] = 1;
+        effect_04_init(1, 7, 0, 0x48);
+
+        char_index = 66;
+
+        for (ix = 0; ix < 2; ix++) {
+            effect_61_init(0, ix + 0x50, 0, 1, char_index, ix, 0x7047);
+            Order[ix + 0x50] = 1;
+            Order_Dir[ix + 0x50] = 4;
+            Order_Timer[ix + 0x50] = ix + 0x14;
+            char_index++;
+        }
+
+        Menu_Cursor_Move = 2;
+        break;
+
+    case 1:
+        Menu_Sub_case1(task_ptr);
+        break;
+
+    case 2:
+        if (FadeIn(1, 0x19, 8) != 0) {
+            task_ptr->r_no[2] += 1;
+            Suicide[3] = 0;
+        }
+        break;
+
+    case 3:
+        if (MC_Move_Sub(Check_Menu_Lever(0, 0), 0, 1, 0xFF) == 0) {
+            MC_Move_Sub(Check_Menu_Lever(1, 0), 0, 1, 0xFF);
+        }
+
+        if (IO_Result == 0x100 || IO_Result == 0x200) {
+            SE_selected();
+
+            if (Menu_Cursor_Y[0] == 0 && !check_netplay_cancelled()) {
+                Netplay_BeginMatchmaking();
+                Netplay_BeginDirectP2P();
+                break;
+            }
+
+            if (Menu_Cursor_Y[0] == 1 || IO_Result == 0x200) {
+                Menu_Suicide[0] = 0;
+                Menu_Suicide[1] = 1;
+                task_ptr->r_no[1] = 1;
+                task_ptr->r_no[2] = 0;
+                task_ptr->r_no[3] = 0;
+                task_ptr->free[0] = 0;
+                Order[0x70] = 4;
+                Order_Timer[0x70] = 4;
+
+                if (check_netplay_cancelled()) {
+                    Netplay_CancelMatchmaking();
+                }
+
+                break;
+            }
+        }
+        break;
+    }
+}
+#endif
 
 void Load_Replay(struct _TASK* task_ptr) {
     Menu_Cursor_X[1] = Menu_Cursor_X[0];

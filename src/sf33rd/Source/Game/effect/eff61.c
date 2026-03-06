@@ -17,7 +17,7 @@ void EFF61_SLIDE_IN(WORK_Other_CONN* ewk);
 void EFF61_SLIDE_OUT(WORK_Other_CONN* /* unused */);
 void EFF61_SUDDENLY(WORK_Other_CONN* ewk);
 
-const s8* Menu_Letter_Data[66] = { "ARCADE",
+const s8* Menu_Letter_Data[68] = { "ARCADE",
                                    "VERSUS",
                                    "TRAINING",
                                    "SYSTEM DIRECTION",
@@ -86,6 +86,8 @@ const s8* Menu_Letter_Data[66] = { "ARCADE",
                                    "BGM SELECT",
                                    "DEFAULT SETTING",
                                    "BGM TEST",
+                                   "EXIT",
+                                   "FIND MATCH",
                                    "EXIT" };
 
 void (*const EFF61_Jmp_Tbl[4])() = { EFF61_WAIT, EFF61_SLIDE_IN, EFF61_SLIDE_OUT, EFF61_SUDDENLY };
