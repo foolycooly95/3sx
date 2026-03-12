@@ -151,12 +151,6 @@ static void sf3_init() {
     MemcardInit();
 }
 
-static void afs_init() {
-    char* file_path = Resources_GetPath("SF33RD.AFS");
-    AFS_Init(file_path);
-    SDL_free(file_path);
-}
-
 #if _WIN32 && DEBUG
 static void init_windows_console() {
     // attaches to an existing console for printouts. Works with windows CMD but not MSYS2
@@ -178,7 +172,7 @@ static void initialize_game() {
 #endif
 
     set_netplay_params();
-    afs_init();
+    AFS_Init(Resources_GetAFSPath());
     sf3_init();
 }
 
@@ -419,7 +413,7 @@ static int loop() {
         case MAIN_PHASE_INIT:
             SDLApp_PreInit();
 
-            if (Resources_CheckIfPresent()) {
+            if (Resources_Check()) {
                 initialize_game();
                 phase = MAIN_PHASE_INITIALIZED;
             } else {
