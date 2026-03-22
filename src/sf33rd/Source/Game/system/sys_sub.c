@@ -248,6 +248,10 @@ bool Is_Training_Hitbox_Display_Enabled() {
 }
 
 bool Cut_Cut_Cut() {
+    if (Is_Training_Mode(Mode_Type)) {
+        return true;
+    }
+
     if (Demo_Flag == 0) {
         return false;
     }
