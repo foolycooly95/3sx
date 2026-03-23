@@ -1,7 +1,7 @@
 #include "netplay/netplay.h"
 #include "main.h"
+#include "netplay/fistbump.h"
 #include "netplay/game_state.h"
-#include "netplay/matchmaking.h"
 #include "netplay/sdl_net_adapter.h"
 #include "port/sdl/sdl_app.h"
 #include "sf33rd/Source/Game/effect/effect.h"
@@ -175,7 +175,7 @@ static void configure_gekko() {
         printf("Session is already running! probably incorrect.\n");
     }
 
-    NET_DatagramSocket* mm_sock = Matchmaking_GetSocket();
+    NET_DatagramSocket* mm_sock = Fistbump_GetSocket();
     NET_DatagramSocket* active_sock;
     if (mm_sock != NULL) {
         // Matchmaking path: reuse the socket that was registered with the server.
@@ -643,7 +643,7 @@ void Netplay_BeginMatchmaking() {
     }
     // session_state stays IDLE so the menu keeps running normally.
     // setup_vs_mode() and the session transition happen in Netplay_TickMatchmaking.
-    Matchmaking_Start(matchmaking_server_ip, matchmaking_server_port, 9001);
+    Fistbump_Start(matchmaking_server_ip, matchmaking_server_port, 9001);
     matchmaking_pending = true;
 }
 
@@ -652,12 +652,12 @@ void Netplay_TickMatchmaking() {
         return;
     }
 
-    Matchmaking_Run();
+    Fistbump_Run();
 
-    const MatchmakingState mm = Matchmaking_GetState();
+    const FistbumpState mm = Fistbump_GetState();
 
-    if (mm == MATCHMAKING_MATCHED) {
-        const MatchResult* r = Matchmaking_GetResult();
+    if (mm == FISTBUMP_MATCHED) {
+        const MatchResult* r = Fistbump_GetResult();
         player_number = r->player - 1;
         SDL_strlcpy(matched_ip, r->ip, sizeof(matched_ip));
         remote_ip = matched_ip;
@@ -669,7 +669,7 @@ void Netplay_TickMatchmaking() {
         matchmaking_pending = false;
         setup_vs_mode();
         session_state = NETPLAY_SESSION_TRANSITIONING;
-    } else if (mm == MATCHMAKING_ERROR) {
+    } else if (mm == FISTBUMP_ERROR) {
         matchmaking_pending = false;
         Soft_Reset_Sub();
     }
@@ -677,12 +677,12 @@ void Netplay_TickMatchmaking() {
 
 bool Netplay_IsMatchmakingPending() {
     // Returns false once matched so cancel is ignored during the display countdown.
-    return matchmaking_pending && Matchmaking_GetState() != MATCHMAKING_MATCHED;
+    return matchmaking_pending && Fistbump_GetState() != FISTBUMP_MATCHED;
 }
 
 void Netplay_CancelMatchmaking() {
-    if (Matchmaking_GetState() != MATCHMAKING_IDLE) {
-        Matchmaking_Reset();
+    if (Fistbump_GetState() != FISTBUMP_IDLE) {
+        Fistbump_Reset();
     }
     matchmaking_pending = false;
 }
