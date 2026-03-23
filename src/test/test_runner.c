@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 
+#define GAME_TIMER_OFFSET 0x1136C
 #define COUNTER_HI_OFFSET 0x11376
 #define COUNTER_LOW_OFFSET 0x11378
 #define MY_CHAR_OFFSET 0x11387
@@ -23,12 +24,21 @@
 #define C_NO_OFFSET 0x154A6
 #define ROUND_TIMER_OFFSET 0x28679
 #define PLW_OFFSET 0x68C6C
-#define P1SW_OFFSET 0x6AA8C
-#define P2SW_OFFSET 0x6AA90
+#define P1SW_1_OFFSET 0x6AA8E
+#define P2SW_1_OFFSET 0x6AA92
 
 #define PLW_SIZE 0x498
+
+#define PLW_SA_STOP_FLAG_OFFSET 0x41C
+#define PLW_DO_NOT_MOVE_OFFSET 0x455
+
+#define WORK_ROUTINE_NO_OFFSET 0x24
+#define WORK_HIT_STOP_OFFSET 0x44
 #define WORK_XYZ_OFFSET 0x64
 #define WORK_VITAL_NEW_OFFSET 0x9E
+#define WORK_CG_IX_OFFSET 0x204
+#define WORK_CG_ADD_XY_OFFSET 0x228
+#define WORK_DM_STOP_OFFSET 0x32E
 
 #define REPLAY_FRAMES_MAX 3 * 100 * 60
 
@@ -179,8 +189,9 @@ static void initialize_data() {
         // Parse inputs
 
         if (in_round && in_round_prev) {
-            inputs[inputs_index][0] = read_input_buff(io, P1SW_OFFSET);
-            inputs[inputs_index][1] = read_input_buff(io, P2SW_OFFSET);
+            // We read previous inputs because CPS3 updates input buffers at the end of a frame
+            inputs[inputs_index][0] = read_input_buff(io, P1SW_1_OFFSET);
+            inputs[inputs_index][1] = read_input_buff(io, P2SW_1_OFFSET);
             inputs_index += 1;
 
             if (comparison_index == 0) {
@@ -209,29 +220,73 @@ static void initialize_data() {
     inputs_index = 0;
 }
 
-static void compare_values(SDL_IOStream* io) {
+static void compare_main_values(SDL_IOStream* io) {
     const u8 allow_a_battle_f_cps3 = read_u8(io, ALLOW_A_BATTLE_F_OFFSET);
     stop_if(Allow_a_battle_f != allow_a_battle_f_cps3);
-
-    const s16 counter_hi_cps3 = read_s16(io, COUNTER_HI_OFFSET);
-    stop_if(Counter_hi != counter_hi_cps3);
-
-    const s16 counter_low_cps3 = read_s16(io, COUNTER_LOW_OFFSET);
-    stop_if(Counter_low != counter_low_cps3);
 
     const u8 round_timer_cps3 = read_u8(io, ROUND_TIMER_OFFSET);
     stop_if(round_timer != round_timer_cps3);
 
+    // const u16 game_timer_cps3 = read_u16(io, GAME_TIMER_OFFSET);
+    // printf("⏱️ %d game_timer: %d\n", comparison_index, game_timer_cps3);
+
     for (int i = 0; i < 2; i++) {
+        const Sint64 plw_offset = calc_plw_offset(i);
+
         const Position pos_3sx = get_position(i);
         const Position pos_cps3 = read_position(io, i);
         stop_if(pos_3sx.x != pos_cps3.x);
         stop_if(pos_3sx.y != pos_cps3.y);
 
         const s16 vital_new_3sx = plw[i].wu.vital_new;
-        const s16 vital_new_cps3 = read_s16(io, calc_plw_offset(i) + WORK_VITAL_NEW_OFFSET);
+        const s16 vital_new_cps3 = read_s16(io, plw_offset + WORK_VITAL_NEW_OFFSET);
         stop_if(vital_new_3sx != vital_new_cps3);
     }
+}
+
+static void compare_service_values(SDL_IOStream* io) {
+    const s16 counter_hi_cps3 = read_s16(io, COUNTER_HI_OFFSET);
+    stop_if(Counter_hi != counter_hi_cps3);
+
+    const s16 counter_low_cps3 = read_s16(io, COUNTER_LOW_OFFSET);
+    stop_if(Counter_low != counter_low_cps3);
+
+    for (int i = 0; i < 2; i++) {
+        const Sint64 plw_offset = calc_plw_offset(i);
+
+        const u8 do_not_move_3sx = plw[i].do_not_move;
+        const u8 do_not_move_cps3 = read_u8(io, plw_offset + PLW_DO_NOT_MOVE_OFFSET);
+        stop_if(do_not_move_3sx != do_not_move_cps3);
+
+        const s16 routine_no_0_3sx = plw[i].wu.routine_no[0];
+        const s16 routine_no_0_cps3 = read_s16(io, plw_offset + WORK_ROUTINE_NO_OFFSET);
+        stop_if(routine_no_0_3sx != routine_no_0_cps3);
+
+        const s16 dm_stop_3sx = plw[i].wu.dm_stop;
+        const s16 dm_stop_cps3 = read_s16(io, plw_offset + WORK_DM_STOP_OFFSET);
+        stop_if(dm_stop_3sx != dm_stop_cps3);
+
+        const s16 hit_stop_3sx = plw[i].wu.hit_stop;
+        const s16 hit_stop_cps3 = read_s16(io, plw_offset + WORK_HIT_STOP_OFFSET);
+        stop_if(hit_stop_3sx != hit_stop_cps3);
+
+        const u8 sa_stop_flag_3sx = plw[i].sa_stop_flag;
+        const u8 sa_stop_flag_cps3 = read_u8(io, plw_offset + PLW_SA_STOP_FLAG_OFFSET);
+        stop_if(sa_stop_flag_3sx != sa_stop_flag_cps3);
+
+        // const u16 cg_ix_cps3 = read_u16(io, plw_offset + WORK_CG_IX_OFFSET);
+        // const u16 cg_ix_3sx = plw[i].wu.cg_ix;
+        // stop_if(cg_ix_cps3 != cg_ix_3sx);
+
+        const u16 cg_add_xy_cps3 = read_u16(io, plw_offset + WORK_CG_ADD_XY_OFFSET);
+        const u16 cg_add_xy_3sx = plw[i].wu.cg_add_xy;
+        stop_if(cg_add_xy_3sx != cg_add_xy_cps3);
+    }
+}
+
+static void compare_values(SDL_IOStream* io) {
+    compare_main_values(io);
+    compare_service_values(io);
 }
 
 void TestRunner_Prologue() {
