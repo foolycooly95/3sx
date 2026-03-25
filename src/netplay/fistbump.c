@@ -4,8 +4,11 @@
 #include <SDL3_net/SDL_net.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
+#include <time.h>
 
 static FistbumpState state = FISTBUMP_IDLE;
+static FistbumpConnectState connect_state = FISTBUMP_CONN_IDLE;
 
 static NET_Address* server_addr = NULL;
 static NET_StreamSocket* tcp_sock = NULL;
@@ -15,22 +18,90 @@ static int saved_tcp_port = 0;
 static int saved_udp_port = 0;
 
 static char id_buf[8]; // 7-char ID + null
-static char line_buf[128];
+static char line_buf[1024];
 static int line_len = 0;
 static int udp_retry_timer = 0;
 
+static const char* base_path;
+
+static DAG dag;
+static JWT refresh_token;
+
+typedef enum Command { CMD_UNKNOWN, CMD_SESSION, CMD_DAG, CMD_UDP, CMD_MATCH } Command;
+
 static MatchResult match_result;
+
+static void SaveToken(const JWT* jwt) {
+    if (!base_path || !jwt) {
+        return;
+    }
+
+    char path[512];
+    SDL_snprintf(path, sizeof(path), "%s/token", base_path);
+
+    FILE* f = fopen(path, "w");
+    if (!f) {
+        return;
+    }
+
+    fprintf(f, "%s\n%d\n", jwt->token, jwt->expiry);
+    fclose(f);
+}
+
+static bool LoadToken(JWT* jwt) {
+    if (!base_path || !jwt) {
+        return false;
+    }
+
+    char path[512];
+    SDL_snprintf(path, sizeof(path), "%s/token", base_path);
+
+    FILE* f = fopen(path, "r");
+    if (!f) {
+        return false;
+    }
+
+    if (!fgets(jwt->token, (int)sizeof(jwt->token), f)) {
+        fclose(f);
+        return false;
+    }
+
+    size_t len = strcspn(jwt->token, "\r\n");
+    jwt->token[len] = '\0';
+
+    if (fscanf(f, "%d", &jwt->expiry) != 1) {
+        fclose(f);
+        return false;
+    }
+
+    fclose(f);
+
+    time_t now = time(NULL);
+
+    if ((time_t)jwt->expiry <= now) {
+        // token expired → delete file
+        remove(path);
+        return false;
+    }
+
+    return true;
+}
 
 static bool pop_line(char* out, int out_size) {
     for (int i = 0; i < line_len; i++) {
         if (line_buf[i] == '\n') {
-            int copy_len = (i < out_size - 1) ? i : out_size - 1;
 
-            SDL_strlcpy(out, line_buf, copy_len + 1);
+            int len = i;
+            if (len >= out_size)
+                len = out_size - 1;
 
-            int remaining = line_len - i - 1;
-            SDL_memmove(line_buf, line_buf + i + 1, remaining);
+            memcpy(out, line_buf, len);
+            out[len] = '\0';
+
+            int remaining = line_len - (i + 1);
+            memmove(line_buf, line_buf + i + 1, remaining);
             line_len = remaining;
+
             return true;
         }
     }
@@ -51,7 +122,7 @@ static void read_into_line_buf() {
     }
 }
 
-void Fistbump_Start(const char* server_ip, int tcp_port, int udp_port) {
+void Fistbump_Start(const char* server_ip, int tcp_port, int udp_port, const char* pref_path) {
     NET_Init();
 
     saved_tcp_port = tcp_port;
@@ -63,23 +134,27 @@ void Fistbump_Start(const char* server_ip, int tcp_port, int udp_port) {
     udp_retry_timer = 0;
     SDL_zero(match_result);
 
+    base_path = pref_path;
+
     server_addr = NET_ResolveHostname(server_ip);
-    state = FISTBUMP_RESOLVING_DNS;
+    state = FISTBUMP_CONNECTING;
+    connect_state = FISTBUMP_CONN_RESOLVING_DNS;
 }
 
-void Fistbump_Run() {
-    char tmp[128];
+void Fistbump_Connect() {
+    switch (connect_state) {
+    case FISTBUMP_CONN_IDLE:
+        break;
 
-    switch (state) {
-    case FISTBUMP_RESOLVING_DNS:
+    case FISTBUMP_CONN_RESOLVING_DNS:
         switch (NET_GetAddressStatus(server_addr)) {
         case NET_SUCCESS:
             tcp_sock = NET_CreateClient(server_addr, (Uint16)saved_tcp_port);
             if (tcp_sock == NULL) {
                 printf("Fistbump: failed to create TCP client: %s\n", SDL_GetError());
-                state = FISTBUMP_ERROR;
+                connect_state = FISTBUMP_CONN_ERROR;
             } else {
-                state = FISTBUMP_CONNECTING_TCP;
+                connect_state = FISTBUMP_CONN_CONNECTING_TCP;
             }
             break;
 
@@ -93,15 +168,15 @@ void Fistbump_Run() {
         }
         break;
 
-    case FISTBUMP_CONNECTING_TCP:
+    case FISTBUMP_CONN_CONNECTING_TCP:
         switch (NET_GetConnectionStatus(tcp_sock)) {
         case NET_SUCCESS:
-            state = FISTBUMP_AWAITING_ID;
+            connect_state = FISTBUMP_CONN_CONNECTED;
             break;
 
         case NET_FAILURE:
             printf("Fistbump: TCP connection failed: %s\n", SDL_GetError());
-            state = FISTBUMP_ERROR;
+            connect_state = FISTBUMP_CONN_ERROR;
             break;
 
         case NET_WAITING:
@@ -109,57 +184,143 @@ void Fistbump_Run() {
         }
         break;
 
-    case FISTBUMP_AWAITING_ID:
-        read_into_line_buf();
+    case FISTBUMP_CONN_CONNECTED:
+    case FISTBUMP_CONN_ERROR:
+        break;
+    }
+}
 
-        if (pop_line(tmp, sizeof(tmp))) {
-            SDL_strlcpy(id_buf, tmp, sizeof(id_buf));
-            printf("Fistbump: received ID: %s\n", id_buf);
-            state = FISTBUMP_SENDING_UDP;
+void Fistbump_Login() {
+    state = FISTBUMP_LOGGING_IN;
+    char buf[1024];
+
+    if (LoadToken(&refresh_token)) {
+        SDL_snprintf(buf, sizeof(buf), "REFRESH %s\n", refresh_token.token);
+        NET_WriteToStreamSocket(tcp_sock, buf, SDL_strlen(buf));
+    } else {
+        SDL_snprintf(buf, sizeof(buf), "HELLO\n");
+        NET_WriteToStreamSocket(tcp_sock, buf, SDL_strlen(buf));
+    }
+}
+
+void Fistbump_Queue() {
+    state = FISTBUMP_AWAITING_MATCH;
+
+    char buf[128];
+    SDL_snprintf(buf, sizeof(buf), "QUEUE add\n");
+    NET_WriteToStreamSocket(tcp_sock, buf, SDL_strlen(buf));
+}
+
+void Fistbump_BeginUDP() {
+    state = FISTBUMP_SENDING_UDP;
+    udp_retry_timer = 0;
+}
+
+void Fistbump_SendUDP() {
+    if (udp_sock == NULL) {
+        udp_sock = NET_CreateDatagramSocket(NULL, 0);
+
+        if (udp_sock == NULL) {
+            printf("Fistbump: failed to create UDP socket: %s\n", SDL_GetError());
+            state = FISTBUMP_ERROR;
+            return;
         }
+    }
+
+    if (udp_retry_timer <= 0) {
+        NET_SendDatagram(udp_sock, server_addr, (Uint16)saved_udp_port, id_buf, 7);
+        udp_retry_timer = 30; // retransmit every ~0.5 seconds
+    }
+
+    udp_retry_timer--;
+}
+
+void Fistbump_HandleSESSION(const char* line) {
+    SDL_sscanf(line, "SESSION %7s", id_buf);
+    printf("Fistbump: received ID: %s\n", id_buf);
+
+    Fistbump_BeginUDP();
+}
+
+void Fistbump_HandleDAG(const char* line) {
+    SDL_sscanf(line, "DAG %8s %127s", dag.code, dag.activate_url);
+    printf("Fistbump: DAG %s, login at %s\n", dag.code, dag.activate_url);
+
+    state = FISTBUMP_AWAITING_LOGIN;
+}
+
+void Fistbump_HandleUDP(const char* line) {
+    char res[8];
+
+    SDL_sscanf(line, "UDP %7s", res);
+
+    if (strcmp(res, "ok") == 0) {
+        printf("Fistbump: UDP ok!\n");
+        Fistbump_Login();
+    }
+}
+
+void Fistbump_HandleTOKEN(const char* line) {
+    char token[1024];
+    int expiry;
+
+    if (sscanf(line, "TOKEN refresh %1023s %d", token, &expiry) == 2) {
+        SDL_strlcpy(refresh_token.token, token, sizeof(refresh_token.token));
+        refresh_token.expiry = expiry;
+        SaveToken(&refresh_token);
+        state = FISTBUMP_IDLE;
+    }
+}
+
+void Fistbump_HandleMATCH(const char* line) {
+    SDL_sscanf(line, "MATCH %d %63[^:]:%d", &match_result.player, match_result.ip, &match_result.remote_port);
+    printf("Fistbump: player %d, matched with %s:%d\n", match_result.player, match_result.ip, match_result.remote_port);
+
+    if (state == FISTBUMP_AWAITING_MATCH) {
+        state = FISTBUMP_MATCHED;
+    }
+}
+
+void Fistbump_ParseCommand(const char* line) {
+    if (strncmp(line, "SESSION ", 8) == 0) {
+        Fistbump_HandleSESSION(line);
+    } else if (strncmp(line, "DAG ", 4) == 0) {
+        Fistbump_HandleDAG(line);
+    } else if (strncmp(line, "UDP ", 4) == 0) {
+        Fistbump_HandleUDP(line);
+    } else if (strncmp(line, "TOKEN ", 6) == 0) {
+        Fistbump_HandleTOKEN(line);
+    } else if (strncmp(line, "MATCH ", 6) == 0) {
+        Fistbump_HandleMATCH(line);
+    }
+}
+
+void Fistbump_Run() {
+    char tmp[1024];
+
+    read_into_line_buf();
+
+    while (pop_line(tmp, sizeof(tmp))) {
+        Fistbump_ParseCommand(tmp);
+    }
+
+    switch (state) {
+    case FISTBUMP_IDLE:
+    case FISTBUMP_CONNECTING:
+        Fistbump_Connect();
+        break;
+
+    case FISTBUMP_AWAITING_ID:
         break;
 
     case FISTBUMP_SENDING_UDP:
-        if (udp_sock == NULL) {
-            udp_sock = NET_CreateDatagramSocket(NULL, 0);
-
-            if (udp_sock == NULL) {
-                printf("Fistbump: failed to create UDP socket: %s\n", SDL_GetError());
-                state = FISTBUMP_ERROR;
-                break;
-            }
-        }
-
-        if (udp_retry_timer <= 0) {
-            NET_SendDatagram(udp_sock, server_addr, (Uint16)saved_udp_port, id_buf, 7);
-            udp_retry_timer = 30; // retransmit every ~0.5 seconds
-        }
-
-        udp_retry_timer--;
-
-        // Advance when the server responds via TCP (confirms it received our UDP).
-        read_into_line_buf();
-
-        if (line_len > 0) {
-            state = FISTBUMP_AWAITING_MATCH;
-        }
+        Fistbump_SendUDP();
         break;
 
+    case FISTBUMP_LOGGING_IN:
+    case FISTBUMP_AWAITING_LOGIN:
     case FISTBUMP_AWAITING_MATCH:
-        read_into_line_buf();
-
-        if (pop_line(tmp, sizeof(tmp))) {
-            SDL_sscanf(tmp, "%d %63[^:]:%d", &match_result.player, match_result.ip, &match_result.remote_port);
-            printf("Fistbump: player %d, matched with %s:%d\n",
-                   match_result.player,
-                   match_result.ip,
-                   match_result.remote_port);
-            state = FISTBUMP_MATCHED;
-        }
-        break;
-
     case FISTBUMP_MATCHED:
-    case FISTBUMP_IDLE:
     case FISTBUMP_ERROR:
         break;
     }
@@ -169,12 +330,20 @@ FistbumpState Fistbump_GetState() {
     return state;
 }
 
+FistbumpConnectState Fistbump_GetConnectState() {
+    return connect_state;
+}
+
 const MatchResult* Fistbump_GetResult() {
     return &match_result;
 }
 
 NET_DatagramSocket* Fistbump_GetSocket() {
     return udp_sock;
+}
+
+DAG Fistbump_GetDAG() {
+    return dag;
 }
 
 void Fistbump_Reset() {
