@@ -378,6 +378,6 @@ void Fistbump_Reset() {
     SDL_zero(match_result);
 
     state = FISTBUMP_IDLE;
-    profile = NULL;
+    memset(&profile, 0, sizeof(profile));
     NET_Quit();
 }
