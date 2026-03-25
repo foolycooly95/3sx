@@ -39,6 +39,10 @@ typedef struct {
     int expiry;
 } JWT;
 
+typedef struct {
+    char username[64];
+} Fistbump_Profile;
+
 void Fistbump_Start(const char* server_ip, int tcp_port, int udp_port, const char *pref_path);
 void Fistbump_Connect();
 void Fistbump_Run();
