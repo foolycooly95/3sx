@@ -26,9 +26,7 @@ static const char* base_path;
 
 static DAG dag;
 static JWT refresh_token;
-
-typedef enum Command { CMD_UNKNOWN, CMD_SESSION, CMD_DAG, CMD_UDP, CMD_MATCH } Command;
-
+static Fistbump_Profile profile;
 static MatchResult match_result;
 
 static void SaveToken(const JWT* jwt) {
@@ -272,6 +270,11 @@ void Fistbump_HandleTOKEN(const char* line) {
     }
 }
 
+void Fistbump_HandlePROFILE(const char* line) {
+    SDL_sscanf(line, "PROFILE %7s", profile.username);
+    printf("Fistbump: Logged in as %s\n", profile.username);
+}
+
 void Fistbump_HandleMATCH(const char* line) {
     SDL_sscanf(line, "MATCH %d %63[^:]:%d", &match_result.player, match_result.ip, &match_result.remote_port);
     printf("Fistbump: player %d, matched with %s:%d\n", match_result.player, match_result.ip, match_result.remote_port);
@@ -290,6 +293,8 @@ void Fistbump_ParseCommand(const char* line) {
         Fistbump_HandleUDP(line);
     } else if (strncmp(line, "TOKEN ", 6) == 0) {
         Fistbump_HandleTOKEN(line);
+    } else if (strncmp(line, "PROFILE ", 8) == 0) {
+        Fistbump_HandlePROFILE(line);
     } else if (strncmp(line, "MATCH ", 6) == 0) {
         Fistbump_HandleMATCH(line);
     }
@@ -373,5 +378,6 @@ void Fistbump_Reset() {
     SDL_zero(match_result);
 
     state = FISTBUMP_IDLE;
+    profile = NULL;
     NET_Quit();
 }
