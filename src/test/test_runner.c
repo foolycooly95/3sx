@@ -98,8 +98,15 @@ static void compare_main_values(SDL_IOStream* io) {
     const u8 round_timer_cps3 = read_u8(io, ROUND_TIMER_OFFSET);
     stop_if(round_timer != round_timer_cps3);
 
-    // const u16 game_timer_cps3 = read_u16(io, GAME_TIMER_OFFSET);
+    const u16 game_timer_cps3 = read_u16(io, GAME_TIMER_OFFSET);
     // printf("⏱️ %d game_timer: %d\n", comparison_index, game_timer_cps3);
+
+    // Some interactions are decided by the evenness of Game_timer. After the first round Game_timer inevitably
+    // goes out of sync, which is why we have to sync it manually.
+    // This is not the best place to do this, but we need to sync Game_timer somewhere, so ...
+    if (Game_timer != game_timer_cps3) {
+        Game_timer = game_timer_cps3;
+    }
 
     for (int i = 0; i < 2; i++) {
         const Sint64 plw_offset = calc_plw_offset(i);
@@ -109,9 +116,25 @@ static void compare_main_values(SDL_IOStream* io) {
         stop_if(pos_3sx.x != pos_cps3.x);
         stop_if(pos_3sx.y != pos_cps3.y);
 
+        // if (i == 0) {
+        //     printf("🔴 %llu pos x: %d vs %d\n", frame, pos_cps3.x, pos_3sx.x);
+        // }
+
         const s16 vital_new_3sx = plw[i].wu.vital_new;
         const s16 vital_new_cps3 = read_s16(io, plw_offset + WORK_VITAL_NEW_OFFSET);
         stop_if(vital_new_3sx != vital_new_cps3);
+
+        const s16 stun_3sx = piyori_type[i].now.quantity.h;
+        const s16 stun_cps3 = read_s16(io, PIYORI_TYPE_OFFSET + i * sizeof(PiyoriType) + offsetof(PiyoriType, now));
+        stop_if(stun_3sx != stun_cps3);
+
+        const s16 sa_gauge_3sx = super_arts[i].gauge.s.h;
+        const s16 sa_gauge_cps3 = read_s16(io, SUPER_ARTS_WORK_OFFSET + i * sizeof(SA_WORK) + offsetof(SA_WORK, gauge));
+        stop_if(sa_gauge_3sx != sa_gauge_cps3);
+
+        const s16 sa_store_3sx = super_arts[i].store;
+        const s16 sa_store_cps3 = read_s16(io, SUPER_ARTS_WORK_OFFSET + i * sizeof(SA_WORK) + offsetof(SA_WORK, store));
+        stop_if(sa_store_3sx != sa_store_cps3);
     }
 }
 
@@ -125,13 +148,22 @@ static void compare_service_values(SDL_IOStream* io) {
     for (int i = 0; i < 2; i++) {
         const Sint64 plw_offset = calc_plw_offset(i);
 
+        // const u32 curr_rca_cps3 = read_u32(io, plw_offset + WORK_CURR_RCA_OFFSET);
+        // printf("%llu curr_rca: 0x%x\n", frame, curr_rca_cps3);
+
+        const u8 caution_flag_3sx = plw[i].caution_flag;
+        const u8 caution_flag_cps3 = read_u8(io, plw_offset + PLW_CAUTION_FLAG_OFFSET);
+        stop_if(caution_flag_3sx != caution_flag_cps3);
+
         const u8 do_not_move_3sx = plw[i].do_not_move;
         const u8 do_not_move_cps3 = read_u8(io, plw_offset + PLW_DO_NOT_MOVE_OFFSET);
         stop_if(do_not_move_3sx != do_not_move_cps3);
 
-        const s16 routine_no_0_3sx = plw[i].wu.routine_no[0];
-        const s16 routine_no_0_cps3 = read_s16(io, plw_offset + WORK_ROUTINE_NO_OFFSET);
-        stop_if(routine_no_0_3sx != routine_no_0_cps3);
+        for (int j = 0; j < 8; j++) {
+            const s16 routine_no_3sx = plw[i].wu.routine_no[j];
+            const s16 routine_no_cps3 = read_s16(io, plw_offset + WORK_ROUTINE_NO_OFFSET + j * 2);
+            stop_if(routine_no_3sx != routine_no_cps3);
+        }
 
         const s16 dm_stop_3sx = plw[i].wu.dm_stop;
         const s16 dm_stop_cps3 = read_s16(io, plw_offset + WORK_DM_STOP_OFFSET);
@@ -238,6 +270,9 @@ void TestRunner_Prologue() {
             wait_timer -= 1;
 
             if (wait_timer <= 0) {
+                // We must set New_Challenger manually so that the game selects the correct stage.
+                // If we set this var earlier it would be overwritten
+                New_Challenger = game.new_challenger;
                 char_select_phase = 2;
             }
 
