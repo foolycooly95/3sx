@@ -4,21 +4,18 @@
 #include "arcade/arcade_constants.h"
 #include "constants.h"
 #include "main.h"
-#include "port/utils.h"
 #include "sf33rd/AcrSDK/common/pad.h"
-#include "sf33rd/Source/Game/engine/plcnt.h"
 #include "sf33rd/Source/Game/engine/workuser.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
-#include "sf33rd/Source/Game/ui/count.h"
 #include "test/replay_game.h"
+#include "test/test_runner_compare.h"
 #include "test/test_runner_utils.h"
 
 #include "stb/stb_ds.h"
 #include <SDL3/SDL.h>
 
+#include <signal.h>
 #include <stdio.h>
-
-#define REPLAY_FRAMES_MAX 3 * 100 * 60
 
 typedef enum Phase {
     PHASE_TITLE,
@@ -29,11 +26,6 @@ typedef enum Phase {
     PHASE_ROUND_TRANSITION,
     PHASE_ROUND,
 } Phase;
-
-typedef struct Position {
-    s16 x;
-    s16 y;
-} Position;
 
 static const Uint8 character_to_cursor[20][2] = { { 7, 1 }, { 1, 0 }, { 5, 2 }, { 6, 1 }, { 3, 2 }, { 4, 0 }, { 1, 2 },
                                                   { 3, 0 }, { 2, 2 }, { 4, 2 }, { 0, 1 }, { 0, 2 }, { 2, 0 }, { 5, 0 },
@@ -49,6 +41,13 @@ static int comparison_index = 0;
 static bool initialized = false;
 static ReplayGame game;
 static int round_index = 0;
+
+static SDL_IOStream* io_at_index(int index) {
+    const char* path = ram_path(index);
+    SDL_IOStream* io = SDL_IOFromFile(path, "rb");
+    SDL_free(path);
+    return io;
+}
 
 static ReplayRound* _round() {
     return &game.rounds[round_index];
@@ -70,126 +69,9 @@ static void tap_button(SWKey button, int player) {
     *dst |= button;
 }
 
-static Sint64 calc_plw_offset(int player) {
-    return PLW_OFFSET + player * PLW_SIZE;
-}
-
-static Position read_position(SDL_IOStream* io, int player) {
-    const Sint64 xyz_offset = calc_plw_offset(player) + WORK_XYZ_OFFSET;
-    const Sint64 x_offset = xyz_offset;
-    const Sint64 y_offset = x_offset + sizeof(XY);
-    return (Position) { .x = read_s16(io, x_offset), .y = read_s16(io, y_offset) };
-}
-
-static Position get_position(int player) {
-    const XY* xyz = plw[player].wu.xyz;
-    return (Position) { .x = xyz[0].disp.pos, .y = xyz[1].disp.pos };
-}
-
 static void initialize_data() {
     ReplayGame_Parse(&game);
     round_index = 0;
-}
-
-static void compare_main_values(SDL_IOStream* io) {
-    const u8 allow_a_battle_f_cps3 = read_u8(io, ALLOW_A_BATTLE_F_OFFSET);
-    stop_if(Allow_a_battle_f != allow_a_battle_f_cps3);
-
-    const u8 round_timer_cps3 = read_u8(io, ROUND_TIMER_OFFSET);
-    stop_if(round_timer != round_timer_cps3);
-
-    const u16 game_timer_cps3 = read_u16(io, GAME_TIMER_OFFSET);
-    // printf("⏱️ %d game_timer: %d\n", comparison_index, game_timer_cps3);
-
-    // Some interactions are decided by the evenness of Game_timer. After the first round Game_timer inevitably
-    // goes out of sync, which is why we have to sync it manually.
-    // This is not the best place to do this, but we need to sync Game_timer somewhere, so ...
-    if (Game_timer != game_timer_cps3) {
-        Game_timer = game_timer_cps3;
-    }
-
-    for (int i = 0; i < 2; i++) {
-        const Sint64 plw_offset = calc_plw_offset(i);
-
-        const Position pos_3sx = get_position(i);
-        const Position pos_cps3 = read_position(io, i);
-        stop_if(pos_3sx.x != pos_cps3.x);
-        stop_if(pos_3sx.y != pos_cps3.y);
-
-        // if (i == 0) {
-        //     printf("🔴 %llu pos x: %d vs %d\n", frame, pos_cps3.x, pos_3sx.x);
-        // }
-
-        const s16 vital_new_3sx = plw[i].wu.vital_new;
-        const s16 vital_new_cps3 = read_s16(io, plw_offset + WORK_VITAL_NEW_OFFSET);
-        stop_if(vital_new_3sx != vital_new_cps3);
-
-        const s16 stun_3sx = piyori_type[i].now.quantity.h;
-        const s16 stun_cps3 = read_s16(io, PIYORI_TYPE_OFFSET + i * sizeof(PiyoriType) + offsetof(PiyoriType, now));
-        stop_if(stun_3sx != stun_cps3);
-
-        const s16 sa_gauge_3sx = super_arts[i].gauge.s.h;
-        const s16 sa_gauge_cps3 = read_s16(io, SUPER_ARTS_WORK_OFFSET + i * sizeof(SA_WORK) + offsetof(SA_WORK, gauge));
-        stop_if(sa_gauge_3sx != sa_gauge_cps3);
-
-        const s16 sa_store_3sx = super_arts[i].store;
-        const s16 sa_store_cps3 = read_s16(io, SUPER_ARTS_WORK_OFFSET + i * sizeof(SA_WORK) + offsetof(SA_WORK, store));
-        stop_if(sa_store_3sx != sa_store_cps3);
-    }
-}
-
-static void compare_service_values(SDL_IOStream* io) {
-    const s16 counter_hi_cps3 = read_s16(io, COUNTER_HI_OFFSET);
-    stop_if(Counter_hi != counter_hi_cps3);
-
-    const s16 counter_low_cps3 = read_s16(io, COUNTER_LOW_OFFSET);
-    stop_if(Counter_low != counter_low_cps3);
-
-    for (int i = 0; i < 2; i++) {
-        const Sint64 plw_offset = calc_plw_offset(i);
-
-        // const u32 curr_rca_cps3 = read_u32(io, plw_offset + WORK_CURR_RCA_OFFSET);
-        // printf("%llu curr_rca: 0x%x\n", frame, curr_rca_cps3);
-
-        const u8 caution_flag_3sx = plw[i].caution_flag;
-        const u8 caution_flag_cps3 = read_u8(io, plw_offset + PLW_CAUTION_FLAG_OFFSET);
-        stop_if(caution_flag_3sx != caution_flag_cps3);
-
-        const u8 do_not_move_3sx = plw[i].do_not_move;
-        const u8 do_not_move_cps3 = read_u8(io, plw_offset + PLW_DO_NOT_MOVE_OFFSET);
-        stop_if(do_not_move_3sx != do_not_move_cps3);
-
-        for (int j = 0; j < 8; j++) {
-            const s16 routine_no_3sx = plw[i].wu.routine_no[j];
-            const s16 routine_no_cps3 = read_s16(io, plw_offset + WORK_ROUTINE_NO_OFFSET + j * 2);
-            stop_if(routine_no_3sx != routine_no_cps3);
-        }
-
-        const s16 dm_stop_3sx = plw[i].wu.dm_stop;
-        const s16 dm_stop_cps3 = read_s16(io, plw_offset + WORK_DM_STOP_OFFSET);
-        stop_if(dm_stop_3sx != dm_stop_cps3);
-
-        const s16 hit_stop_3sx = plw[i].wu.hit_stop;
-        const s16 hit_stop_cps3 = read_s16(io, plw_offset + WORK_HIT_STOP_OFFSET);
-        stop_if(hit_stop_3sx != hit_stop_cps3);
-
-        const u8 sa_stop_flag_3sx = plw[i].sa_stop_flag;
-        const u8 sa_stop_flag_cps3 = read_u8(io, plw_offset + PLW_SA_STOP_FLAG_OFFSET);
-        stop_if(sa_stop_flag_3sx != sa_stop_flag_cps3);
-
-        // const u16 cg_ix_cps3 = read_u16(io, plw_offset + WORK_CG_IX_OFFSET);
-        // const u16 cg_ix_3sx = plw[i].wu.cg_ix;
-        // stop_if(cg_ix_cps3 != cg_ix_3sx);
-
-        const u16 cg_add_xy_cps3 = read_u16(io, plw_offset + WORK_CG_ADD_XY_OFFSET);
-        const u16 cg_add_xy_3sx = plw[i].wu.cg_add_xy;
-        stop_if(cg_add_xy_3sx != cg_add_xy_cps3);
-    }
-}
-
-static void compare_values(SDL_IOStream* io) {
-    compare_service_values(io);
-    compare_main_values(io);
 }
 
 static void reset_comparison_index() {
@@ -210,6 +92,10 @@ static void finish_round() {
 }
 
 void TestRunner_Prologue() {
+    if (frame == SDL_MAX_UINT64) {
+        raise(SIGSTOP);
+    }
+
     p1sw_buff = 0;
     p2sw_buff = 0;
 
@@ -314,6 +200,10 @@ void TestRunner_Prologue() {
             break;
         }
 
+        SDL_IOStream* io = io_at_index(comparison_index - 1);
+        sync_values(io);
+        SDL_CloseIO(io);
+
         phase = PHASE_ROUND;
         // fallthrough
 
@@ -335,9 +225,7 @@ void TestRunner_Prologue() {
 void TestRunner_Epilogue() {
     switch (phase) {
     case PHASE_ROUND:
-        const char* path = ram_path(comparison_index);
-        SDL_IOStream* io = SDL_IOFromFile(path, "rb");
-        SDL_free(path);
+        SDL_IOStream* io = io_at_index(comparison_index);
 
         if (io == NULL) {
             break;
