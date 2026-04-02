@@ -4,6 +4,7 @@
 #include "port/config/keymap.h"
 #include "port/sdl/netplay_screen.h"
 #include "port/sdl/netstats_renderer.h"
+#include "port/sdl/scanline_renderer.h"
 #include "port/sdl/sdl_debug_text.h"
 #include "port/sdl/sdl_game_renderer.h"
 #include "port/sdl/sdl_message_renderer.h"
@@ -161,6 +162,7 @@ int SDLApp_FullInit() {
     // Initialize rendering subsystems
     SDLMessageRenderer_Initialize(renderer);
     SDLGameRenderer_Init(renderer);
+    ScanlineRenderer_Init(renderer);
 
 #if DEBUG
     SDLDebugText_Initialize(renderer);
@@ -177,6 +179,7 @@ int SDLApp_FullInit() {
 
 void SDLApp_Quit() {
     Config_Destroy();
+    ScanlineRenderer_Destroy();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -384,6 +387,12 @@ void SDLApp_EndFrame() {
     // Render screen texture to screen
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderTexture(renderer, screen_texture, NULL, NULL);
+
+    // Apply scanlines using a cached overlay texture.
+    int win_w, win_h;
+    SDL_GetRenderOutputSize(renderer, &win_w, &win_h);
+    const SDL_FRect game_rect = get_letterbox_rect(win_w, win_h);
+    ScanlineRenderer_Render(&game_rect);
 
     if (should_save_screenshot) {
         save_texture(screen_texture, "screenshot_screen.bmp");
