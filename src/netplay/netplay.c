@@ -77,6 +77,8 @@ static int stats_update_timer = 0;
 static int frame_max_rollback = 0;
 static NetworkStats network_stats = { 0 };
 
+bool is_logged_in = false;
+
 #if DEBUG
 #define STATE_BUFFER_MAX 20
 
@@ -683,10 +685,20 @@ bool Netplay_IsMatchmakingPending() {
     return matchmaking_pending && Fistbump_GetState() != FISTBUMP_MATCHED;
 }
 
-void Netplay_CancelMatchmaking() {
-    if (Fistbump_GetState() != FISTBUMP_IDLE) {
-        Fistbump_Reset();
+void Netplay_FindMatch() {
+    if (matchmaking_server_ip == NULL) {
+        return;
     }
+
+    if (!Fistbump_IsLoggedIn()) {
+        return;
+    }
+
+    Fistbump_Queue();
+}
+
+void Netplay_CancelMatchmaking() {
+    Fistbump_Reset();
     matchmaking_pending = false;
 }
 

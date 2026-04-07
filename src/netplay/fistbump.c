@@ -85,6 +85,17 @@ static bool LoadToken(JWT* jwt) {
     return true;
 }
 
+static void DeleteToken() {
+    if (!base_path) {
+        return;
+    }
+
+    char path[512];
+    SDL_snprintf(path, sizeof(path), "%s/token", base_path);
+
+    remove(path);
+}
+
 static bool pop_line(char* out, int out_size) {
     for (int i = 0; i < line_len; i++) {
         if (line_buf[i] == '\n') {
@@ -206,6 +217,14 @@ void Fistbump_Queue() {
 
     char buf[128];
     SDL_snprintf(buf, sizeof(buf), "QUEUE add\n");
+    NET_WriteToStreamSocket(tcp_sock, buf, SDL_strlen(buf));
+}
+
+void Fistbump_CancelQueue() {
+    state = FISTBUMP_IDLE;
+
+    char buf[128];
+    SDL_snprintf(buf, sizeof(buf), "QUEUE remove\n");
     NET_WriteToStreamSocket(tcp_sock, buf, SDL_strlen(buf));
 }
 
@@ -351,10 +370,19 @@ DAG Fistbump_GetDAG() {
     return dag;
 }
 
+bool Fistbump_IsLoggedIn() {
+    return strcmp(profile.username, "") != 0;
+}
+
+void Fistbump_Logout() {
+    DeleteToken();
+    Fistbump_Reset();
+}
+
 void Fistbump_Reset() {
-    if (state == FISTBUMP_IDLE) {
-        return;
-    }
+    // if (state == FISTBUMP_IDLE) {
+    //     return;
+    // }
 
     if (tcp_sock != NULL) {
         NET_DestroyStreamSocket(tcp_sock);

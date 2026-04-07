@@ -1,6 +1,8 @@
 #ifndef FISTBUMP_H
 #define FISTBUMP_H
 
+#include <stdbool.h>
+
 typedef enum {
     FISTBUMP_IDLE,
     FISTBUMP_CONNECTING,
@@ -45,12 +47,16 @@ typedef struct {
 
 void Fistbump_Start(const char* server_ip, int tcp_port, int udp_port, const char *pref_path);
 void Fistbump_Connect();
+void Fistbump_Queue();
+void Fistbump_CancelQueue();
 void Fistbump_Run();
 FistbumpState Fistbump_GetState();
 FistbumpConnectState Fistbump_GetConnectState();
 const MatchResult* Fistbump_GetResult();  // valid when MATCHED
 NET_DatagramSocket* Fistbump_GetSocket(); // ephemeral UDP socket, valid when MATCHED
 DAG Fistbump_GetDAG();
+bool Fistbump_IsLoggedIn();
+void Fistbump_Logout();
 void Fistbump_Reset();
 
 #endif

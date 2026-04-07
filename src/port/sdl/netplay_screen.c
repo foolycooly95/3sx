@@ -1,4 +1,5 @@
 #include "port/sdl/netplay_screen.h"
+#include "main.h"
 #include "netplay/fistbump.h"
 #include "netplay/netplay.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
@@ -11,86 +12,79 @@
 // Frames to hold "Match found!" into the connecting phase before showing the game.
 #define MATCH_FOUND_HOLD_FRAMES 90
 
-static FistbumpConnectState display_state = FISTBUMP_CONN_IDLE;
+static FistbumpState display_state = FISTBUMP_IDLE;
 static int transition_hold = 0;
 static int match_found_hold = 0;
 
-static const char* fb_conn_message(FistbumpConnectState s) {
-    switch (s) {
-    case FISTBUMP_CONN_RESOLVING_DNS:
-    case FISTBUMP_CONN_CONNECTING_TCP:
-        return "Connecting to server...";
-
-    case FISTBUMP_CONN_ERROR:
-        return "Matchmaking error";
-
-    default:
-        return "";
-    }
-}
-
-static const char* fb_message(FistbumpState s) {
-    static char out[256];
-
-    switch (s) {
-    case FISTBUMP_IDLE:
-        return "";
-
-    case FISTBUMP_CONNECTING:
-    case FISTBUMP_AWAITING_ID:
-        return "Connecting to server...";
-
-    case FISTBUMP_SENDING_UDP:
-        return "Sending UDP...";
-
-    case FISTBUMP_LOGGING_IN:
-    case FISTBUMP_AWAITING_LOGIN:
-        DAG dag = Fistbump_GetDAG();
-
-        SDL_snprintf(out, sizeof(out), "%s %s", dag.code, dag.activate_url);
-        return out;
-
-    case FISTBUMP_AWAITING_MATCH:
-    case FISTBUMP_MATCHED:
-    case FISTBUMP_ERROR:
-        return "";
-
-    default:
-        return "";
-    }
-}
+bool display_netplay_text = false;
 
 void NetplayScreen_Render() {
     const NetplaySessionState ns = Netplay_GetSessionState();
-    const FistbumpConnectState fcs = Fistbump_GetConnectState();
-    const FistbumpState mm = Fistbump_GetState();
+    const FistbumpState fs = Fistbump_GetState();
+
+    if (!display_netplay_text) {
+        return;
+    }
 
     // While matchmaking is in progress show status text at the top of the
     // screen. This is safe at any time and doesn't require the full render pipeline.
-    if (mm != FISTBUMP_IDLE && mm != FISTBUMP_MATCHED) {
+    if (fs != FISTBUMP_IDLE && fs != FISTBUMP_MATCHED) {
         // Errors show immediately. Other state changes hold the current
         // message for MM_TEXT_HOLD_FRAMES before switching.
-        if (fcs == FISTBUMP_CONN_ERROR) {
-            display_state = fcs;
+        if (fs == FISTBUMP_ERROR) {
+            display_state = fs;
             transition_hold = 0;
-        } else if (fcs == display_state) {
+        } else if (fs == display_state) {
             // Do nothing
         } else if (transition_hold > 0) {
             transition_hold--;
         } else {
-            display_state = fcs;
+            display_state = fs;
             transition_hold = MM_TEXT_HOLD_FRAMES;
         }
 
-        if (fcs != FISTBUMP_CONN_CONNECTED) {
-            SSPutStrPro(1, 384, 2, 9, 0xFFFFFFFF, fb_conn_message(display_state));
-        } else {
-            SSPutStrPro(1, 384, 2, 9, 0xFFFFFFFF, fb_message(mm));
+        switch (display_state) {
+        case FISTBUMP_IDLE:
+            break;
+
+        case FISTBUMP_CONNECTING:
+            SSPutStrPro(1, 384, 100, 9, 0xFFFFFFFF, "Connecting to server...");
+            break;
+
+        case FISTBUMP_AWAITING_ID:
+        case FISTBUMP_SENDING_UDP:
+            break;
+
+        case FISTBUMP_LOGGING_IN:
+        case FISTBUMP_AWAITING_LOGIN:
+            DAG dag = Fistbump_GetDAG();
+
+            SSPutStrPro(1, 384, 80, 9, 0xFFFFFFFF, "Activation Code:");
+            SSPutStr_Bigger(128, 96, 9, dag.code, 2.0f, 2, 0);
+
+            SSPutStrPro(1, 384, 140, 9, 0xFFFFFFFF, "Log-in to the WebUI at:");
+            SSPutStrPro(1, 384, 150, 9, 0xFFFFFFFF, dag.activate_url);
+
+            SSPutStrPro(1, 384, 200, 9, 0xFFFFFFFF, "Press      to go back.");
+            dispButtonImage2(163, 197, 0x18, 0x13, 0xF, 0, 5);
+
+            break;
+
+        case FISTBUMP_AWAITING_MATCH:
+            SSPutStrPro(1, 384, 140, 9, 0xFFFFFFFF, "Finding match...");
+            SSPutStrPro(1, 384, 160, 9, 0xFFFFFFFF, "Press      to cancel search.");
+            dispButtonImage2(143, 157, 0x18, 0x13, 0xF, 0, 5);
+            break;
+
+        case FISTBUMP_MATCHED:
+        case FISTBUMP_ERROR:
+            break;
         }
+
         return;
     }
 
-    display_state = FISTBUMP_CONN_IDLE;
+    display_state = FISTBUMP_IDLE;
     transition_hold = 0;
 
     // After a match is found, show "Match found!" during VS mode loading and
