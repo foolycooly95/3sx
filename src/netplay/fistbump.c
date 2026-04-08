@@ -194,7 +194,10 @@ void Fistbump_Connect() {
         break;
 
     case FISTBUMP_CONN_CONNECTED:
+        break;
+
     case FISTBUMP_CONN_ERROR:
+        state = FISTBUMP_ERROR;
         break;
     }
 }
