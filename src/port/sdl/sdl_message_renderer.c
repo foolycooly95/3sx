@@ -31,6 +31,25 @@ void SDLMessageRenderer_Initialize(SDL_Renderer* renderer) {
     SDL_SetPaletteColors(knjsub_palette, knjsub_palette_colors, 0, 4);
 }
 
+void SDLMessageRenderer_Shutdown() {
+    if (knjsub_texture != NULL) {
+        SDL_DestroyTexture(knjsub_texture);
+        knjsub_texture = NULL;
+    }
+
+    if (knjsub_palette != NULL) {
+        SDL_DestroyPalette(knjsub_palette);
+        knjsub_palette = NULL;
+    }
+
+    if (message_canvas != NULL) {
+        SDL_DestroyTexture(message_canvas);
+        message_canvas = NULL;
+    }
+
+    _renderer = NULL;
+}
+
 void SDLMessageRenderer_BeginFrame() {
     // Clear canvas
     SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);

@@ -6,6 +6,7 @@
 extern SDL_Texture* message_canvas;
 
 void SDLMessageRenderer_Initialize(SDL_Renderer* renderer);
+void SDLMessageRenderer_Shutdown();
 void SDLMessageRenderer_BeginFrame();
 
 void SDLMessageRenderer_CreateTexture(int width, int height, void* pixels, int format);
