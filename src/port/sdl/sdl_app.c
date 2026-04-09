@@ -40,7 +40,6 @@ static Uint64 frame_deadline = 0;
 static FrameMetrics frame_metrics = { 0 };
 static Uint64 last_frame_end_time = 0;
 
-static bool should_save_screenshot = false;
 static Uint64 last_mouse_motion_time = 0;
 static const int mouse_hide_delay_ms = 2000; // 2 seconds
 
@@ -54,6 +53,7 @@ static SDL_ScaleMode screen_texture_scale_mode() {
     case SCALEMODE_SQUARE_PIXELS:
     case SCALEMODE_INTEGER:
         return SDL_SCALEMODE_NEAREST;
+
     default:
         return SDL_SCALEMODE_INVALID;
     }
@@ -161,7 +161,6 @@ int SDLApp_FullInit() {
     }
 
     // Initialize rendering subsystems
-    SDLMessageRenderer_Initialize(renderer);
     g_render_backend.init(&host_context);
     ScanlineRenderer_Init(renderer);
 
@@ -185,7 +184,6 @@ int SDLApp_FullInit() {
 void SDLApp_Quit() {
     Config_Destroy();
     g_render_backend.shutdown();
-    SDLMessageRenderer_Shutdown();
     ScanlineRenderer_Destroy();
 
 #if DEBUG
@@ -206,12 +204,6 @@ void SDLApp_Quit() {
     host_context.renderer = NULL;
     SDL_Quit();
 }
-
-// static void set_screenshot_flag_if_needed(SDL_KeyboardEvent* event) {
-//     if ((event->key == SDLK_GRAVE) && event->down && !event->repeat) {
-//         should_save_screenshot = true;
-//     }
-// }
 
 #if DEBUG
 static void toggle_debug_window_visibility(SDL_KeyboardEvent* event) {
@@ -269,8 +261,6 @@ bool SDLApp_PollEvents() {
 
         case SDL_EVENT_KEY_DOWN:
         case SDL_EVENT_KEY_UP:
-            // set_screenshot_flag_if_needed(&event.key);
-
 #if DEBUG
             toggle_debug_window_visibility(&event.key);
 #endif
@@ -301,7 +291,6 @@ void SDLApp_BeginFrame() {
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderClear(renderer);
 
-    SDLMessageRenderer_BeginFrame();
     g_render_backend.begin_frame();
 
 #if DEBUG
@@ -379,13 +368,6 @@ static void update_metrics(Uint64 sleep_time) {
     last_frame_end_time = new_frame_end_time;
 }
 
-static void save_texture(SDL_Texture* texture, const char* filename) {
-    SDL_SetRenderTarget(renderer, texture);
-    const SDL_Surface* rendered_surface = SDL_RenderReadPixels(renderer, NULL);
-    SDL_SaveBMP(rendered_surface, filename);
-    SDL_DestroySurface(rendered_surface);
-}
-
 void SDLApp_EndFrame() {
     // Run sound processing
     ADX_ProcessTracks();
@@ -400,10 +382,6 @@ void SDLApp_EndFrame() {
 
     SDL_Texture* scene_canvas = g_render_backend.get_canvas_handle();
 
-    if (should_save_screenshot) {
-        save_texture(scene_canvas, "screenshot_cps3.bmp");
-    }
-
     SDL_SetRenderTarget(renderer, screen_texture);
 
     // Render window background
@@ -414,10 +392,6 @@ void SDLApp_EndFrame() {
     const SDL_FRect dst_rect = get_letterbox_rect(screen_texture->w, screen_texture->h);
     SDL_RenderTexture(renderer, scene_canvas, NULL, &dst_rect);
 
-    if (message_canvas != NULL) {
-        SDL_RenderTexture(renderer, message_canvas, NULL, &dst_rect);
-    }
-
     // Render screen texture to screen
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderTexture(renderer, screen_texture, NULL, NULL);
@@ -427,10 +401,6 @@ void SDLApp_EndFrame() {
     SDL_GetRenderOutputSize(renderer, &win_w, &win_h);
     const SDL_FRect game_rect = get_letterbox_rect(win_w, win_h);
     ScanlineRenderer_Render(&game_rect);
-
-    if (should_save_screenshot) {
-        save_texture(screen_texture, "screenshot_screen.bmp");
-    }
 
 #if DEBUG
     // Render debug text
@@ -443,7 +413,6 @@ void SDLApp_EndFrame() {
 
     // Cleanup
     g_render_backend.end_frame();
-    should_save_screenshot = false;
 
     // Handle cursor hiding
     hide_cursor_if_needed();
