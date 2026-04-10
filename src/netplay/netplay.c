@@ -77,8 +77,6 @@ static int stats_update_timer = 0;
 static int frame_max_rollback = 0;
 static NetworkStats network_stats = { 0 };
 
-bool is_logged_in = false;
-
 #if DEBUG
 #define STATE_BUFFER_MAX 20
 

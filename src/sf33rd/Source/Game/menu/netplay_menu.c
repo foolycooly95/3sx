@@ -19,6 +19,8 @@
 #if NETPLAY_ENABLED
 const u8 Netplay_Page_Data[2] = { 0, 2 };
 
+static bool is_logged_in = false;
+
 // Returns true while matchmaking is pending, consuming input to cancel.
 // Caller should skip normal menu logic when this returns true.
 static bool check_netplay_cancelled() {
@@ -111,7 +113,7 @@ void Netplay_Menu(struct _TASK* task_ptr) {
     case 1:
         FadeOut(1, 0xFF, 8);
         task_ptr->r_no[2]++;
-        Menu_Page = is_logged_in;
+        Menu_Page = Netplay_IsLoggedIn();
         Setup_Netplay_Menu(task_ptr);
         /* fallthrough */
 

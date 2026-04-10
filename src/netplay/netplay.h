@@ -17,7 +17,6 @@ typedef enum NetplaySessionState {
     NETPLAY_SESSION_EXITING,
 } NetplaySessionState;
 
-extern bool is_logged_in;
 
 void Netplay_SetParams(int player, const char* ip);
 void Netplay_BeginDirectP2P();
