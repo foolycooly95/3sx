@@ -445,10 +445,6 @@ void Fistbump_Logout() {
 }
 
 void Fistbump_Reset() {
-    // if (state == FISTBUMP_IDLE) {
-    //     return;
-    // }
-
     if (tcp_sock != NULL) {
         NET_DestroyStreamSocket(tcp_sock);
         tcp_sock = NULL;
