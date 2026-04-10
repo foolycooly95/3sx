@@ -177,7 +177,7 @@ void Fistbump_Connect() {
         case NET_SUCCESS:
             tcp_sock = NET_CreateClient(server_addr, (Uint16)saved_tcp_port);
             if (tcp_sock == NULL) {
-                printf("Fistbump: failed to create TCP client: %s\n", SDL_GetError());
+                SDL_Log("Fistbump: failed to create TCP client: %s\n", SDL_GetError());
                 connect_state = FISTBUMP_CONN_ERROR;
             } else {
                 connect_state = FISTBUMP_CONN_CONNECTING_TCP;
@@ -185,7 +185,7 @@ void Fistbump_Connect() {
             break;
 
         case NET_FAILURE:
-            printf("Fistbump: DNS resolution failed: %s\n", SDL_GetError());
+            SDL_Log("Fistbump: DNS resolution failed: %s\n", SDL_GetError());
             state = FISTBUMP_ERROR;
             break;
 
@@ -201,7 +201,7 @@ void Fistbump_Connect() {
             break;
 
         case NET_FAILURE:
-            printf("Fistbump: TCP connection failed: %s\n", SDL_GetError());
+            SDL_Log("Fistbump: TCP connection failed: %s\n", SDL_GetError());
             connect_state = FISTBUMP_CONN_ERROR;
             break;
 
@@ -258,7 +258,7 @@ void Fistbump_SendUDP() {
         udp_sock = NET_CreateDatagramSocket(NULL, 0);
 
         if (udp_sock == NULL) {
-            printf("Fistbump: failed to create UDP socket: %s\n", SDL_GetError());
+            SDL_Log("Fistbump: failed to create UDP socket: %s\n", SDL_GetError());
             state = FISTBUMP_ERROR;
             return;
         }
@@ -286,14 +286,14 @@ void Fistbump_DeclineMatch() {
 
 void Fistbump_HandleSESSION(const char* line) {
     SDL_sscanf(line, "SESSION %7s", id_buf);
-    printf("Fistbump: received ID: %s\n", id_buf);
+    SDL_Log("Fistbump: received ID: %s\n", id_buf);
 
     state = FISTBUMP_SENDING_TOKEN;
 }
 
 void Fistbump_HandleDAG(const char* line) {
     SDL_sscanf(line, "DAG %8s %127s", dag.code, dag.activate_url);
-    printf("Fistbump: DAG %s, login at %s\n", dag.code, dag.activate_url);
+    SDL_Log("Fistbump: DAG %s, login at %s\n", dag.code, dag.activate_url);
 
     state = FISTBUMP_AWAITING_LOGIN;
 }
@@ -304,7 +304,7 @@ void Fistbump_HandleUDP(const char* line) {
     SDL_sscanf(line, "UDP %7s", res);
 
     if (strcmp(res, "ok") == 0) {
-        printf("Fistbump: UDP ok!\n");
+        SDL_Log("Fistbump: UDP ok!\n");
     }
 }
 
@@ -322,12 +322,12 @@ void Fistbump_HandleTOKEN(const char* line) {
 
 void Fistbump_HandlePROFILE(const char* line) {
     SDL_sscanf(line, "PROFILE %7s", profile.username);
-    printf("Fistbump: Logged in as %s\n", profile.username);
+    SDL_Log("Fistbump: Logged in as %s\n", profile.username);
 }
 
 void Fistbump_HandleMATCH(const char* line) {
     SDL_sscanf(line, "MATCH %36s %63s", match_result.match_id, match_result.opponent_name);
-    printf("Fistbump: matched with %s\n", match_result.opponent_name);
+    SDL_Log("Fistbump: matched with %s\n", match_result.opponent_name);
 
     state = FISTBUMP_MATCHED;
 }
@@ -336,7 +336,7 @@ void Fistbump_HandleCANCEL(const char* line) {
     char match_id[37];
 
     if (SDL_sscanf(line, "CANCEL %36s", match_id) != 1) {
-        printf("Fistbump: failed to parse CANCEL\n");
+        SDL_Log("Fistbump: failed to parse CANCEL\n");
         return;
     }
 
@@ -344,7 +344,7 @@ void Fistbump_HandleCANCEL(const char* line) {
         return;
     }
 
-    printf("Fistbump: match cancelled\n");
+    SDL_Log("Fistbump: match cancelled\n");
     SDL_zero(match_result);
 
     if (state == FISTBUMP_MATCHED) {
@@ -354,7 +354,8 @@ void Fistbump_HandleCANCEL(const char* line) {
 
 void Fistbump_HandleSTART(const char* line) {
     SDL_sscanf(line, "START %d %63[^:]:%d", &match_result.player, match_result.ip, &match_result.remote_port);
-    printf("Fistbump: player %d, opponent IP: %s:%d\n", match_result.player, match_result.ip, match_result.remote_port);
+    SDL_Log(
+        "Fistbump: player %d, opponent IP: %s:%d\n", match_result.player, match_result.ip, match_result.remote_port);
 
     state = FISTBUMP_GAME_START;
 }
