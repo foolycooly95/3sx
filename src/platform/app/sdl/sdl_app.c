@@ -1,6 +1,10 @@
-#include "port/sdl/sdl_app.h"
+#if CRS_APP_DRIVER_SDL
+
+#include "platform/app/sdl/sdl_app.h"
+#include "arcade/arcade_balance.h"
 #include "common.h"
 #include "imgui/imgui_wrapper.h"
+#include "main.h"
 #include "port/config/config.h"
 #include "port/config/keymap.h"
 #include "port/host_context.h"
@@ -14,7 +18,22 @@
 #include "port/sound/adx.h"
 #include "sf33rd/AcrSDK/ps2/foundaps2.h"
 
+#if DEBUG
+#include "sf33rd/Source/Game/debug/debug_config.h"
+#endif
+
+#include "port/io/afs.h"
+#include "port/resources.h"
+
 #include <SDL3/SDL.h>
+
+#if _WIN32 && DEBUG
+// Including windows.h causes conflicts with the Polygon struct, so I just included the header where
+// AllocConsole is and the Windows-specific typedefs that it requires.
+#include <windef.h>
+
+#include <ConsoleApi.h>
+#endif
 
 typedef enum ScaleMode {
     SCALEMODE_NEAREST,
@@ -23,6 +42,14 @@ typedef enum ScaleMode {
     SCALEMODE_SQUARE_PIXELS,
     SCALEMODE_INTEGER,
 } ScaleMode;
+
+typedef enum AppPhase {
+    APP_PHASE_INIT,
+    APP_PHASE_COPYING_RESOURCES,
+    APP_PHASE_INITIALIZED,
+} AppPhase;
+
+static AppPhase phase = APP_PHASE_INIT;
 
 static const char* app_name = "Street Fighter III: 3rd Strike";
 static const float display_target_ratio = 4.0 / 3.0;
@@ -132,7 +159,7 @@ static bool init_window() {
     return true;
 }
 
-int SDLApp_PreInit() {
+static int pre_init() {
     SDL_SetAppMetadata(app_name, "0.1", NULL);
     SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR, "1");
     SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
@@ -145,7 +172,20 @@ int SDLApp_PreInit() {
     return 0;
 }
 
-int SDLApp_FullInit() {
+#if _WIN32 && DEBUG
+static void init_windows_console() {
+    // attaches to an existing console for printouts. Works with windows CMD but not MSYS2
+    if (AttachConsole(ATTACH_PARENT_PROCESS) == 0) {
+        // if fails, then allocate a new console
+        AllocConsole();
+    }
+    freopen("CONIN$", "r", stdin);
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+}
+#endif
+
+static int full_init() {
     Config_Init();
     Keymap_Init();
     init_scalemode();
@@ -178,10 +218,23 @@ int SDLApp_FullInit() {
     ImGuiW_Init(window, renderer);
 #endif
 
+#if _WIN32 && DEBUG
+    init_windows_console();
+#endif
+
+    ArcadeBalance_Init();
+    AFS_Init(Resources_GetAFSPath());
+
+#if DEBUG
+    DebugConfig_Init();
+#endif
+
+    Main_Init();
     return 0;
 }
 
-void SDLApp_Quit() {
+static void cleanup() {
+    AFS_Finish();
     Config_Destroy();
     g_render_backend.shutdown();
     ScanlineRenderer_Destroy();
@@ -202,7 +255,6 @@ void SDLApp_Quit() {
     host_context.backend_kind = PLATFORM_HOST_BACKEND_NONE;
     host_context.window = NULL;
     host_context.renderer = NULL;
-    SDL_Quit();
 }
 
 #if DEBUG
@@ -244,7 +296,7 @@ static void hide_cursor_if_needed() {
     }
 }
 
-bool SDLApp_PollEvents() {
+static bool poll_events() {
     SDL_Event event;
     bool continue_running = true;
 
@@ -285,7 +337,7 @@ bool SDLApp_PollEvents() {
     return continue_running;
 }
 
-void SDLApp_BeginFrame() {
+static void begin_frame() {
     // Clear window
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_SetRenderTarget(renderer, NULL);
@@ -296,6 +348,8 @@ void SDLApp_BeginFrame() {
 #if DEBUG
     ImGuiW_BeginFrame();
 #endif
+
+    AFS_RunServer();
 }
 
 static void center_rect(SDL_FRect* rect, int win_w, int win_h) {
@@ -368,7 +422,7 @@ static void update_metrics(Uint64 sleep_time) {
     last_frame_end_time = new_frame_end_time;
 }
 
-void SDLApp_EndFrame() {
+static void end_frame() {
     // Run sound processing
     ADX_ProcessTracks();
 
@@ -443,12 +497,90 @@ void SDLApp_EndFrame() {
     update_metrics(sleep_time);
 }
 
+// Entrypoint
+
+static bool sdl_poll_helper() {
+    SDL_Event event;
+    bool continue_running = true;
+
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_EVENT_QUIT) {
+            continue_running = false;
+        }
+    }
+
+    return continue_running;
+}
+
+static int loop() {
+    bool is_running = true;
+
+    while (is_running) {
+        switch (phase) {
+        case APP_PHASE_INIT:
+            pre_init();
+
+            if (Resources_Check()) {
+                full_init();
+                phase = APP_PHASE_INITIALIZED;
+            } else {
+                phase = APP_PHASE_COPYING_RESOURCES;
+            }
+
+            break;
+
+        case APP_PHASE_COPYING_RESOURCES:
+            is_running = sdl_poll_helper();
+
+            if (!is_running) {
+                break;
+            }
+
+            SDL_Delay(16);
+
+            const bool resource_flow_ended = Resources_RunResourceCopyingFlow();
+
+            if (resource_flow_ended) {
+                full_init();
+                phase = APP_PHASE_INITIALIZED;
+            }
+
+            break;
+
+        case APP_PHASE_INITIALIZED:
+            is_running = poll_events();
+
+            if (!is_running) {
+                break;
+            }
+
+            begin_frame();
+            Main_StepFrame();
+            end_frame();
+            Main_FinishFrame();
+            break;
+        }
+    }
+
+    cleanup();
+    SDL_Quit();
+    return 0;
+}
+
+int main(int argc, const char* argv[]) {
+    return loop();
+}
+
+// Public API
+
+const FrameMetrics* SDLApp_GetFrameMetrics() {
+    return &frame_metrics;
+}
+
 void SDLApp_Exit() {
     SDL_Event quit_event;
     quit_event.type = SDL_EVENT_QUIT;
     SDL_PushEvent(&quit_event);
 }
 
-const FrameMetrics* SDLApp_GetFrameMetrics() {
-    return &frame_metrics;
-}
+#endif // CRS_APP_DRIVER_SDL
