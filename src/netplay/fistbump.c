@@ -22,7 +22,7 @@ static char line_buf[1024];
 static int line_len = 0;
 static int udp_retry_timer = 0;
 
-static const char* base_path;
+static const char* base_path = NULL;
 
 static DAG dag;
 static JWT refresh_token;
@@ -30,7 +30,7 @@ static Fistbump_Profile profile;
 static MatchResult match_result;
 
 static void SaveToken(const JWT* jwt) {
-    if (!base_path || !jwt) {
+    if (base_path == NULL || jwt == NULL) {
         return;
     }
 
