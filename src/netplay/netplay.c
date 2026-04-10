@@ -661,7 +661,7 @@ void Netplay_TickMatchmaking() {
 
     const FistbumpState mm = Fistbump_GetState();
 
-    if (mm == FISTBUMP_MATCHED) {
+    if (mm == FISTBUMP_GAME_START) {
         const MatchResult* r = Fistbump_GetResult();
         player_number = r->player - 1;
         SDL_strlcpy(matched_ip, r->ip, sizeof(matched_ip));
@@ -682,7 +682,7 @@ void Netplay_TickMatchmaking() {
 
 bool Netplay_IsMatchmakingPending() {
     // Returns false once matched so cancel is ignored during the display countdown.
-    return matchmaking_pending && Fistbump_GetState() != FISTBUMP_MATCHED;
+    return matchmaking_pending && Fistbump_GetState() != FISTBUMP_GAME_START;
 }
 
 void Netplay_FindMatch() {

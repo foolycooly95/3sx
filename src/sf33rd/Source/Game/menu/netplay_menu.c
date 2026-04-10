@@ -170,7 +170,15 @@ void Netplay_Menu(struct _TASK* task_ptr) {
         } else if (IO_Result == SWK_EAST && Fistbump_GetState() == FISTBUMP_AWAITING_MATCH) {
             Fistbump_CancelQueue();
             break;
+        } else if (IO_Result == SWK_EAST && Fistbump_GetState() == FISTBUMP_MATCHED) {
+            Fistbump_DeclineMatch();
+            break;
         } else if (IO_Result == SWK_SOUTH) {
+            if (Fistbump_GetState() == FISTBUMP_MATCHED) {
+                Fistbump_AcceptMatch();
+                break;
+            }
+
             switch (Menu_Cursor_Y[0]) {
             case 0:
                 Netplay_FindMatch();

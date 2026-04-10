@@ -248,18 +248,30 @@ void Fistbump_SendUDP() {
     }
 
     if (udp_retry_timer <= 0) {
-        NET_SendDatagram(udp_sock, server_addr, (Uint16)saved_udp_port, id_buf, 7);
+        char buf[128];
+        SDL_snprintf(buf, sizeof(buf), "%s %s", id_buf, match_result.match_id);
+        NET_SendDatagram(udp_sock, server_addr, (Uint16)saved_udp_port, buf, SDL_strlen(buf));
         udp_retry_timer = 30; // retransmit every ~0.5 seconds
     }
 
     udp_retry_timer--;
 }
 
+void Fistbump_AcceptMatch() {
+    Fistbump_BeginUDP();
+}
+
+void Fistbump_DeclineMatch() {
+    char buf[128];
+    SDL_snprintf(buf, sizeof(buf), "DECLINE %s\n", match_result.match_id);
+    NET_WriteToStreamSocket(tcp_sock, buf, SDL_strlen(buf));
+}
+
 void Fistbump_HandleSESSION(const char* line) {
     SDL_sscanf(line, "SESSION %7s", id_buf);
     printf("Fistbump: received ID: %s\n", id_buf);
 
-    Fistbump_BeginUDP();
+    state = FISTBUMP_SENDING_TOKEN;
 }
 
 void Fistbump_HandleDAG(const char* line) {
@@ -276,7 +288,6 @@ void Fistbump_HandleUDP(const char* line) {
 
     if (strcmp(res, "ok") == 0) {
         printf("Fistbump: UDP ok!\n");
-        Fistbump_Login();
     }
 }
 
@@ -298,12 +309,37 @@ void Fistbump_HandlePROFILE(const char* line) {
 }
 
 void Fistbump_HandleMATCH(const char* line) {
-    SDL_sscanf(line, "MATCH %d %63[^:]:%d", &match_result.player, match_result.ip, &match_result.remote_port);
-    printf("Fistbump: player %d, matched with %s:%d\n", match_result.player, match_result.ip, match_result.remote_port);
+    SDL_sscanf(line, "MATCH %36s %63s", match_result.match_id, match_result.opponent_name);
+    printf("Fistbump: matched with %s\n", match_result.opponent_name);
 
-    if (state == FISTBUMP_AWAITING_MATCH) {
-        state = FISTBUMP_MATCHED;
+    state = FISTBUMP_MATCHED;
+}
+
+void Fistbump_HandleCANCEL(const char* line) {
+    char match_id[37];
+
+    if (SDL_sscanf(line, "CANCEL %36s", match_id) != 1) {
+        printf("Fistbump: failed to parse CANCEL\n");
+        return;
     }
+
+    if (strcmp(match_id, match_result.match_id) != 0) {
+        return;
+    }
+
+    printf("Fistbump: match cancelled\n");
+    SDL_zero(match_result);
+
+    if (state == FISTBUMP_MATCHED) {
+        state = FISTBUMP_IDLE;
+    }
+}
+
+void Fistbump_HandleSTART(const char* line) {
+    SDL_sscanf(line, "START %d %63[^:]:%d", &match_result.player, match_result.ip, &match_result.remote_port);
+    printf("Fistbump: player %d, opponent IP: %s:%d\n", match_result.player, match_result.ip, match_result.remote_port);
+
+    state = FISTBUMP_GAME_START;
 }
 
 void Fistbump_ParseCommand(const char* line) {
@@ -319,6 +355,10 @@ void Fistbump_ParseCommand(const char* line) {
         Fistbump_HandlePROFILE(line);
     } else if (strncmp(line, "MATCH ", 6) == 0) {
         Fistbump_HandleMATCH(line);
+    } else if (strncmp(line, "CANCEL ", 7) == 0) {
+        Fistbump_HandleCANCEL(line);
+    } else if (strncmp(line, "START ", 6) == 0) {
+        Fistbump_HandleSTART(line);
     }
 }
 
@@ -337,17 +377,21 @@ void Fistbump_Run() {
         Fistbump_Connect();
         break;
 
-    case FISTBUMP_AWAITING_ID:
-        break;
-
-    case FISTBUMP_SENDING_UDP:
-        Fistbump_SendUDP();
+    case FISTBUMP_SENDING_TOKEN:
+        Fistbump_Login();
         break;
 
     case FISTBUMP_LOGGING_IN:
     case FISTBUMP_AWAITING_LOGIN:
     case FISTBUMP_AWAITING_MATCH:
     case FISTBUMP_MATCHED:
+        break;
+
+    case FISTBUMP_SENDING_UDP:
+        Fistbump_SendUDP();
+        break;
+
+    case FISTBUMP_GAME_START:
     case FISTBUMP_ERROR:
         break;
     }

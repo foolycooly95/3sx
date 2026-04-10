@@ -28,7 +28,7 @@ void NetplayScreen_Render() {
 
     // While matchmaking is in progress show status text at the top of the
     // screen. This is safe at any time and doesn't require the full render pipeline.
-    if (fs != FISTBUMP_IDLE && fs != FISTBUMP_MATCHED) {
+    if (fs != FISTBUMP_IDLE && fs != FISTBUMP_GAME_START) {
         // Errors show immediately. Other state changes hold the current
         // message for MM_TEXT_HOLD_FRAMES before switching.
         if (fs == FISTBUMP_ERROR) {
@@ -51,8 +51,7 @@ void NetplayScreen_Render() {
             SSPutStrPro(1, 384, 100, 9, 0xFFFFFFFF, "Connecting to server...");
             break;
 
-        case FISTBUMP_AWAITING_ID:
-        case FISTBUMP_SENDING_UDP:
+        case FISTBUMP_SENDING_TOKEN:
             break;
 
         case FISTBUMP_LOGGING_IN:
@@ -77,6 +76,22 @@ void NetplayScreen_Render() {
             break;
 
         case FISTBUMP_MATCHED:
+            MatchResult* match = Fistbump_GetResult();
+
+            SSPutStrPro(1, 384, 130, 9, 0xFFFFFFFF, "Matched with:");
+            SSPutStrPro(1, 384, 140, 9, 0xFFFFFFFF, match->opponent_name);
+
+            SSPutStrPro(1, 384, 160, 9, 0xFFFFFFFF, "      ACCEPT      DECLINE");
+            dispButtonImage2(121, 157, 0x19, 0x13, 0xF, 0, 4);
+            dispButtonImage2(193, 157, 0x19, 0x13, 0xF, 0, 5);
+
+            break;
+
+        case FISTBUMP_SENDING_UDP:
+            SSPutStrPro(1, 384, 140, 9, 0xFFFFFFFF, "Starting match...");
+            break;
+
+        case FISTBUMP_GAME_START:
         case FISTBUMP_ERROR:
             break;
         }
@@ -87,7 +102,7 @@ void NetplayScreen_Render() {
     display_state = FISTBUMP_IDLE;
     transition_hold = 0;
 
-    // After a match is found, show "Match found!" during VS mode loading and
+    // After a match is found, show "Match start!" during VS mode loading and
     // hold it briefly into the connecting phase before revealing the game.
     // this should maybe be replaced by actual visual effects but good for a prototype.
     if (ns == NETPLAY_SESSION_TRANSITIONING) {
@@ -98,6 +113,6 @@ void NetplayScreen_Render() {
         return;
     }
 
-    const char* msg = "Match found!";
+    const char* msg = "Match start!";
     SSPutStrPro(1, 384, 110, 9, 0xFFFFFFFF, msg);
 }

@@ -6,12 +6,13 @@
 typedef enum {
     FISTBUMP_IDLE,
     FISTBUMP_CONNECTING,
-    FISTBUMP_AWAITING_ID,
-    FISTBUMP_SENDING_UDP,
+    FISTBUMP_SENDING_TOKEN,
     FISTBUMP_LOGGING_IN,
     FISTBUMP_AWAITING_LOGIN,
     FISTBUMP_AWAITING_MATCH,
     FISTBUMP_MATCHED,
+    FISTBUMP_SENDING_UDP,
+    FISTBUMP_GAME_START,
     FISTBUMP_ERROR,
 } FistbumpState;
 
@@ -26,7 +27,9 @@ typedef enum {
 typedef struct NET_DatagramSocket NET_DatagramSocket;
 
 typedef struct {
+    char match_id[37];
     int player;        // 1 or 2
+    char opponent_name[64];
     char ip[64];       // remote peer IP string
     int remote_port;   // remote peer game port (parsed from "ip:port")
 } MatchResult;
@@ -49,6 +52,8 @@ void Fistbump_Start(const char* server_ip, int tcp_port, int udp_port, const cha
 void Fistbump_Connect();
 void Fistbump_Queue();
 void Fistbump_CancelQueue();
+void Fistbump_AcceptMatch();
+void Fistbump_DeclineMatch();
 void Fistbump_Run();
 FistbumpState Fistbump_GetState();
 FistbumpConnectState Fistbump_GetConnectState();
