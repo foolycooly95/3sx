@@ -4,6 +4,7 @@
 #include <SDL3_net/SDL_net.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -37,13 +38,13 @@ static void SaveToken(const JWT* jwt) {
     char path[512];
     SDL_snprintf(path, sizeof(path), "%s/token", base_path);
 
-    FILE* f = fopen(path, "w");
-    if (!f) {
+    SDL_IOStream* stream = SDL_IOFromFile(path, "w");
+    if (!stream) {
         return;
     }
 
-    fprintf(f, "%s\n%d\n", jwt->token, jwt->expiry);
-    fclose(f);
+    SDL_IOprintf(stream, "%s\n%d\n", jwt->token, jwt->expiry);
+    SDL_CloseIO(stream);
 }
 
 static bool LoadToken(JWT* jwt) {
@@ -54,30 +55,46 @@ static bool LoadToken(JWT* jwt) {
     char path[512];
     SDL_snprintf(path, sizeof(path), "%s/token", base_path);
 
-    FILE* f = fopen(path, "r");
-    if (!f) {
+    SDL_IOStream* stream = SDL_IOFromFile(path, "r");
+    if (!stream) {
         return false;
     }
 
-    if (!fgets(jwt->token, (int)sizeof(jwt->token), f)) {
-        fclose(f);
+    char line[256];
+
+    if (!SDL_ReadIO(stream, line, sizeof(line) - 1)) {
+        SDL_CloseIO(stream);
         return false;
     }
+
+    line[sizeof(line) - 1] = '\0';
+
+    SDL_strlcpy(jwt->token, line, sizeof(jwt->token));
 
     size_t len = strcspn(jwt->token, "\r\n");
     jwt->token[len] = '\0';
 
-    if (fscanf(f, "%d", &jwt->expiry) != 1) {
-        fclose(f);
+    if (!SDL_ReadIO(stream, line, sizeof(line) - 1)) {
+        SDL_CloseIO(stream);
         return false;
     }
 
-    fclose(f);
+    line[sizeof(line) - 1] = '\0';
+
+    char* endptr = NULL;
+    long expiry = strtol(line, &endptr, 10);
+
+    if (endptr == line) {
+        SDL_CloseIO(stream);
+        return false;
+    }
+
+    jwt->expiry = (time_t)expiry;
+
+    SDL_CloseIO(stream);
 
     time_t now = time(NULL);
-
-    if ((time_t)jwt->expiry <= now) {
-        // token expired → delete file
+    if (jwt->expiry <= now) {
         remove(path);
         return false;
     }
