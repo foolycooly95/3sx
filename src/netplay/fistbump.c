@@ -48,7 +48,7 @@ static void SaveToken(const JWT* jwt) {
 }
 
 static bool LoadToken(JWT* jwt) {
-    if (!base_path || !jwt) {
+    if (base_path == NULL || jwt == NULL) {
         return false;
     }
 
