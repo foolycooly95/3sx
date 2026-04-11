@@ -3,6 +3,8 @@
 #include "netplay/fistbump.h"
 #include "netplay/game_state.h"
 #include "netplay/sdl_net_adapter.h"
+#include "port/paths.h"
+#include "port/sdl/sdl_app.h"
 #include "sf33rd/Source/Game/effect/effect.h"
 #include "sf33rd/Source/Game/engine/grade.h"
 #include "sf33rd/Source/Game/engine/plcnt.h"
@@ -644,7 +646,7 @@ void Netplay_BeginMatchmaking() {
     }
     // session_state stays IDLE so the menu keeps running normally.
     // setup_vs_mode() and the session transition happen in Netplay_TickMatchmaking.
-    Fistbump_Start(matchmaking_server_ip, matchmaking_server_port, 9001);
+    Fistbump_Start(matchmaking_server_ip, matchmaking_server_port, 9001, Paths_GetPrefPath());
     matchmaking_pending = true;
 }
 
