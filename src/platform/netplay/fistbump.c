@@ -1,4 +1,4 @@
-#include "netplay/fistbump.h"
+#include "platform/netplay/fistbump.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3_net/SDL_net.h>

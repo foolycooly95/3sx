@@ -1,7 +1,7 @@
 #include "port/sdl/netplay_screen.h"
 #include "main.h"
-#include "netplay/fistbump.h"
-#include "netplay/netplay.h"
+#include "platform/netplay/fistbump.h"
+#include "platform/netplay/netplay.h"
 #include "sf33rd/Source/Game/system/work_sys.h"
 #include "sf33rd/Source/Game/ui/sc_sub.h"
 

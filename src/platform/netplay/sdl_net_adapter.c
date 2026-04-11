@@ -1,4 +1,4 @@
-#include "netplay/sdl_net_adapter.h"
+#include "platform/netplay/sdl_net_adapter.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3_net/SDL_net.h>
