@@ -113,7 +113,7 @@ void Netplay_Menu(struct _TASK* task_ptr) {
     case 1:
         FadeOut(1, 0xFF, 8);
         task_ptr->r_no[2]++;
-        Menu_Page = Netplay_IsLoggedIn();
+        Menu_Page = is_logged_in;
         Setup_Netplay_Menu(task_ptr);
         /* fallthrough */
 
