@@ -1,4 +1,4 @@
-#include "netplay/game_state.h"
+#include "platform/netplay/game_state.h"
 #include "sf33rd/Source/Game/animation/appear.h"
 #include "sf33rd/Source/Game/animation/win_pl.h"
 #include "sf33rd/Source/Game/effect/eff56.h"

@@ -17,6 +17,7 @@ typedef enum NetplaySessionState {
     NETPLAY_SESSION_EXITING,
 } NetplaySessionState;
 
+
 void Netplay_SetParams(int player, const char* ip);
 void Netplay_BeginDirectP2P();
 void Netplay_TickDirectP2P();
@@ -24,6 +25,7 @@ void Netplay_SetMatchmakingParams(const char* server_ip, int server_port);
 void Netplay_BeginMatchmaking();
 void Netplay_TickMatchmaking();
 bool Netplay_IsMatchmakingPending(); // true while searching, false once matched or idle
+void Netplay_FindMatch();
 void Netplay_CancelMatchmaking();
 void Netplay_Run();
 NetplaySessionState Netplay_GetSessionState();

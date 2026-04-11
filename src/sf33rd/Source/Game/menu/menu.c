@@ -7,7 +7,10 @@
 #include "common.h"
 #include "core/app.h"
 #include "main.h"
-#include "netplay/netplay.h"
+#include "platform/app/sdl/sdl_app.h"
+#include "platform/netplay/fistbump.h"
+#include "platform/netplay/netplay.h"
+#include "port/sdl/netplay_screen.h"
 #include "sf33rd/AcrSDK/common/pad.h"
 #include "sf33rd/Source/Game/animation/appear.h"
 #include "sf33rd/Source/Game/debug/Debug.h"
@@ -45,6 +48,7 @@
 #include "sf33rd/Source/Game/io/vm_sub.h"
 #include "sf33rd/Source/Game/menu/dir_data.h"
 #include "sf33rd/Source/Game/menu/ex_data.h"
+#include "sf33rd/Source/Game/menu/netplay_menu.h"
 #include "sf33rd/Source/Game/message/en/msgtable_en.h"
 #include "sf33rd/Source/Game/rendering/color3rd.h"
 #include "sf33rd/Source/Game/rendering/mmtmcnt.h"
@@ -120,7 +124,6 @@ void Save_Replay(struct _TASK* task_ptr);
 void Direction_Menu(struct _TASK* task_ptr);
 void Save_Direction(struct _TASK* task_ptr);
 void Load_Direction(struct _TASK* task_ptr);
-void Netplay_Menu(struct _TASK* task_ptr);
 void Setup_VS_Mode(struct _TASK* task_ptr);
 void Setup_Next_Page(struct _TASK* task_ptr, u8 /* unused */);
 void Load_Replay_Sub(struct _TASK* task_ptr);
@@ -140,7 +143,6 @@ u16 MC_Move_Sub(u16 sw, s16 cursor_id, s16 menu_max, s16 cansel_menu);
 s32 Menu_Sub_case1(struct _TASK* task_ptr);
 void System_Dir_Move_Sub(s16 PL_id);
 void System_Dir_Move_Sub_LR(u16 sw, s16 cursor_id);
-void Dir_Move_Sub(struct _TASK* task_ptr, s16 PL_id);
 u16 Dir_Move_Sub2(u16 sw);
 void Dir_Move_Sub_LR(u16 sw, s16 /* unused */);
 void Ex_Move_Sub_LR(u16 sw, s16 PL_id);
@@ -293,26 +295,6 @@ void Menu_Init(struct _TASK* task_ptr) {
 
     cpReadyTask(TASK_SAVER, Saver_Task);
 }
-
-#if NETPLAY_ENABLED
-// Returns true while matchmaking is pending, consuming input to cancel.
-// Caller should skip normal menu logic when this returns true.
-static bool check_netplay_cancelled() {
-    if (!Netplay_IsMatchmakingPending()) {
-        return false;
-    }
-
-    // I dont know if we want users to be able to cancel mm on their own?
-    // s16 sw = (~plsw_01[0] & plsw_00[0]) | (~plsw_01[1] & plsw_00[1]);
-
-    // if (sw & (SWK_SOUTH | SWK_EAST)) {
-    //     Netplay_CancelMatchmaking();
-    //     SE_selected();
-    // }
-
-    return true;
-}
-#endif
 
 void Mode_Select(struct _TASK* task_ptr) {
     s16 ix;
@@ -1427,82 +1409,6 @@ void Load_Direction(struct _TASK* task_ptr) {
         break;
     }
 }
-
-#if NETPLAY_ENABLED
-void Netplay_Menu(struct _TASK* task_ptr) {
-    s16 ix;
-    s16 char_index;
-
-    switch (task_ptr->r_no[2]) {
-    case 0:
-        Menu_in_Sub(task_ptr);
-        effect_57_init(0x70, MENU_HEADER_NETWORK, 0, 0x3F, 2);
-        Order[0x70] = 1;
-        Order_Dir[0x70] = 8;
-        Order_Timer[0x70] = 1;
-        effect_04_init(1, 7, 0, 0x48);
-
-        char_index = 66;
-
-        for (ix = 0; ix < 2; ix++) {
-            effect_61_init(0, ix + 0x50, 0, 1, char_index, ix, 0x7047);
-            Order[ix + 0x50] = 1;
-            Order_Dir[ix + 0x50] = 4;
-            Order_Timer[ix + 0x50] = ix + 0x14;
-            char_index++;
-        }
-
-        Menu_Cursor_Move = 2;
-        break;
-
-    case 1:
-        Menu_Sub_case1(task_ptr);
-        break;
-
-    case 2:
-        if (FadeIn(1, 0x19, 8) != 0) {
-            task_ptr->r_no[2] += 1;
-            Suicide[3] = 0;
-        }
-
-        break;
-
-    case 3:
-        if (MC_Move_Sub(Check_Menu_Lever(0, 0), 0, 1, 0xFF) == 0) {
-            MC_Move_Sub(Check_Menu_Lever(1, 0), 0, 1, 0xFF);
-        }
-
-        if (IO_Result == SWK_SOUTH || IO_Result == SWK_EAST) {
-            SE_selected();
-
-            if (Menu_Cursor_Y[0] == 1 || IO_Result == SWK_EAST) {
-                Menu_Suicide[0] = 0;
-                Menu_Suicide[1] = 1;
-                task_ptr->r_no[1] = 1;
-                task_ptr->r_no[2] = 0;
-                task_ptr->r_no[3] = 0;
-                task_ptr->free[0] = 0;
-                Order[0x70] = 4;
-                Order_Timer[0x70] = 4;
-
-                if (check_netplay_cancelled()) {
-                    Netplay_CancelMatchmaking();
-                }
-
-                break;
-            }
-
-            if (Menu_Cursor_Y[0] == 0 && !check_netplay_cancelled()) {
-                Netplay_BeginMatchmaking();
-                Netplay_BeginDirectP2P();
-                break;
-            }
-        }
-
-        break;
-    }
-}
-#endif
 
 void Load_Replay(struct _TASK* task_ptr) {
     Menu_Cursor_X[1] = Menu_Cursor_X[0];
